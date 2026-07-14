@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-gray-50 text-gray-800 antialiased;
+  }
+  /* Display headings set in the editorial serif; smaller headings stay sans */
+  h1, h2 {
+    @apply font-serif;
+    letter-spacing: -0.01em;
+  }
+  :focus-visible {
+    outline: 2px solid #e85d1f;
+    outline-offset: 2px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, ::before, ::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
