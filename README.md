@@ -32,6 +32,29 @@ New participants can self-register via **Request Access** on the sign-in screen.
 - **Drive** — navigable mirror of the Google Drive folder tree with direct links
 - **Users** (admin only) — full CRUD with roles, search, filters, profile photos
 
+## Language
+
+The interface is bilingual — use the EN/FR switch in the top bar (or on the
+sign-in screen). The choice is remembered per browser.
+
+## Shared data with Supabase (optional)
+
+By default all data lives in each visitor's browser (localStorage), so users
+on different devices don't see each other. To share the user directory and
+progress across devices:
+
+1. Create a free project at [supabase.com](https://supabase.com)
+2. In the project's **SQL Editor**, run [`supabase/schema.sql`](supabase/schema.sql)
+3. Copy `.env.example` to `.env` and fill in the URL and anon key from
+   **Settings → API**
+4. Rebuild and redeploy: `npm run build && npx gh-pages -d dist`
+
+Without the env vars the app silently falls back to localStorage, and remote
+failures fall back to the local copy, so it works offline either way.
+Note: the anon key grants read/write to the shared table at the application
+level — fine for a cohort-internal tool, but move to Supabase Auth with
+per-user policies before storing anything sensitive.
+
 ## Stack & architecture
 
 - Vite + React 18 + Tailwind CSS v3 + lucide-react
