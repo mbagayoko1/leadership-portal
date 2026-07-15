@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "leadership-portal",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "/Users/moussabagayoko/Desktop/BioFarm/leadership-portal",
+      "port": 3005
+    }
+  ]
+}
