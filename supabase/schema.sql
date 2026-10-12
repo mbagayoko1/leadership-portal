@@ -15,3 +15,5 @@ alter table portal_kv enable row level security;
 create policy "portal read" on portal_kv for select to anon using (true);
 create policy "portal insert" on portal_kv for insert to anon with check (true);
 create policy "portal update" on portal_kv for update to anon using (true);
+-- Needed when a participant stops sharing their AI Coach growth plan.
+create policy "portal delete" on portal_kv for delete to anon using (key like 'coachplan:%');

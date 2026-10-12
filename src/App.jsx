@@ -1,13 +1,16 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, lazy, Suspense } from "react";
 import {
   CheckCircle2, Circle, Book, Mic, Users, Trophy, TrendingUp,
   Calendar, Target, LogOut, User, Settings, Plus, Trash2, Edit2,
   Eye, EyeOff, Save, FolderOpen, ChevronRight, ChevronDown,
-  Shield, Play, FileText, Link, ExternalLink
+  Shield, Play, FileText, Link, ExternalLink, Sparkles,
+  UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone
 } from "lucide-react";
 import { RC, ROLES, TC, EF, IU, CUR, SM, CI, DS, DDC, DEFAULT_GOALS } from "./data.js";
 import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON } from "./storage.js";
 import { STR } from "./i18n.js";
+
+const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
 
 // ─── COMPONENTS ───────────────────────────────────────────────────────────────
 function Av({ user, size }) {
@@ -27,6 +30,31 @@ function Band() {
   );
 }
 const ROMAN = { p1:"I", p2:"II", p3:"III", p4:"IV" };
+// One icon per entry of STR[lang].compItems, in the same order.
+const COMP_ICONS = [UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone];
+function Competencies({ t }) {
+  return (
+    <div className="ldp-card overflow-hidden">
+      <div className="ldp-phase-header">
+        <h3 className="font-semibold">{t.compTitle}</h3>
+      </div>
+      <div className="p-4">
+        <p className="text-sm text-gray-600 mb-3">{t.compSub}</p>
+        <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          {t.compItems.map((item,i)=>{
+            const Icon=COMP_ICONS[i]||CheckCircle2;
+            return (
+              <li key={i} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
+                <span className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center flex-shrink-0"><Icon className="w-4 h-4 text-orange-600"/></span>
+                <span className="text-sm text-gray-700 leading-snug pt-1">{item}</span>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
+    </div>
+  );
+}
 function LangSwitch({ lang, setLang }) {
   return (
     <div className="flex rounded-lg overflow-hidden border border-white/25 font-mono text-[11px]">
@@ -76,7 +104,8 @@ export default function App() {
       if (!saved) await saveUsers(u);
       // Restore personal session
       const sess = await loadSession();
-      if (sess && u[sess.username]) { setMe({...u[sess.username]}); setLi(true); }
+      const su = sess && Object.values(u).find(x=>x.username===sess.username);
+      if (su) { setMe({...su}); setLi(true); }
       setReady(true);
     })();
   },[]);
@@ -171,7 +200,7 @@ export default function App() {
   const all=[...SM,...CI];
   const cur=all.find(m=>m.id===sm)||SM[0];
   const op=pct();
-  const tabs=[{k:"dashboard",l:t.nav.dashboard,I:TrendingUp},{k:"curriculum",l:t.nav.curriculum,I:Calendar},{k:"study-guide",l:t.nav.study,I:Book},{k:"resources",l:t.nav.resources,I:Trophy},{k:"drive",l:t.nav.drive,I:FolderOpen},...(me&&me.role==="admin"?[{k:"users",l:t.nav.users,I:Users}]:[])];
+  const tabs=[{k:"dashboard",l:t.nav.dashboard,I:TrendingUp},{k:"curriculum",l:t.nav.curriculum,I:Calendar},{k:"study-guide",l:t.nav.study,I:Book},{k:"coach",l:t.nav.coach,I:Sparkles},{k:"resources",l:t.nav.resources,I:Trophy},{k:"drive",l:t.nav.drive,I:FolderOpen},...(me&&me.role==="admin"?[{k:"users",l:t.nav.users,I:Users}]:[])];
 
   if(!ready){ return <div className="min-h-screen bg-gradient-to-br from-purple-700 to-blue-700 flex items-center justify-center"><div className="text-center text-white"><div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"/><p className="font-semibold">{t.loading}</p></div></div>; }
   if(!li){
@@ -180,23 +209,33 @@ export default function App() {
         <div className="absolute top-4 right-4"><LangSwitch lang={lang} setLang={setLang}/></div>
         <div className="w-full max-w-md space-y-4">
           <div className="text-center mb-2">
-            <div className="bg-white/20 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"><Shield className="w-10 h-10 text-white"/></div>
-            <h1 className="text-4xl font-medium text-white">Leadership Development Portal</h1>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-purple-300 mt-3">{t.loginSubtitle}</p>
+            <div className="flex items-center justify-center gap-3 mb-5">
+              <div className="flex flex-col gap-1">
+                <div className="h-5 w-1.5 bg-orange-500 rounded-full"/>
+                <div className="h-2.5 w-1.5 bg-yellow-400 rounded-full"/>
+                <div className="h-2 w-1.5 bg-green-500 rounded-full"/>
+              </div>
+              <div className="text-left">
+                <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5">UNFPA · WCARO</p>
+                <h1 className="text-3xl font-semibold text-white leading-tight">Leadership &amp; Communication</h1>
+                <p className="text-xl font-light text-white/80 leading-tight">Development Portal</p>
+              </div>
+            </div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-purple-300">{t.loginSubtitle}</p>
           </div>
           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
             <Band/>
             <div className="flex border-b">
-              <button onClick={()=>{setSr(false);setRe("");setLe("");}} className={"flex-1 py-3 text-sm font-semibold "+(!sr?"bg-purple-50 text-purple-700 border-b-2 border-purple-600":"text-gray-500 hover:bg-gray-50")}>{t.signIn}</button>
-              <button onClick={()=>{setSr(true);setRe("");setLe("");}} className={"flex-1 py-3 text-sm font-semibold "+(sr?"bg-purple-50 text-purple-700 border-b-2 border-purple-600":"text-gray-500 hover:bg-gray-50")}>{t.requestAccess}</button>
+              <button onClick={()=>{setSr(false);setRe("");setLe("");}} className={"flex-1 py-3 text-sm font-semibold transition-colors "+(!sr?"bg-orange-50 text-orange-700 border-b-2 border-orange-500":"text-gray-500 hover:bg-gray-50 border-b-2 border-transparent")}>{t.signIn}</button>
+              <button onClick={()=>{setSr(true);setRe("");setLe("");}} className={"flex-1 py-3 text-sm font-semibold transition-colors "+(sr?"bg-orange-50 text-orange-700 border-b-2 border-orange-500":"text-gray-500 hover:bg-gray-50 border-b-2 border-transparent")}>{t.requestAccess}</button>
             </div>
             <div className="p-6">
               {!sr?(
                 <div className="space-y-4">
-                  <div><label className="block text-sm font-semibold text-gray-700 mb-1">{t.username}</label><input type="text" value={lf.username} onChange={e=>setLf(f=>({...f,username:e.target.value}))} onKeyDown={e=>{if(e.key==="Enter")login();}} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-sm" placeholder={t.enterUsername}/></div>
-                  <div><label className="block text-sm font-semibold text-gray-700 mb-1">{t.password}</label><input type="password" value={lf.password} onChange={e=>setLf(f=>({...f,password:e.target.value}))} onKeyDown={e=>{if(e.key==="Enter")login();}} className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 outline-none text-sm" placeholder={t.enterPassword}/></div>
+                  <div><label className="block text-sm font-semibold text-gray-600 mb-1">{t.username}</label><input type="text" value={lf.username} onChange={e=>setLf(f=>({...f,username:e.target.value}))} onKeyDown={e=>{if(e.key==="Enter")login();}} className="ldp-input" placeholder={t.enterUsername}/></div>
+                  <div><label className="block text-sm font-semibold text-gray-600 mb-1">{t.password}</label><input type="password" value={lf.password} onChange={e=>setLf(f=>({...f,password:e.target.value}))} onKeyDown={e=>{if(e.key==="Enter")login();}} className="ldp-input" placeholder={t.enterPassword}/></div>
                   {le&&<div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-red-700 text-sm text-center">{le}</div>}
-                  <button onClick={login} className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-3 rounded-lg font-semibold hover:opacity-90 text-sm">{t.signInBtn}</button>
+                  <button onClick={login} className="ldp-btn-primary">{t.signInBtn}</button>
                 </div>
               ):(
                 <div className="space-y-3">
@@ -222,7 +261,7 @@ export default function App() {
                         return <div key={fd}><label className="block text-xs font-semibold text-gray-700 mb-1">{lb}</label><input type={tp2} value={rf[fd]} onChange={e=>{const v=e.target.value;setRf(f=>({...f,[fd]:v}));}} onKeyDown={e=>{if(e.key==="Enter")reg();}} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/></div>;
                       })}
                       {re&&<div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-red-700 text-sm">{re}</div>}
-                      <button onClick={reg} className="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-2.5 rounded-lg font-semibold hover:opacity-90 text-sm">{t.createAccount}</button>
+                      <button onClick={reg} className="ldp-btn-primary">{t.createAccount}</button>
                       <p className="text-center text-xs text-gray-400">{t.haveAccount} <button onClick={()=>{setSr(false);setRe("");}} className="text-purple-600 hover:underline font-semibold">{t.signIn}</button></p>
                     </div>
                   )}
@@ -247,16 +286,30 @@ export default function App() {
   ):null;
 
   const topbar=(
-    <div className="bg-purple-800 text-white">
-      <div className="px-6 py-4 flex items-center justify-between">
-        <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.25em] text-purple-300 mb-1">{t.eyebrow}</p>
-          <h1 className="text-2xl font-semibold leading-tight">Leadership & Communication Mastery</h1>
+    <div className="text-white" style={{background:"linear-gradient(135deg,#1b2540 0%,#1e2a44 60%,#2f5077 100%)"}}>
+      <div className="px-6 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="flex flex-col gap-0.5 flex-shrink-0">
+            <div className="h-4 w-1 bg-orange-500 rounded-full"/>
+            <div className="h-2 w-1 bg-yellow-400 rounded-full"/>
+            <div className="h-1.5 w-1 bg-green-500 rounded-full"/>
+          </div>
+          <div className="min-w-0">
+            <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5">{t.eyebrow}</p>
+            <h1 className="text-xl font-semibold leading-tight truncate">Leadership &amp; Communication Mastery</h1>
+            <p className="font-mono text-[9px] text-blue-300/70 mt-0.5 hidden sm:block">UNFPA WCARO · Cohort 1 · 2026</p>
+          </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 flex-shrink-0">
           <LangSwitch lang={lang} setLang={setLang}/>
-          <div className="flex items-center gap-2"><Av user={me} size="sm"/><div className="hidden sm:block"><p className="text-sm font-semibold">{me.name}</p><Bdg role={me.role}/></div></div>
-          <button onClick={logout} className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 border border-white/20 px-3 py-1.5 rounded-lg text-sm"><LogOut className="w-4 h-4"/>{t.logout}</button>
+          <div className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-lg px-2.5 py-1.5">
+            <Av user={me} size="sm"/>
+            <div className="hidden sm:block">
+              <p className="text-xs font-semibold leading-none">{me.name}</p>
+              <p className="font-mono text-[9px] uppercase tracking-wider text-orange-300 mt-0.5">{me.role}</p>
+            </div>
+          </div>
+          <button onClick={logout} className="ldp-btn-ghost text-white flex items-center gap-1.5"><LogOut className="w-4 h-4"/><span className="hidden sm:inline">{t.logout}</span></button>
         </div>
       </div>
       <Band/>
@@ -266,9 +319,9 @@ export default function App() {
   const nav=(
     <div className="bg-white border-b flex overflow-x-auto sticky top-0 z-40">
       {tabs.map(tb=>(
-        <button key={tb.k} onClick={()=>setTab(tb.k)} className={"flex items-center gap-1.5 px-5 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(tab===tb.k?"border-purple-600 text-purple-700 bg-purple-50":"border-transparent text-gray-500 hover:bg-gray-50")}>
+        <button key={tb.k} onClick={()=>setTab(tb.k)} className={"flex items-center gap-1.5 px-5 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(tab===tb.k?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700")}>
           <tb.I className="w-4 h-4"/>{tb.l}
-          {tb.k==="users"&&<span className="ml-1 bg-purple-100 text-purple-700 text-xs rounded-full px-1.5 py-0.5">{Object.keys(users).length}</span>}
+          {tb.k==="users"&&<span className="ml-1 bg-orange-100 text-orange-700 text-xs rounded-full px-1.5 py-0.5">{Object.keys(users).length}</span>}
         </button>
       ))}
     </div>
@@ -277,33 +330,47 @@ export default function App() {
   // dashboard – mentor
   const mentorDash=(tab==="dashboard"&&me.role==="mentor")?(
     <div className="space-y-5">
-      <div className="bg-gradient-to-r from-purple-700 to-indigo-700 text-white rounded-xl p-5">
-        <div className="flex items-center gap-4"><Av user={me} size="lg"/><div><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-purple-300">{t.mentorDash}</p><h2 className="text-2xl font-bold">{me.name}</h2><p className="text-purple-200 text-sm">{me.title||t.mentorDefault} · {me.organization||"UNFPA WCARO"}</p></div></div>
-        <div className="flex gap-2 mt-5 border-t border-white/20 pt-4 flex-wrap">
-          {[["overview",t.mTabs.overview],["participants",t.mTabs.participants],["sessions",t.mTabs.sessions],["goals",t.mTabs.goals],["notes",t.mTabs.notes]].map(arr=>(
-            <button key={arr[0]} onClick={()=>setMt(arr[0])} className={"px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors "+(mt===arr[0]?"bg-white text-purple-700":"bg-white/20 hover:bg-white/30 text-white")}>{arr[1]}</button>
-          ))}
+      <div className="rounded-xl overflow-hidden shadow-md">
+        <div style={{background:"linear-gradient(135deg,#1e2a44 0%,#2f5077 100%)"}} className="text-white p-5">
+          <div className="flex items-center gap-4">
+            <div className="ring-2 ring-orange-400/60 ring-offset-2 ring-offset-transparent rounded-full flex-shrink-0"><Av user={me} size="lg"/></div>
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5">{t.mentorDash}</p>
+              <h2 className="text-2xl font-bold">{me.name}</h2>
+              <p className="text-blue-200 text-sm">{me.title||t.mentorDefault} · {me.organization||"UNFPA WCARO"}</p>
+            </div>
+          </div>
+          <div className="flex gap-2 mt-5 border-t border-white/15 pt-4 flex-wrap">
+            {[["overview",t.mTabs.overview],["participants",t.mTabs.participants],["sessions",t.mTabs.sessions],["goals",t.mTabs.goals],["notes",t.mTabs.notes]].map(arr=>(
+              <button key={arr[0]} onClick={()=>setMt(arr[0])} className={"px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors "+(mt===arr[0]?"bg-white text-purple-900":"bg-white/15 hover:bg-white/25 text-white border border-white/20")}>{arr[1]}</button>
+            ))}
+          </div>
         </div>
+        <Band/>
       </div>
       {mt==="overview"&&(
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[[pts.length,t.statParticipants,"text-purple-600"],[ms.length,t.statSessions,"text-blue-600"],[dg+"/"+mg.length,t.statGoalsDone,"text-green-600"],[gp+"%",t.statProgress,"text-orange-600"]].map(arr=>(
-              <div key={arr[1]} className="bg-white border rounded-xl p-4 shadow-sm text-center"><p className={"font-mono text-3xl font-semibold "+arr[2]}>{arr[0]}</p><p className="text-xs text-gray-500 mt-1">{arr[1]}</p></div>
+            {[[pts.length,t.statParticipants,"text-purple-700","#4c1d95"],[ms.length,t.statSessions,"text-blue-700","#1d4ed8"],[dg+"/"+mg.length,t.statGoalsDone,"text-green-700","#15803d"],[gp+"%",t.statProgress,"text-orange-600","#e85d1f"]].map(arr=>(
+              <div key={arr[1]} className="ldp-stat text-center" style={{"--stat-accent":arr[3]}}><p className={"font-mono text-3xl font-semibold "+arr[2]}>{arr[0]}</p><p className="text-xs text-gray-500 mt-1">{arr[1]}</p></div>
             ))}
           </div>
-          <div className="bg-white border rounded-xl p-4 shadow-sm">
-            <div className="flex justify-between mb-2"><p className="text-sm font-semibold text-gray-700">{t.goalProgress}</p><span className="font-mono text-sm font-semibold text-purple-600">{gp}%</span></div>
-            <div className="w-full bg-gray-100 rounded-full h-2.5"><div className="bg-gradient-to-r from-purple-500 to-blue-500 h-2.5 rounded-full transition-all" style={{width:gp+"%"}}/></div>
+          <div className="ldp-card p-4">
+            <div className="flex justify-between mb-2"><p className="text-sm font-semibold text-gray-700">{t.goalProgress}</p><span className="font-mono text-sm font-semibold text-orange-600">{gp}%</span></div>
+            <div className="ldp-progress-bar h-2.5"><div className="ldp-progress-fill h-2.5" style={{width:gp+"%"}}/></div>
           </div>
-          <div className="bg-white border rounded-xl p-4 shadow-sm">
-            <h4 className="font-semibold text-gray-800 mb-3">{t.cohortProgramme}</h4>
-            {Object.entries(CUR).map(e=>(
-              <div key={e[0]} className="flex items-center gap-3 py-1.5 border-b last:border-0"><div className="w-2 h-2 rounded-full bg-purple-400 flex-shrink-0"/><div className="flex-1"><p className="text-sm font-semibold text-gray-700">{e[1].name}</p><p className="text-xs text-gray-400">{e[1].modules.length} {t.modules}</p></div></div>
+          <Competencies t={t}/>
+          <div className="ldp-card p-4">
+            <div className="flex justify-between items-center mb-3"><h4 className="font-semibold text-gray-800">{t.cohortProgramme}</h4><span className="ldp-eyebrow">Cohort 1</span></div>
+            {Object.entries(CUR).map((e,ci)=>(
+              <div key={e[0]} className="flex items-center gap-3 py-1.5 border-b last:border-0">
+                <span className="font-mono text-[10px] font-semibold text-orange-500 w-5 flex-shrink-0">{ROMAN["p"+(ci+1)]||""}</span>
+                <div className="flex-1"><p className="text-sm font-semibold text-gray-700">{e[1].name}</p><p className="text-xs text-gray-400">{e[1].modules.length} {t.modules}</p></div>
+              </div>
             ))}
           </div>
-          <div className="bg-white border rounded-xl p-4 shadow-sm">
-            <div className="flex justify-between items-center mb-3"><h4 className="font-semibold text-gray-800">{t.recentSessions}</h4><button onClick={()=>setMt("sessions")} className="text-xs text-purple-600 hover:underline">{t.viewAll}</button></div>
+          <div className="ldp-card p-4">
+            <div className="flex justify-between items-center mb-3"><h4 className="font-semibold text-gray-800">{t.recentSessions}</h4><button onClick={()=>setMt("sessions")} className="text-xs text-orange-600 hover:underline">{t.viewAll}</button></div>
             {ms.length===0?<p className="text-sm text-gray-400 italic">{t.noSessions}</p>:ms.slice(-3).reverse().map(s=>(
               <div key={s.id} className="flex items-center gap-3 py-2 border-b last:border-0"><div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center"><Calendar className="w-4 h-4 text-blue-600"/></div><div><p className="text-sm font-semibold text-gray-700">{users[s.participant]?users[s.participant].name:s.participant}</p><p className="text-xs text-gray-400">{s.date} · {t.sessionTypes[s.type]||s.type}</p></div></div>
             ))}
@@ -359,8 +426,8 @@ export default function App() {
       )}
       {mt==="goals"&&(
         <div className="space-y-3">
-          <div className="flex justify-between items-center"><h3 className="font-bold text-gray-800">{t.goals} ({dg}/{mg.length})</h3><span className="font-mono text-sm font-semibold text-purple-600">{gp}%</span></div>
-          <div className="w-full bg-gray-100 rounded-full h-2"><div className="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full transition-all" style={{width:gp+"%"}}/></div>
+          <div className="flex justify-between items-center"><h3 className="font-bold text-gray-800">{t.goals} ({dg}/{mg.length})</h3><span className="font-mono text-sm font-semibold text-orange-600">{gp}%</span></div>
+          <div className="ldp-progress-bar h-2"><div className="ldp-progress-fill h-2" style={{width:gp+"%"}}/></div>
           {mg.map(g=>(
             <div key={g.id} className={"flex items-start gap-3 bg-white border rounded-xl p-4 shadow-sm "+(g.done?"border-green-200 bg-green-50":"")}>
               <button onClick={()=>tg(g.id)} className="flex-shrink-0 mt-0.5">{g.done?<CheckCircle2 className="w-5 h-5 text-green-500"/>:<Circle className="w-5 h-5 text-gray-300"/>}</button>
@@ -388,8 +455,18 @@ export default function App() {
   // dashboard – participant/admin
   const partDash=(tab==="dashboard"&&me.role!=="mentor")?(
     <div className="space-y-5">
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-5">
-        <div className="flex items-center gap-4"><Av user={me} size="lg"/><div><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-purple-300">{t.welcome}</p><h2 className="text-2xl font-bold">{me.name}</h2><p className="text-purple-200 text-sm">{me.title||t.participantDefault}{me.organization?" · "+me.organization:""}</p></div></div>
+      <div className="rounded-xl overflow-hidden shadow-md">
+        <div style={{background:"linear-gradient(135deg,#1e2a44 0%,#2f5077 100%)"}} className="text-white p-5">
+          <div className="flex items-center gap-4">
+            <div className="ring-2 ring-orange-400/60 ring-offset-2 ring-offset-transparent rounded-full flex-shrink-0"><Av user={me} size="lg"/></div>
+            <div>
+              <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5">{t.welcome}</p>
+              <h2 className="text-2xl font-bold">{me.name}</h2>
+              <p className="text-blue-200 text-sm">{me.title||t.participantDefault}{me.organization?" · "+me.organization:""}</p>
+            </div>
+          </div>
+        </div>
+        <Band/>
       </div>
       <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
         <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"/>
@@ -404,15 +481,15 @@ export default function App() {
       </div>
       <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg"><h3 className="font-bold text-blue-900">{t.journeyTitle}</h3><p className="text-blue-700 text-sm mt-0.5">{t.journeyDesc}</p></div>
       <div className="grid grid-cols-3 gap-4">
-        <div className="bg-white border rounded-xl p-4 shadow-sm"><div className="flex justify-between items-start"><Target className="w-7 h-7 text-purple-500"/><span className="font-mono text-2xl font-semibold text-purple-600">{op}%</span></div><p className="text-xs text-gray-500 mt-1">{t.overallProgress}</p><div className="w-full bg-gray-100 rounded-full h-1.5 mt-2"><div className="bg-purple-500 h-1.5 rounded-full" style={{width:op+"%"}}/></div></div>
-        <div className="bg-white border rounded-xl p-4 shadow-sm"><div className="flex justify-between items-start"><Book className="w-7 h-7 text-green-500"/><span className="font-mono text-2xl font-semibold text-green-600">{Object.values(prog.rt).filter(Boolean).length}</span></div><p className="text-xs text-gray-500 mt-1">{t.readingTests}</p></div>
-        <div className="bg-white border rounded-xl p-4 shadow-sm"><div className="flex justify-between items-start"><Mic className="w-7 h-7 text-orange-500"/><span className="font-mono text-2xl font-semibold text-orange-600">{Object.values(prog.ve).filter(Boolean).length}</span></div><p className="text-xs text-gray-500 mt-1">{t.vocalSessions}</p></div>
+        <div className="ldp-stat" style={{"--stat-accent":"#e85d1f"}}><div className="flex justify-between items-start"><Target className="w-7 h-7 text-orange-500"/><span className="font-mono text-2xl font-semibold text-orange-600">{op}%</span></div><p className="text-xs text-gray-500 mt-1">{t.overallProgress}</p><div className="ldp-progress-bar h-1.5 mt-2"><div className="ldp-progress-fill h-1.5" style={{width:op+"%"}}/></div></div>
+        <div className="ldp-stat" style={{"--stat-accent":"#15803d"}}><div className="flex justify-between items-start"><Book className="w-7 h-7 text-green-600"/><span className="font-mono text-2xl font-semibold text-green-700">{Object.values(prog.rt).filter(Boolean).length}</span></div><p className="text-xs text-gray-500 mt-1">{t.readingTests}</p></div>
+        <div className="ldp-stat" style={{"--stat-accent":"#c08f1f"}}><div className="flex justify-between items-start"><Mic className="w-7 h-7 text-yellow-600"/><span className="font-mono text-2xl font-semibold text-yellow-700">{Object.values(prog.ve).filter(Boolean).length}</span></div><p className="text-xs text-gray-500 mt-1">{t.vocalSessions}</p></div>
       </div>
-      <div className="bg-white border rounded-xl p-4 shadow-sm">
+      <div className="ldp-card p-4">
         <h4 className="font-semibold text-gray-800 mb-3">{t.quickAccessStudy}</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {SM.slice(0,4).map(m=>(
-            <button key={m.id} onClick={()=>{setTab("study-guide");setSm(m.id);setSt("guide");}} className="text-left p-3 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"><p className="text-xs text-purple-500 font-semibold">{t.phaseLabel} {m.ph}</p><p className="text-sm font-semibold text-gray-800 leading-tight mt-0.5">{m.title}</p></button>
+            <button key={m.id} onClick={()=>{setTab("study-guide");setSm(m.id);setSt("guide");}} className="text-left p-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors border border-orange-100"><p className="font-mono text-[9px] uppercase tracking-wider text-orange-500">{t.phaseLabel} {m.ph}</p><p className="text-sm font-semibold text-gray-800 leading-tight mt-0.5">{m.title}</p></button>
           ))}
         </div>
       </div>
@@ -431,8 +508,11 @@ export default function App() {
       {Object.entries(CUR).map(e=>{
         const pk=e[0],ph=e[1];
         return (
-          <div key={pk} className="border rounded-xl overflow-hidden">
-            <div className="bg-purple-700 text-white px-5 py-3 flex items-baseline gap-3"><span className="font-mono text-[10px] uppercase tracking-[0.25em] text-yellow-400">{t.phaseLabel} {ROMAN[pk]}</span><h3 className="font-bold">{ph.name}</h3></div>
+          <div key={pk} className="ldp-card overflow-hidden">
+            <div className="ldp-phase-header">
+              <span className="font-mono text-2xl font-semibold text-yellow-400/80 flex-shrink-0">{ROMAN[pk]}</span>
+              <div><p className="font-mono text-[9px] uppercase tracking-[0.22em] text-blue-300">{t.phaseLabel} {ROMAN[pk]}</p><h3 className="font-bold text-white">{ph.name}</h3></div>
+            </div>
             <div className="p-4 space-y-3">
               {ph.modules.map((mod,idx)=>(
                 <div key={mod.id} className="border rounded-lg overflow-hidden">
@@ -470,17 +550,20 @@ export default function App() {
           <optgroup label={t.commGroup}>{CI.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</optgroup>
         </select>
       </div>
-      <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-xl p-5">
-        <div className="flex items-start justify-between flex-wrap gap-3">
-          <div><p className="font-mono text-[10px] uppercase tracking-[0.25em] text-purple-300 mb-1">{cur.wk}</p><h2 className="text-xl font-bold">{cur.title}</h2></div>
-          <div className="flex gap-2 flex-wrap">
-            {cur.doc&&<a href={cur.doc} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm font-semibold"><FileText className="w-4 h-4"/>{t.openInDrive}</a>}
-            {cur.fld&&<a href={cur.fld} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 px-3 py-1.5 rounded-lg text-sm font-semibold"><FolderOpen className="w-4 h-4"/>{t.folderBtn}</a>}
+      <div className="rounded-xl overflow-hidden shadow-md">
+        <div style={{background:"linear-gradient(135deg,#1e2a44 0%,#2f5077 100%)"}} className="text-white p-5">
+          <div className="flex items-start justify-between flex-wrap gap-3">
+            <div><p className="font-mono text-[9px] uppercase tracking-[0.25em] text-orange-300 mb-1">{cur.wk}</p><h2 className="text-xl font-bold">{cur.title}</h2></div>
+            <div className="flex gap-2 flex-wrap">
+              {cur.doc&&<a href={cur.doc} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 border border-white/20 px-3 py-1.5 rounded-lg text-sm font-semibold"><FileText className="w-4 h-4"/>{t.openInDrive}</a>}
+              {cur.fld&&<a href={cur.fld} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 border border-white/20 px-3 py-1.5 rounded-lg text-sm font-semibold"><FolderOpen className="w-4 h-4"/>{t.folderBtn}</a>}
+            </div>
           </div>
         </div>
+        <Band/>
       </div>
       <div className="flex bg-white border rounded-xl overflow-hidden shadow-sm">
-        {sgTabs.map(a=><button key={a[0]} onClick={()=>setSt(a[0])} className={"flex-1 py-2.5 text-xs font-semibold border-b-2 transition-colors "+(st===a[0]?"border-purple-600 text-purple-700 bg-purple-50":"border-transparent text-gray-500 hover:bg-gray-50")}>{a[1]}</button>)}
+        {sgTabs.map(a=><button key={a[0]} onClick={()=>setSt(a[0])} className={"flex-1 py-2.5 text-xs font-semibold border-b-2 transition-colors "+(st===a[0]?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50")}>{a[1]}</button>)}
       </div>
       {st==="guide"&&(
         <div className="space-y-3">
@@ -599,6 +682,7 @@ export default function App() {
   // resources
   const resTab=tab==="resources"?(
     <div className="space-y-4">
+      <Competencies t={t}/>
       <div className="bg-white border rounded-xl p-5 shadow-sm"><h3 className="font-bold text-lg mb-3 flex items-center gap-2"><Mic className="w-5 h-5 text-orange-500"/>{t.vocalTitle}</h3><p className="text-sm text-gray-600 mb-3">{t.vocalDesc}</p><a href="https://drive.google.com/drive/folders/1w0UbxFFcqsKa6EeYf_J7Pp485OtF7fTT" target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline flex items-center gap-1"><FolderOpen className="w-4 h-4"/>{t.dailyExercisesFolder}</a></div>
       <div className="bg-white border rounded-xl p-5 shadow-sm"><h3 className="font-bold text-lg mb-3 flex items-center gap-2"><Users className="w-5 h-5 text-blue-500"/>{t.practiceTitle}</h3><ul className="space-y-1.5 text-sm text-gray-600">{t.practiceItems.map((tx,i)=><li key={i}>• {tx}</li>)}</ul></div>
       <div className="bg-red-50 border border-red-100 rounded-xl p-5"><h3 className="font-bold text-lg mb-3 text-red-900">{t.pitfallsTitle}</h3><div className="space-y-2 text-sm">{t.pitfallItems.map((a,i)=><div key={i}><strong className="text-red-700">{t.pitfallWord}</strong> {a[0]} — <strong>{t.solutionWord}</strong> {a[1]}</div>)}</div></div>
@@ -702,6 +786,11 @@ export default function App() {
         {partDash}
         {currTab}
         {studyTab}
+        {tab==="coach"&&(
+          <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">{t.ai.loadingCoach}</div>}>
+            <CoachPanel user={me} lang={lang} setLang={setLang} t={t}/>
+          </Suspense>
+        )}
         {resTab}
         {driveTab}
         {uDenied}

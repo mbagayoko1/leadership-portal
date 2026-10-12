@@ -5,7 +5,21 @@ export const STR = {
     // chrome
     eyebrow: "UNFPA WCARO · Cohort 1 · 2026 Strategic Growth Plan",
     logout: "Logout",
-    nav: { dashboard: "Dashboard", curriculum: "Curriculum", study: "Study Guide", resources: "Resources", drive: "Drive", users: "Users" },
+    nav: { dashboard: "Dashboard", curriculum: "Curriculum", study: "Study Guide", coach: "AI Coach", resources: "Resources", drive: "Drive", users: "Users" },
+    ai: {
+      loadingCoach: "Loading the AI Coach…",
+      offTitle: "Connect the AI Coach",
+      offBody: "Goals, check-ins and your progress work now. Coaching sessions, practice scenes and live calls need a connection to Claude.",
+      keyLabel: "Anthropic API key",
+      keyHelp: "Stored only in this browser and sent directly to Anthropic. Avoid saving it on a shared computer.",
+      getKey: "Get a key from the Anthropic Console ↗",
+      connect: "Connect",
+      checking: "Checking…",
+      badKey: "That key was not accepted. Check it and try again.",
+      netError: "Could not reach Anthropic. Check your connection and try again.",
+      connectedKey: "AI connected with a key saved in this browser.",
+      remove: "Remove key"
+    },
     save: "Save", cancel: "Cancel", edit: "Edit", del: "Delete", back: "← Back",
     // login
     loginSubtitle: "Cohort 1 · 2026 Strategic Growth Plan · UNFPA WCARO",
@@ -72,6 +86,17 @@ export const STR = {
     reflectDesc: "Answer in your own words. Share with James before your next session.",
     checkpointFlag: "🏁 Checkpoint", uploadToDrive: "Upload to Drive ↗",
     // resources tab
+    compTitle: "Coaching & facilitation competencies",
+    compSub: "Support available through the programme, for individuals, teams and partner organizations.",
+    compItems: [
+      "Executive and leadership coaching tailored to your goals",
+      "Team coaching and facilitation for high-functioning collaboration",
+      "Strategy retreats and team development workshops",
+      "Diagnostics and actionable solutions for team challenges",
+      "Career coaching that integrates work/life balance and communication skills",
+      "Strengthening partnerships across donors, governments, and NGOs",
+      "Customized activation talks and workshops that inspire organizations"
+    ],
     vocalTitle: "Vocal Training",
     vocalDesc: "Daily warm-up: jaw release → breathing → lip trills → sirens → articulation → projection (10 min).",
     dailyExercisesFolder: "Daily Exercises folder ↗",
@@ -100,7 +125,21 @@ export const STR = {
   fr: {
     eyebrow: "UNFPA WCARO · Cohorte 1 · Plan de croissance stratégique 2026",
     logout: "Déconnexion",
-    nav: { dashboard: "Tableau de bord", curriculum: "Programme", study: "Guide d'étude", resources: "Ressources", drive: "Drive", users: "Utilisateurs" },
+    nav: { dashboard: "Tableau de bord", curriculum: "Programme", study: "Guide d'étude", coach: "Coach IA", resources: "Ressources", drive: "Drive", users: "Utilisateurs" },
+    ai: {
+      loadingCoach: "Chargement du Coach IA…",
+      offTitle: "Connecter le Coach IA",
+      offBody: "Les objectifs, les bilans et votre progression fonctionnent déjà. Les séances de coaching, les scènes de pratique et les appels en direct nécessitent une connexion à Claude.",
+      keyLabel: "Clé API Anthropic",
+      keyHelp: "Conservée uniquement dans ce navigateur et envoyée directement à Anthropic. Évitez de l'enregistrer sur un ordinateur partagé.",
+      getKey: "Obtenir une clé dans la console Anthropic ↗",
+      connect: "Connecter",
+      checking: "Vérification…",
+      badKey: "Cette clé n'a pas été acceptée. Vérifiez-la et réessayez.",
+      netError: "Impossible de joindre Anthropic. Vérifiez votre connexion et réessayez.",
+      connectedKey: "IA connectée avec une clé enregistrée dans ce navigateur.",
+      remove: "Retirer la clé"
+    },
     save: "Enregistrer", cancel: "Annuler", edit: "Modifier", del: "Supprimer", back: "← Retour",
     loginSubtitle: "Cohorte 1 · Plan de croissance stratégique 2026 · UNFPA WCARO",
     signIn: "Connexion", requestAccess: "Demander l'accès",
@@ -161,6 +200,17 @@ export const STR = {
     reflectionQuestions: "Questions de réflexion",
     reflectDesc: "Répondez avec vos propres mots. Partagez avec James avant votre prochaine séance.",
     checkpointFlag: "🏁 Point d'étape", uploadToDrive: "Téléverser sur Drive ↗",
+    compTitle: "Compétences en coaching et facilitation",
+    compSub: "Accompagnement proposé dans le cadre du programme, pour les personnes, les équipes et les organisations partenaires.",
+    compItems: [
+      "Coaching exécutif et de leadership adapté à vos objectifs",
+      "Coaching et facilitation d'équipe pour une collaboration performante",
+      "Retraites stratégiques et ateliers de développement d'équipe",
+      "Diagnostics et solutions concrètes face aux défis d'équipe",
+      "Coaching de carrière intégrant l'équilibre vie professionnelle/vie personnelle et les compétences en communication",
+      "Renforcement des partenariats entre bailleurs, gouvernements et ONG",
+      "Conférences de mobilisation et ateliers sur mesure qui inspirent les organisations"
+    ],
     vocalTitle: "Entraînement vocal",
     vocalDesc: "Échauffement quotidien : détente de la mâchoire → respiration → trilles de lèvres → sirènes → articulation → projection (10 min).",
     dailyExercisesFolder: "Dossier Exercices quotidiens ↗",

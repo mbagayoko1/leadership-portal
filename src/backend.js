@@ -22,3 +22,14 @@ export async function kvSet(k, value) {
   const { error } = await supabase.from(TABLE).upsert({ key: k, value, updated_at: new Date().toISOString() });
   if (error) throw error;
 }
+
+export async function kvDelete(k) {
+  const { error } = await supabase.from(TABLE).delete().eq("key", k);
+  if (error) throw error;
+}
+
+export async function kvListKeys(prefix) {
+  const { data, error } = await supabase.from(TABLE).select("key").like("key", prefix + "%");
+  if (error) throw error;
+  return (data || []).map(r => r.key);
+}

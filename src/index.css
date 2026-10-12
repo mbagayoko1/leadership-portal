@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,600;1,400;1,600&family=Public+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,8 +7,8 @@
 @layer base {
   body {
     @apply bg-gray-50 text-gray-800 antialiased;
+    font-feature-settings: "kern" 1, "liga" 1;
   }
-  /* Display headings set in the editorial serif; smaller headings stay sans */
   h1, h2 {
     @apply font-serif;
     letter-spacing: -0.01em;
@@ -14,7 +16,12 @@
   :focus-visible {
     outline: 2px solid #e85d1f;
     outline-offset: 2px;
+    border-radius: 3px;
   }
+  ::-webkit-scrollbar { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #d0cbbf; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #a39d8f; }
   @media (prefers-reduced-motion: reduce) {
     *, ::before, ::after {
       animation-duration: 0.01ms !important;
@@ -22,4 +29,96 @@
       transition-duration: 0.01ms !important;
     }
   }
+}
+
+@layer components {
+  /* ── Card system ──────────────────────────────────── */
+  .ldp-card {
+    @apply bg-white rounded-xl border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_8px_rgba(0,0,0,0.04)];
+    transition: box-shadow 0.18s ease, transform 0.15s ease;
+  }
+  .ldp-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04); }
+
+  /* Stat card: coloured top stripe via CSS var */
+  .ldp-stat {
+    @apply ldp-card p-4 overflow-hidden relative;
+  }
+  .ldp-stat::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--stat-accent, #e85d1f);
+    border-radius: 0.75rem 0.75rem 0 0;
+  }
+
+  /* ── Phase header ─────────────────────────────────── */
+  .ldp-phase-header {
+    background: linear-gradient(135deg, #1e2a44 0%, #2f5077 100%);
+    @apply text-white px-5 py-4 flex items-baseline gap-4;
+  }
+
+  /* ── Section eyebrow ──────────────────────────────── */
+  .ldp-eyebrow {
+    @apply font-mono text-[10px] uppercase tracking-[0.22em] text-purple-400;
+  }
+
+  /* ── Progress bar ─────────────────────────────────── */
+  .ldp-progress-bar {
+    @apply w-full bg-gray-100 rounded-full overflow-hidden;
+  }
+  .ldp-progress-fill {
+    background: linear-gradient(90deg, #e85d1f 0%, #c08f1f 100%);
+    @apply h-full rounded-full transition-all duration-700;
+  }
+
+  /* ── Form inputs ──────────────────────────────────── */
+  .ldp-input {
+    @apply w-full px-4 py-2.5 border border-gray-200 rounded-lg text-sm
+           bg-gray-50 focus:bg-white focus:border-orange-400 focus:ring-2
+           focus:ring-orange-200 outline-none transition-all duration-150
+           placeholder:text-gray-400;
+  }
+
+  /* ── Buttons ──────────────────────────────────────── */
+  .ldp-btn-primary {
+    background: linear-gradient(135deg, #1e2a44 0%, #2f5077 100%);
+    @apply w-full text-white py-3 rounded-lg font-semibold text-sm
+           hover:opacity-90 transition-opacity cursor-pointer;
+  }
+  .ldp-btn-ghost {
+    @apply bg-white/15 hover:bg-white/25 border border-white/25 px-3 py-1.5
+           rounded-lg text-sm font-semibold transition-colors cursor-pointer;
+  }
+
+  /* ── Tab pill active indicator ────────────────────── */
+  .ldp-tab-active {
+    @apply border-b-2 border-orange-500 text-orange-700 bg-orange-50;
+  }
+  .ldp-tab-inactive {
+    @apply border-b-2 border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700;
+  }
+
+  /* ── Badge system ─────────────────────────────────── */
+  .ldp-badge-participant { @apply bg-blue-100 text-blue-800 text-xs px-2 py-0.5 rounded-full font-semibold; }
+  .ldp-badge-mentor      { @apply bg-orange-100 text-orange-800 text-xs px-2 py-0.5 rounded-full font-semibold; }
+  .ldp-badge-admin       { @apply bg-purple-100 text-purple-800 text-xs px-2 py-0.5 rounded-full font-semibold; }
+  .ldp-badge-observer    { @apply bg-gray-100 text-gray-600 text-xs px-2 py-0.5 rounded-full font-semibold; }
+}
+
+/* ── Animations ──────────────────────────────────────── */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-up { animation: fade-up 0.3s ease-out both; }
+
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position: 400px 0; }
+}
+.shimmer {
+  background: linear-gradient(90deg, #f1efea 25%, #e5e1d8 50%, #f1efea 75%);
+  background-size: 400px 100%;
+  animation: shimmer 1.4s ease-in-out infinite;
 }

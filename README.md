@@ -55,6 +55,36 @@ Note: the anon key grants read/write to the shared table at the application
 level — fine for a cohort-internal tool, but move to Supabase Auth with
 per-user policies before storing anything sensitive.
 
+## AI Coach
+
+The **AI Coach** tab (`src/coach/`) adds coaching sessions, a practice studio
+with scored role-plays, a growth plan, progress tracking, weekly check-ins,
+voice conversation and full-screen live calls, in English and French. It
+follows the portal's EN/FR switch and calls Claude (`claude-sonnet-4-6`)
+through the official Anthropic SDK. The tab is code-split, so its bundle only
+loads when opened.
+
+Privacy: coaching conversations, practice and check-ins stay in the user's
+browser. Only a participant's opt-in growth-plan summary (goals, progress,
+practice scores) is shared, and it syncs through Supabase when configured,
+so mentors and admins see it under **Mentor view**.
+
+Connecting it to Claude, either way:
+
+- **Proxy (after real sign-in is in place).**
+  [`supabase/functions/ai-coach`](supabase/functions/ai-coach/index.ts) keeps
+  your Anthropic key on the server and pins the model and token limits. It is
+  not safe to deploy yet: it can only check the request's `Origin` header,
+  which scripts can forge, so anyone with its URL could spend your credit.
+  Deploy it only after the portal moves to Supabase Auth and the function
+  verifies each caller's session (see the file header).
+- **Personal key.** With no proxy configured, each user can paste their own
+  Anthropic API key in the tab. It is kept in that browser only and sent
+  straight to Anthropic.
+
+The Web Speech API powers voice: listening works in Chrome, Edge and Safari,
+and it needs microphone permission. Reading aloud works in all modern browsers.
+
 ## Stack & architecture
 
 - Vite + React 18 + Tailwind CSS v3 + lucide-react

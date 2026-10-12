@@ -2,7 +2,7 @@
 // goes to Supabase when configured (see backend.js), otherwise localStorage.
 // The signed-in session is always per-device localStorage.
 // Remote failures fall back to the local copy so the app never bricks offline.
-import { remoteEnabled, kvGet, kvSet } from "./backend.js";
+import { remoteEnabled, kvGet, kvSet, kvDelete, kvListKeys } from "./backend.js";
 
 const PREFIX = "ldp_";
 
@@ -51,3 +51,32 @@ export async function clearSession() {
 // Per-user shared state (progress, sessions, goals, notes)
 export async function loadJSON(key, fallback) { return sharedGet(key, fallback); }
 export function saveJSON(key, value) { sharedSet(key, value); }
+
+// Generic access for the AI Coach module. `shared` data may sync to Supabase;
+// private data never leaves this browser.
+export async function storeGet(key, shared) {
+  return shared ? sharedGet(key) : localGet(key);
+}
+export async function storeSet(key, value, shared) {
+  if (!shared) { localSet(key, value); return localGet(key) != null; }
+  localSet(key, value);
+  if (!remoteEnabled) return true;
+  try { await kvSet(key, value); return true; } catch (e) { console.warn("Supabase write failed for " + key, e); return false; }
+}
+export async function storeDelete(key, shared) {
+  try { localStorage.removeItem(PREFIX + key); } catch (e) {}
+  if (shared && remoteEnabled) {
+    try { await kvDelete(key); } catch (e) { console.warn("Supabase delete failed for " + key, e); }
+  }
+}
+export async function storeListKeys(prefix, shared) {
+  if (shared && remoteEnabled) return kvListKeys(prefix);
+  const out = [];
+  try {
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(PREFIX + prefix)) out.push(k.slice(PREFIX.length));
+    }
+  } catch (e) {}
+  return out;
+}
