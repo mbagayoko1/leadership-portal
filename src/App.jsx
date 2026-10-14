@@ -4,13 +4,17 @@ import {
   Calendar, Target, LogOut, User, Settings, Plus, Trash2, Edit2,
   Eye, EyeOff, Save, FolderOpen, ChevronRight, ChevronDown,
   Shield, Play, FileText, Link, ExternalLink, Sparkles,
-  UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone
+  UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone, Lightbulb
 } from "lucide-react";
 import { RC, ROLES, TC, EF, IU, CUR, SM, CI, DS, DDC, DEFAULT_GOALS } from "./data.js";
-import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON } from "./storage.js";
+import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON, moveUserData, deleteUserData } from "./storage.js";
 import { STR } from "./i18n.js";
+import { COMPETENCIES } from "./competencies.js";
+import { SPEAKERS, PD_PLAN } from "./development.js";
 
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
+const SpeechLibrary = lazy(() => import("./SpeechLibrary.jsx"));
+const SkillModule = lazy(() => import("./SkillModule.jsx"));
 
 // ─── COMPONENTS ───────────────────────────────────────────────────────────────
 function Av({ user, size }) {
@@ -32,26 +36,190 @@ function Band() {
 const ROMAN = { p1:"I", p2:"II", p3:"III", p4:"IV" };
 // One icon per entry of STR[lang].compItems, in the same order.
 const COMP_ICONS = [UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone];
-function Competencies({ t }) {
+function Competencies({ t, selected, onSelect }) {
   return (
     <div className="ldp-card overflow-hidden">
       <div className="ldp-phase-header">
         <h3 className="font-semibold">{t.compTitle}</h3>
       </div>
       <div className="p-4">
-        <p className="text-sm text-gray-600 mb-3">{t.compSub}</p>
+        <p className="text-sm text-gray-600 mb-1">{t.compSub}</p>
+        <p className="text-xs text-gray-400 mb-3">{t.compPick}</p>
         <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
           {t.compItems.map((item,i)=>{
             const Icon=COMP_ICONS[i]||CheckCircle2;
+            const on=selected===i;
             return (
-              <li key={i} className="flex items-start gap-3 p-3 rounded-lg bg-gray-50 border border-gray-100">
-                <span className="w-8 h-8 rounded-lg bg-orange-50 border border-orange-100 flex items-center justify-center flex-shrink-0"><Icon className="w-4 h-4 text-orange-600"/></span>
-                <span className="text-sm text-gray-700 leading-snug pt-1">{item}</span>
+              <li key={i}>
+                <button onClick={()=>onSelect(i)} aria-pressed={on} className={"w-full text-left flex items-start gap-3 p-3 rounded-lg border transition-colors "+(on?"bg-orange-50 border-orange-300":"bg-gray-50 border-gray-100 hover:border-orange-200 hover:bg-orange-50/50")}>
+                  <span className={"w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 "+(on?"bg-orange-500 border-orange-500":"bg-orange-50 border-orange-100")}><Icon className={"w-4 h-4 "+(on?"text-white":"text-orange-600")}/></span>
+                  <span className="text-sm text-gray-700 leading-snug pt-1 flex-1">{item}</span>
+                  <ChevronRight className={"w-4 h-4 mt-2 flex-shrink-0 "+(on?"text-orange-600":"text-gray-300")}/>
+                </button>
               </li>
             );
           })}
         </ul>
       </div>
+    </div>
+  );
+}
+function CompetencyDetail({ t, lang, index }) {
+  const c=COMPETENCIES[index];
+  if(!c) return null;
+  const Icon=COMP_ICONS[index]||CheckCircle2;
+  const head=(I,label,n)=><h4 className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><I className="w-4 h-4 text-orange-500"/>{label}<span className="font-mono text-[10px] text-gray-400">{n}</span></h4>;
+  return (
+    <div className="ldp-card overflow-hidden fade-up">
+      <div className="p-5 border-b border-gray-100 flex items-start gap-3">
+        <span className="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0"><Icon className="w-5 h-5 text-white"/></span>
+        <div>
+          <p className="ldp-eyebrow">{t.compOverview}</p>
+          <h3 className="text-lg font-semibold text-gray-800 leading-snug">{t.compItems[index]}</h3>
+        </div>
+      </div>
+      <div className="p-5 space-y-5">
+        <p className="text-sm text-gray-700 leading-relaxed">{c.overview[lang]||c.overview.en}</p>
+        <div>
+          <h4 className="text-sm font-bold text-gray-700 mb-2">{t.compPractice}</h4>
+          <ul className="space-y-1.5">{(c.practice[lang]||c.practice.en).map((p,i)=><li key={i} className="text-sm text-gray-600 pl-3 border-l-2 border-orange-200">{p}</li>)}</ul>
+        </div>
+        <div>
+          {head(Play,t.compVideos,c.vids.length)}
+          <div className="space-y-2">{c.vids.map((v,i)=>(
+            <a key={i} href={v.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
+              <span className="w-8 h-8 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0"><Play className="w-4 h-4 text-red-700"/></span>
+              <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-gray-800">{v.t}</span><span className="block text-xs text-gray-500">{v.s}{v.d?" · "+v.d:""}</span></span>
+              <Tg tag={v.g}/>
+            </a>
+          ))}</div>
+        </div>
+        <div>
+          {head(Link,t.compArticles,c.arts.length)}
+          <div className="space-y-2">{c.arts.map((a,i)=>(
+            <a key={i} href={a.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+              <span className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center flex-shrink-0">{/\((PDF|image)\)$/.test(a.t)?<FileText className="w-4 h-4 text-blue-700"/>:<Link className="w-4 h-4 text-blue-700"/>}</span>
+              <span className="flex-1 min-w-0 text-sm font-semibold text-gray-800">{a.t}</span>
+              <Tg tag={a.s}/>
+            </a>
+          ))}</div>
+        </div>
+        <div>
+          {head(Book,t.compBooks,c.books.length)}
+          <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">{c.books.map((b,i)=>(
+            <li key={i} className="p-3 rounded-lg bg-gray-50 border border-gray-100">
+              <p className="text-sm font-semibold text-gray-800 font-serif italic">{b.t}</p>
+              <p className="text-xs text-gray-500 mt-0.5">{b.a} · {b.y}</p>
+            </li>
+          ))}</ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+function PersonalDevelopment({ t, lang, done, onToggle, selected, onSelect, onCoach, view, onView, speech, onSpeech, spDone, onSpToggle, skDone, onSkToggle, skStage, onSkStage }) {
+  const p=t.pd;
+  const views=[["plan",p.viewPlan],["speeches",p.viewSpeeches],["facilitation",p.viewFac],["mc",p.viewMc],["money",p.viewMoney]];
+  const sp=SPEAKERS[selected]||SPEAKERS[0];
+  const nWeeks=PD_PLAN.filter(w=>done[w.id]).length;
+  const nameOf=id=>(SPEAKERS.find(s=>s.id===id)||{}).name;
+  const chips=kind=>SPEAKERS.map((s,i)=>s.kind!==kind?null:(
+    <button key={s.id} onClick={()=>onSelect(i)} aria-pressed={selected===i} className={"text-left px-3 py-2 rounded-lg border transition-colors "+(selected===i?"bg-orange-50 border-orange-300":"bg-white border-gray-200 hover:border-orange-200")}>
+      <span className="block text-sm font-semibold text-gray-800">{s.name}</span>
+      <span className="block text-xs text-gray-500">{s.theme[lang]||s.theme.en}</span>
+    </button>
+  ));
+  return (
+    <div className="space-y-4">
+      <div className="ldp-card overflow-hidden">
+        <div className="ldp-phase-header"><h2 className="text-xl font-semibold">{p.title}</h2></div>
+        <div className="p-4 space-y-2">
+          <p className="text-sm text-gray-700">{p.sub}</p>
+          <p className="text-xs text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-3 py-2">{p.note}</p>
+          <div role="tablist" className="flex flex-wrap gap-1 pt-1">
+            {views.map(([k,label])=>(
+              <button key={k} role="tab" aria-selected={view===k} onClick={()=>onView(k)} className={"text-sm px-3 py-1.5 rounded-lg font-semibold transition-colors "+(view===k?"bg-purple-700 text-white":"text-gray-600 hover:bg-gray-100")}>{label}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+      {view==="speeches"?(
+        <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">…</div>}>
+          <SpeechLibrary t={t} lang={lang} done={spDone} onToggle={onSpToggle} selected={speech} onSelect={onSpeech} onCoach={onCoach}/>
+        </Suspense>
+      ):(view==="facilitation"||view==="mc"||view==="money")?(
+        <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">…</div>}>
+          <SkillModule key={view} id={view} t={t} lang={lang} done={skDone} onToggle={onSkToggle} stage={skStage[view]} onStage={id=>onSkStage({...skStage,[view]:id})} onCoach={onCoach}/>
+        </Suspense>
+      ):<>
+      <div className="ldp-card p-4">
+        <div className="flex justify-between items-baseline mb-1"><h3 className="font-semibold text-gray-800">{p.plan}</h3><span className="font-mono text-xs text-orange-600">{p.weeksDone(nWeeks,PD_PLAN.length)}</span></div>
+        <p className="text-xs text-gray-500 mb-3">{p.planSub}</p>
+        <div className="ldp-progress-bar h-1.5 mb-3"><div className="ldp-progress-fill h-1.5" style={{width:(nWeeks/PD_PLAN.length*100)+"%"}}/></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {PD_PLAN.map(w=>(
+            <div key={w.id} className={"rounded-lg border p-3 "+(done[w.id]?"bg-green-50 border-green-200":"bg-gray-50 border-gray-100")}>
+              <button onClick={()=>onToggle(w.id)} aria-pressed={!!done[w.id]} className="flex items-center gap-2 text-left w-full">
+                {done[w.id]?<CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0"/>:<Circle className="w-5 h-5 text-gray-300 flex-shrink-0"/>}
+                <span className="text-sm font-semibold text-gray-800">{w.title[lang]||w.title.en}</span>
+              </button>
+              <ul className="mt-2 space-y-1">{(w.steps[lang]||w.steps.en).map((s,i)=><li key={i} className="text-xs text-gray-600 pl-3 border-l-2 border-orange-200">{s}</li>)}</ul>
+              <p className="text-[11px] text-gray-400 mt-2">{w.speakers.map(nameOf).join(" · ")}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="ldp-card p-4 space-y-3">
+        {[["speaker",p.speakers],["research",p.research],["africa",p.africa],["classic",p.classics],["channel",p.channels]].map(([kind,label])=>(
+          <div key={kind}><p className="ldp-eyebrow mb-2">{label}</p><div className="grid grid-cols-2 md:grid-cols-4 gap-2">{chips(kind)}</div></div>
+        ))}
+      </div>
+      <div className="ldp-card overflow-hidden fade-up" key={sp.id}>
+        <div className="p-5 border-b border-gray-100">
+          <p className="ldp-eyebrow">{sp.theme[lang]||sp.theme.en}</p>
+          <h3 className="text-xl font-semibold text-gray-800 font-serif">{sp.name}</h3>
+          <p className="text-sm text-gray-500">{sp.role[lang]||sp.role.en}</p>
+        </div>
+        <div className="p-5 space-y-5">
+          {sp.quotes.length>0&&(
+            <div>
+              <h4 className="text-sm font-bold text-gray-700 mb-2">{p.quotes} <span className="font-mono text-xs text-gray-400">({sp.quotes.length})</span></h4>
+              <div className="space-y-3">{sp.quotes.map((q,i)=>(
+                <figure key={i} className={"border-l-4 border-yellow-400 pl-4 "+(i?"":"pb-1")}>
+                  <blockquote className={"font-serif italic text-gray-800 leading-snug "+(i?"":"text-lg")}>“{lang==="fr"&&q.fr?q.fr:q.text}”</blockquote>
+                  {lang==="fr"&&q.fr&&<p className="text-xs text-gray-500 italic mt-0.5">“{q.text}”</p>}
+                  <figcaption className="text-xs text-gray-500 mt-1">— {sp.name}, {q.source}{lang==="fr"?" · "+(q.fr?p.freeTr:p.quoteNote):""}</figcaption>
+                </figure>
+              ))}</div>
+              {sp.kind==="classic"&&<p className="text-[11px] text-gray-400 mt-2">{p.classicNote}</p>}
+            </div>
+          )}
+          <div>
+            <h4 className="text-sm font-bold text-gray-700 mb-2">{p.ideas}</h4>
+            <ul className="space-y-2">{(sp.ideas[lang]||sp.ideas.en).map((x,i)=><li key={i} className="text-sm text-gray-700 pl-3 border-l-2 border-orange-300 leading-relaxed">{x}</li>)}</ul>
+          </div>
+          {sp.caution&&<div className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2"><strong>{p.note2}:</strong> {sp.caution[lang]||sp.caution.en}</div>}
+          <div className="bg-orange-50 border-l-4 border-orange-500 rounded-lg px-4 py-3">
+            <p className="text-xs font-bold text-orange-800 uppercase tracking-wide mb-1">{p.practice}</p>
+            <p className="text-sm text-gray-800">{sp.practice[lang]||sp.practice.en}</p>
+          </div>
+          {sp.vids.length>0&&<div>
+            <h4 className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><Play className="w-4 h-4 text-orange-500"/>{p.watch}</h4>
+            <div className="space-y-2">{sp.vids.map((v,i)=>(
+              <a key={i} href={v.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
+                <span className="w-8 h-8 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0"><Play className="w-4 h-4 text-red-700"/></span>
+                <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-gray-800">{v.t}</span><span className="block text-xs text-gray-500">{v.by}</span></span>
+                <Tg tag={v.u.includes("ted.com")?"TED":"YouTube"}/>
+              </a>
+            ))}</div>
+          </div>}
+          <div className="flex flex-wrap gap-2">
+            <a href={sp.channel} target="_blank" rel="noopener noreferrer" className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700">{sp.channel.includes("gutenberg.org")?p.openBook:sp.channel.includes("ted.com")?p.openTed:p.openChannel}</a>
+            <button onClick={onCoach} className="text-sm px-3 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-800 text-white font-semibold">{p.practiseCoach}</button>
+          </div>
+        </div>
+      </div>
+      </>}
     </div>
   );
 }
@@ -64,7 +232,7 @@ function LangSwitch({ lang, setLang }) {
     </div>
   );
 }
-function Bdg({ role }) { return <span className={"text-xs px-2 py-0.5 rounded-full font-semibold capitalize "+(RC[role]||"bg-gray-100 text-gray-600")}>{role}</span>; }
+function Bdg({ role, t }) { return <span className={"text-xs px-2 py-0.5 rounded-full font-semibold capitalize "+(RC[role]||"bg-gray-100 text-gray-600")}>{(t&&t.roleNames[role])||role}</span>; }
 function Tg({ tag }) { return <span className={"text-xs px-1.5 py-0.5 rounded font-semibold "+(TC[tag]||"bg-gray-100 text-gray-600")}>{tag}</span>; }
 function DN({ node, depth, open, setOpen, openLabel }) {
   const has = node.ch && node.ch.length > 0;
@@ -73,10 +241,14 @@ function DN({ node, depth, open, setOpen, openLabel }) {
   const ico = has ? (isOpen ? <ChevronDown className="w-3.5 h-3.5 text-gray-400 flex-shrink-0"/> : <ChevronRight className="w-3.5 h-3.5 text-gray-400 flex-shrink-0"/>) : <span className="w-3.5"/>;
   return (
     <div>
-      <div className="flex items-center gap-2 py-1.5 rounded hover:bg-blue-50 cursor-pointer group" style={{paddingLeft:(depth*18+8)+"px"}} onClick={()=>{ if(has) setOpen(s=>({...s,[node.id]:!s[node.id]})); }}>
+      <div className="flex items-center gap-2 py-1.5 rounded hover:bg-blue-50 cursor-pointer group" style={{paddingLeft:(depth*18+8)+"px"}}
+        role={has?"button":undefined} tabIndex={has?0:undefined} aria-expanded={has?!!isOpen:undefined}
+        onClick={()=>{ if(has) setOpen(s=>({...s,[node.id]:!s[node.id]})); }}
+        onKeyDown={e=>{ if(has&&e.target===e.currentTarget&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); setOpen(s=>({...s,[node.id]:!s[node.id]})); } }}>
         {ico}
         <span className="text-sm text-gray-700 flex-1">{node.label}</span>
-        <a href={node.url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()} className="opacity-0 group-hover:opacity-100 text-xs text-blue-500 pr-3 transition-opacity">{openLabel}</a>
+        {/* Always visible on touch screens; revealed on hover or keyboard focus on larger screens. */}
+        <a href={node.url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()} className="lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 text-xs text-blue-500 pr-3 transition-opacity">{openLabel}</a>
       </div>
       {kids}
     </div>
@@ -96,14 +268,24 @@ export default function App() {
 
   useEffect(()=>{
     (async()=>{
-      // Load shared user list — merge with defaults so admin/james always exist
+      // Load shared user list — merge with defaults so the admin and mentor always exist
       const saved = await loadUsers();
-      const u = saved ? {...IU, ...saved} : IU;
+      // The mentor account moved from James Emmanuel Wanki (james.wanki) to
+      // Moussa Bagayoko (moussa.bagayoko); retire the old seeded account and
+      // hand its workspace to the new one.
+      const legacy = saved && Object.keys(saved).filter(k=>saved[k].username==="james.wanki");
+      if (legacy && legacy.length) { legacy.forEach(k=>delete saved[k]); moveUserData("james.wanki","moussa.bagayoko"); }
+      // Users are keyed by username everywhere (lookups, edit, delete). Older
+      // saves keyed the seeded mentor as "moussa"; re-key so each account
+      // appears once, with the saved copy taking precedence over the seed.
+      const rekeyed = saved && Object.keys(saved).some(k=>saved[k].username!==k);
+      const u = Object.fromEntries([...Object.values(IU), ...Object.values(saved||{})].filter(x=>x&&x.username).map(x=>[x.username,x]));
       setUsers(u);
-      // If first time, seed shared storage with defaults
-      if (!saved) await saveUsers(u);
+      // Seed shared storage on first run, or rewrite it after a migration
+      if (!saved || (legacy && legacy.length) || rekeyed) await saveUsers(u);
       // Restore personal session
-      const sess = await loadSession();
+      let sess = await loadSession();
+      if (sess && sess.username==="james.wanki") { sess={username:"moussa.bagayoko"}; await saveSession(sess.username); }
       const su = sess && Object.values(u).find(x=>x.username===sess.username);
       if (su) { setMe({...su}); setLi(true); }
       setReady(true);
@@ -129,6 +311,30 @@ export default function App() {
   const [uq,setUq]=useState("");
   const [ur,setUr]=useState("all");
   const [mt,setMt]=useState("overview");
+  const [cp,setCp]=useState(0);
+  const [pdSel,setPdSel]=useState(0);
+  const [pdView,setPdView]=useState("plan");
+  const [spSel,setSpSel]=useState("s01");
+  const [skStage,setSkStage]=useState({});
+  // The coach stays mounted after its first visit so an open conversation
+  // survives a trip to the module or resource it linked to.
+  const [coachOpened,setCoachOpened]=useState(false);
+  useEffect(()=>{ if(tab==="coach") setCoachOpened(true); },[tab]);
+  // On narrow screens the tab bar scrolls sideways; keep the active tab visible.
+  const navRef=useRef(null);
+  useEffect(()=>{ const el=navRef.current&&navRef.current.querySelector('[aria-current="page"]'); if(el) el.scrollIntoView({block:"nearest",inline:"nearest"}); },[tab]);
+  // Opens a target from an AI Coach link: tab:<name>, module:<id>,
+  // competency:<id>, speaker:<id>, speech:<id> or skill:<module>.
+  function coachNavigate(target){
+    const [kind,id]=target.split(":");
+    if(kind==="tab"){ const tabs={dashboard:"dashboard",curriculum:"curriculum",study:"study-guide",development:"development",resources:"resources",drive:"drive"}; if(tabs[id]) setTab(tabs[id]); }
+    else if(kind==="module"){ setSm(id); setSt("guide"); setTab("study-guide"); }
+    else if(kind==="competency"){ const i=COMPETENCIES.findIndex(c=>c.id===id); if(i>=0){ setCp(i); setTab("resources"); } }
+    else if(kind==="speaker"){ const i=SPEAKERS.findIndex(s=>s.id===id); if(i>=0){ setPdSel(i); setPdView("plan"); setTab("development"); } }
+    else if(kind==="skill"){ setPdView(id); setTab("development"); } // id already checked by the coach's navLabel
+    else if(kind==="speech"){ setSpSel(id); setPdView("speeches"); setTab("development"); } // id already checked by the coach's navLabel
+    window.scrollTo(0,0);
+  }
   const [ms,setMs]=useState([]);
   const [mn,setMn]=useState({});
   const [mg,setMg]=useState(DEFAULT_GOALS);
@@ -163,19 +369,26 @@ export default function App() {
   useEffect(()=>{ if(meUsername&&loadedRef.current===meUsername) saveJSON("goals_"+meUsername,mg); },[mg]);
   useEffect(()=>{ if(meUsername&&loadedRef.current===meUsername) saveJSON("notes_"+meUsername,mn); },[mn]);
 
-  function login() { const u=Object.values(users).find(u=>u.username===lf.username&&u.password===lf.password); if(u){setMe({...u});setLi(true);setLe("");saveSession(u.username);}else setLe(t.invalidCreds); }
+  function login() { const un=lf.username.trim().toLowerCase(); const u=Object.values(users).find(u=>u.username.toLowerCase()===un&&u.password===lf.password); if(u){setMe({...u});setLi(true);setLe("");saveSession(u.username);}else setLe(t.invalidCreds); }
   function reg() {
     setRe("");
     if(!rf.name.trim()||!rf.username.trim()||!rf.email.trim()||!rf.password.trim()){setRe(t.errAllRequired);return;}
     if(rf.password!==rf.confirm){setRe(t.errNoMatch);return;}
     if(rf.password.length<6){setRe(t.errMinChars);return;}
-    if(users[rf.username]){setRe(t.errTaken);return;}
-    setUsers(p=>{const n={...p,[rf.username]:{username:rf.username,password:rf.password,role:"participant",name:rf.name,email:rf.email,title:"",organization:"",description:"",profilePicture:null}};saveUsers(n);return n;});
+    const un=rf.username.trim().toLowerCase();
+    if(!/^[a-z0-9._-]{3,30}$/.test(un)){setRe(t.errUsernameFormat);return;}
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(rf.email.trim())){setRe(t.errEmail);return;}
+    if(Object.values(users).some(x=>x.username.toLowerCase()===un)){setRe(t.errTaken);return;}
+    setUsers(p=>{const n={...p,[un]:{username:un,password:rf.password,role:"participant",name:rf.name.trim(),email:rf.email.trim(),title:"",organization:"",description:"",profilePicture:null}};saveUsers(n);return n;});
     setRok(true);
     setTimeout(()=>{setSr(false);setRok(false);setRf({name:"",username:"",email:"",password:"",confirm:""});},2000);
   }
-  function logout(){setLi(false);setMe(null);setLf({username:"",password:""});setLe("");setTab("dashboard");clearSession();}
-  function tp(cat,id){setProg(p=>({...p,[cat]:{...p[cat],[id]:!p[cat][id]}}))}
+  // Clears the signed-in user's data and screen state so nothing carries over
+  // to the next person who signs in on this browser.
+  function logout(){setLi(false);setMe(null);setLf({username:"",password:""});setLe("");setTab("dashboard");setCoachOpened(false);clearSession();
+    setProg({mod:{},rt:{},ve:{}});setMs([]);setMg(DEFAULT_GOALS);setMn({});
+    setSm("m1");setSt("guide");setCp(0);setPdSel(0);setPdView("plan");setSpSel("s01");setSkStage({});setMt("overview");setUv("list");setUt(null);}
+  function tp(cat,id){setProg(p=>{const c=p[cat]||{};return {...p,[cat]:{...c,[id]:!c[id]}};})}
   function pct(){let tt=0,d=0;Object.values(CUR).forEach(ph=>ph.modules.forEach(m=>{tt++;if(prog.mod[m.id])d++;}));return tt?Math.round(d/tt*100):0;}
   const pts=Object.values(users).filter(u=>u.role==="participant");
   const dg=mg.filter(g=>g.done).length;
@@ -188,19 +401,24 @@ export default function App() {
     setUe("");
     if(!uf.name.trim()||!uf.username.trim()||!uf.email.trim()){setUe(t.errNameReq);return;}
     if(uv==="create"&&!uf.password.trim()){setUe(t.errPwdReq);return;}
-    if(uv==="create"&&users[uf.username]){setUe(t.errExists);return;}
-    if(uv==="edit"&&uf.username!==ut&&users[uf.username]){setUe(t.errTaken);return;}
-    const u={...uf};if(!u.password&&uv==="edit")u.password=users[ut].password;
+    const un=uf.username.trim().toLowerCase();
+    if(!/^[a-z0-9._-]{3,30}$/.test(un)){setUe(t.errUsernameFormat);return;}
+    const clash=Object.values(users).some(x=>x.username.toLowerCase()===un&&x.username!==ut);
+    if(uv==="create"&&clash){setUe(t.errExists);return;}
+    if(uv==="edit"&&clash){setUe(t.errTaken);return;}
+    const u={...uf,username:un,name:uf.name.trim(),email:uf.email.trim()};if(!u.password&&uv==="edit")u.password=users[ut].password;
+    // A renamed account keeps its progress, goals, notes and coach history.
+    if(uv==="edit"&&ut!==un){ moveUserData(ut,un); if(me.username===ut) saveSession(un); }
     setUsers(p=>{const n={...p};if(uv==="edit"&&ut!==u.username)delete n[ut];n[u.username]=u;if(me.username===ut)setMe(u);saveUsers(n);return n;});
     setUv("list");setUf(EF());setUt(null);
   }
-  function ud(un){if(un===me.username)return;setUsers(p=>{const n={...p};delete n[un];saveUsers(n);return n;});setDc(null);if(uv==="detail"&&ut===un){setUv("list");setUt(null);}}
+  function ud(un){if(un===me.username)return;deleteUserData(un);setUsers(p=>{const n={...p};delete n[un];saveUsers(n);return n;});setDc(null);if(uv==="detail"&&ut===un){setUv("list");setUt(null);}}
   function ui(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onloadend=()=>setUf(fm=>({...fm,profilePicture:r.result}));r.readAsDataURL(f);}
   const fu=Object.values(users).filter(u=>{const q=uq.toLowerCase();return(!q||u.name.toLowerCase().includes(q)||u.username.toLowerCase().includes(q)||u.email.toLowerCase().includes(q))&&(ur==="all"||u.role===ur);});
   const all=[...SM,...CI];
   const cur=all.find(m=>m.id===sm)||SM[0];
   const op=pct();
-  const tabs=[{k:"dashboard",l:t.nav.dashboard,I:TrendingUp},{k:"curriculum",l:t.nav.curriculum,I:Calendar},{k:"study-guide",l:t.nav.study,I:Book},{k:"coach",l:t.nav.coach,I:Sparkles},{k:"resources",l:t.nav.resources,I:Trophy},{k:"drive",l:t.nav.drive,I:FolderOpen},...(me&&me.role==="admin"?[{k:"users",l:t.nav.users,I:Users}]:[])];
+  const tabs=[{k:"dashboard",l:t.nav.dashboard,I:TrendingUp},{k:"curriculum",l:t.nav.curriculum,I:Calendar},{k:"study-guide",l:t.nav.study,I:Book},{k:"development",l:t.nav.development,I:Lightbulb},{k:"coach",l:t.nav.coach,I:Sparkles},{k:"resources",l:t.nav.resources,I:Trophy},{k:"drive",l:t.nav.drive,I:FolderOpen},...(me&&me.role==="admin"?[{k:"users",l:t.nav.users,I:Users}]:[])];
 
   if(!ready){ return <div className="min-h-screen bg-gradient-to-br from-purple-700 to-blue-700 flex items-center justify-center"><div className="text-center text-white"><div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"/><p className="font-semibold">{t.loading}</p></div></div>; }
   if(!li){
@@ -287,7 +505,7 @@ export default function App() {
 
   const topbar=(
     <div className="text-white" style={{background:"linear-gradient(135deg,#1b2540 0%,#1e2a44 60%,#2f5077 100%)"}}>
-      <div className="px-6 py-4 flex items-center justify-between gap-4">
+      <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 sm:gap-4">
         <div className="flex items-center gap-3 min-w-0">
           <div className="flex flex-col gap-0.5 flex-shrink-0">
             <div className="h-4 w-1 bg-orange-500 rounded-full"/>
@@ -295,8 +513,8 @@ export default function App() {
             <div className="h-1.5 w-1 bg-green-500 rounded-full"/>
           </div>
           <div className="min-w-0">
-            <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5">{t.eyebrow}</p>
-            <h1 className="text-xl font-semibold leading-tight truncate">Leadership &amp; Communication Mastery</h1>
+            <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5 hidden sm:block">{t.eyebrow}</p>
+            <h1 className="text-base sm:text-xl font-semibold leading-tight sm:truncate">Leadership &amp; Communication Mastery</h1>
             <p className="font-mono text-[9px] text-blue-300/70 mt-0.5 hidden sm:block">UNFPA WCARO · Cohort 1 · 2026</p>
           </div>
         </div>
@@ -306,10 +524,10 @@ export default function App() {
             <Av user={me} size="sm"/>
             <div className="hidden sm:block">
               <p className="text-xs font-semibold leading-none">{me.name}</p>
-              <p className="font-mono text-[9px] uppercase tracking-wider text-orange-300 mt-0.5">{me.role}</p>
+              <p className="font-mono text-[9px] uppercase tracking-wider text-orange-300 mt-0.5">{t.roleNames[me.role]||me.role}</p>
             </div>
           </div>
-          <button onClick={logout} className="ldp-btn-ghost text-white flex items-center gap-1.5"><LogOut className="w-4 h-4"/><span className="hidden sm:inline">{t.logout}</span></button>
+          <button onClick={logout} aria-label={t.logout} title={t.logout} className="ldp-btn-ghost text-white flex items-center gap-1.5"><LogOut className="w-4 h-4"/><span className="hidden sm:inline">{t.logout}</span></button>
         </div>
       </div>
       <Band/>
@@ -317,13 +535,16 @@ export default function App() {
   );
 
   const nav=(
-    <div className="bg-white border-b flex overflow-x-auto sticky top-0 z-40">
+    <div className="bg-white border-b sticky top-0 z-40">
+    <div ref={navRef} className="flex overflow-x-auto">
       {tabs.map(tb=>(
-        <button key={tb.k} onClick={()=>setTab(tb.k)} className={"flex items-center gap-1.5 px-5 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(tab===tb.k?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700")}>
+        <button key={tb.k} onClick={()=>setTab(tb.k)} aria-current={tab===tb.k?"page":undefined} className={"flex items-center gap-1.5 px-5 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(tab===tb.k?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700")}>
           <tb.I className="w-4 h-4"/>{tb.l}
           {tb.k==="users"&&<span className="ml-1 bg-orange-100 text-orange-700 text-xs rounded-full px-1.5 py-0.5">{Object.keys(users).length}</span>}
         </button>
       ))}
+    </div>
+    <div aria-hidden="true" className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white lg:hidden"/>
     </div>
   );
 
@@ -359,7 +580,7 @@ export default function App() {
             <div className="flex justify-between mb-2"><p className="text-sm font-semibold text-gray-700">{t.goalProgress}</p><span className="font-mono text-sm font-semibold text-orange-600">{gp}%</span></div>
             <div className="ldp-progress-bar h-2.5"><div className="ldp-progress-fill h-2.5" style={{width:gp+"%"}}/></div>
           </div>
-          <Competencies t={t}/>
+          <Competencies t={t} selected={null} onSelect={i=>{setCp(i);setTab("resources");window.scrollTo(0,0);}}/>
           <div className="ldp-card p-4">
             <div className="flex justify-between items-center mb-3"><h4 className="font-semibold text-gray-800">{t.cohortProgramme}</h4><span className="ldp-eyebrow">Cohort 1</span></div>
             {Object.entries(CUR).map((e,ci)=>(
@@ -385,7 +606,7 @@ export default function App() {
             const ps=ms.filter(s=>s.participant===p.username);
             return (
               <div key={p.username} className="bg-white border rounded-xl p-4 shadow-sm">
-                <div className="flex items-center gap-3 mb-3"><Av user={p} size="md"/><div className="flex-1"><p className="font-semibold text-gray-800">{p.name}</p><p className="text-xs text-gray-400">@{p.username} · {p.email}</p></div><Bdg role={p.role}/></div>
+                <div className="flex items-center gap-3 mb-3"><Av user={p} size="md"/><div className="flex-1"><p className="font-semibold text-gray-800">{p.name}</p><p className="text-xs text-gray-400">@{p.username} · {p.email}</p></div><Bdg role={p.role} t={t}/></div>
                 <div className="flex gap-3 text-center mb-3">
                   {[[ps.length,t.statSessions,"bg-blue-50 text-blue-600"],[ps.filter(s=>s.type==="1:1").length,t.oneOnOnes,"bg-purple-50 text-purple-600"],[ps.filter(s=>s.type==="Checkpoint").length,t.checkpoints,"bg-green-50 text-green-600"]].map(arr=>(
                     <div key={arr[1]} className={"flex-1 "+arr[2]+" rounded-lg p-2"}><p className="font-mono text-lg font-semibold">{arr[0]}</p><p className="text-xs text-gray-500">{arr[1]}</p></div>
@@ -523,8 +744,8 @@ export default function App() {
                   </div>
                   <div className="px-4 py-3 space-y-3 bg-white">
                     <div><p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t.dailyTasks}</p>{mod.dt.map((tk,i)=><p key={i} className="text-sm text-gray-600 pl-3 border-l-2 border-blue-200 mb-1">{tk}</p>)}</div>
-                    <div><p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t.readingsLabel}</p>{mod.rd.map((r,i)=>{const tid=mod.id+"_r"+i;return <div key={i} className="flex items-center gap-2 mb-1">{r.x&&<button onClick={()=>tp("rt",tid)}>{prog.rt[tid]?<CheckCircle2 className="w-3.5 h-3.5 text-green-500"/>:<Circle className="w-3.5 h-3.5 text-gray-300"/>}</button>}<span className="text-sm text-gray-600"><strong>{r.t}</strong> — {r.c}{r.x&&<span className="text-blue-500 ml-1 text-xs">{t.testTag}</span>}</span></div>;})}</div>
-                    <div><p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t.vocalTraining}</p>{mod.ve.map((ex,i)=>{const eid=mod.id+"_v"+i;return <div key={i} className="flex items-center gap-2 mb-1"><button onClick={()=>tp("ve",eid)}>{prog.ve[eid]?<CheckCircle2 className="w-3.5 h-3.5 text-orange-500"/>:<Circle className="w-3.5 h-3.5 text-gray-300"/>}</button><span className="text-sm text-gray-600">{ex}</span></div>;})}</div>
+                    <div><p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t.readingsLabel}</p>{mod.rd.map((r,i)=>{const tid=mod.id+"_r"+i;return <div key={i} className="flex items-center gap-2 mb-1">{r.x&&<button onClick={()=>tp("rt",tid)} aria-pressed={!!prog.rt[tid]} aria-label={t.markDone+": "+r.t}>{prog.rt[tid]?<CheckCircle2 className="w-3.5 h-3.5 text-green-500"/>:<Circle className="w-3.5 h-3.5 text-gray-300"/>}</button>}<span className="text-sm text-gray-600"><strong>{r.t}</strong> — {r.c}{r.x&&<span className="text-blue-500 ml-1 text-xs">{t.testTag}</span>}</span></div>;})}</div>
+                    <div><p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t.vocalTraining}</p>{mod.ve.map((ex,i)=>{const eid=mod.id+"_v"+i;return <div key={i} className="flex items-center gap-2 mb-1"><button onClick={()=>tp("ve",eid)} aria-pressed={!!prog.ve[eid]} aria-label={t.markDone+": "+ex}>{prog.ve[eid]?<CheckCircle2 className="w-3.5 h-3.5 text-orange-500"/>:<Circle className="w-3.5 h-3.5 text-gray-300"/>}</button><span className="text-sm text-gray-600">{ex}</span></div>;})}</div>
                     <div className="bg-yellow-50 border-l-4 border-yellow-400 px-3 py-2 rounded text-sm text-yellow-800"><strong>{t.checkpointLabel}</strong> {mod.cp}</div>
                   </div>
                 </div>
@@ -655,7 +876,7 @@ export default function App() {
           <h3 className="font-bold text-gray-800 flex items-center gap-2"><Book className="w-5 h-5 text-purple-500"/>{t.requiredReading}</h3>
           {cur.reads.map((r,i)=>{
             const tid=cur.id+"_r"+i;
-            return <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"><button onClick={()=>tp("rt",tid)} className="flex-shrink-0 mt-0.5">{prog.rt[tid]?<CheckCircle2 className="w-5 h-5 text-green-500"/>:<Circle className="w-5 h-5 text-gray-300"/>}</button><p className="text-sm text-gray-700 flex-1">{r}</p></div>;
+            return <div key={i} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"><button onClick={()=>tp("rt",tid)} aria-pressed={!!prog.rt[tid]} aria-label={t.markDone+": "+r} className="flex-shrink-0 mt-0.5">{prog.rt[tid]?<CheckCircle2 className="w-5 h-5 text-green-500"/>:<Circle className="w-5 h-5 text-gray-300"/>}</button><p className="text-sm text-gray-700 flex-1">{r}</p></div>;
           })}
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800"><strong>{t.afterReading}</strong> {t.uploadNoteTo} <a href="https://drive.google.com/drive/folders/1BHIxUGoLj4vO22LeoguFbe1s-PM4A6E2" target="_blank" rel="noopener noreferrer" className="underline">{t.compNotes}</a></div>
         </div>
@@ -682,7 +903,8 @@ export default function App() {
   // resources
   const resTab=tab==="resources"?(
     <div className="space-y-4">
-      <Competencies t={t}/>
+      <Competencies t={t} selected={cp} onSelect={setCp}/>
+      <CompetencyDetail key={cp} t={t} lang={lang} index={cp}/>
       <div className="bg-white border rounded-xl p-5 shadow-sm"><h3 className="font-bold text-lg mb-3 flex items-center gap-2"><Mic className="w-5 h-5 text-orange-500"/>{t.vocalTitle}</h3><p className="text-sm text-gray-600 mb-3">{t.vocalDesc}</p><a href="https://drive.google.com/drive/folders/1w0UbxFFcqsKa6EeYf_J7Pp485OtF7fTT" target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline flex items-center gap-1"><FolderOpen className="w-4 h-4"/>{t.dailyExercisesFolder}</a></div>
       <div className="bg-white border rounded-xl p-5 shadow-sm"><h3 className="font-bold text-lg mb-3 flex items-center gap-2"><Users className="w-5 h-5 text-blue-500"/>{t.practiceTitle}</h3><ul className="space-y-1.5 text-sm text-gray-600">{t.practiceItems.map((tx,i)=><li key={i}>• {tx}</li>)}</ul></div>
       <div className="bg-red-50 border border-red-100 rounded-xl p-5"><h3 className="font-bold text-lg mb-3 text-red-900">{t.pitfallsTitle}</h3><div className="space-y-2 text-sm">{t.pitfallItems.map((a,i)=><div key={i}><strong className="text-red-700">{t.pitfallWord}</strong> {a[0]} — <strong>{t.solutionWord}</strong> {a[1]}</div>)}</div></div>
@@ -712,7 +934,7 @@ export default function App() {
       <button onClick={()=>setUv("list")} className="text-sm text-blue-600 hover:underline">{t.back}</button>
       <div className="bg-white border rounded-xl p-6 shadow-sm">
         <div className="flex items-start justify-between flex-wrap gap-3">
-          <div className="flex items-center gap-4"><Av user={users[ut]} size="lg"/><div><h2 className="text-xl font-bold text-gray-800">{users[ut].name}</h2>{users[ut].title&&<p className="text-purple-600 font-medium text-sm">{users[ut].title}</p>}{users[ut].organization&&<p className="text-gray-500 text-sm">{users[ut].organization}</p>}<div className="mt-1"><Bdg role={users[ut].role}/></div></div></div>
+          <div className="flex items-center gap-4"><Av user={users[ut]} size="lg"/><div><h2 className="text-xl font-bold text-gray-800">{users[ut].name}</h2>{users[ut].title&&<p className="text-purple-600 font-medium text-sm">{users[ut].title}</p>}{users[ut].organization&&<p className="text-gray-500 text-sm">{users[ut].organization}</p>}<div className="mt-1"><Bdg role={users[ut].role} t={t}/></div></div></div>
           <div className="flex gap-2">
             <button onClick={()=>{setUf({...users[ut],password:""});setUv("edit");setUe("");}} className="flex items-center gap-1.5 text-sm bg-blue-50 hover:bg-blue-100 text-blue-700 px-3 py-1.5 rounded-lg"><Edit2 className="w-4 h-4"/>{t.edit}</button>
             {users[ut].username!==me.username&&<button onClick={()=>setDc(ut)} className="flex items-center gap-1.5 text-sm bg-red-50 hover:bg-red-100 text-red-600 px-3 py-1.5 rounded-lg"><Trash2 className="w-4 h-4"/>{t.del}</button>}
@@ -720,7 +942,7 @@ export default function App() {
         </div>
         <div className="mt-5 grid grid-cols-2 gap-3">
           {[[t.username,users[ut].username],[t.email,users[ut].email],[t.organization,users[ut].organization||"—"]].map(a=><div key={a[0]} className="bg-gray-50 rounded-lg p-3"><p className="text-gray-400 text-xs mb-1">{a[0]}</p><p className="font-medium text-gray-700 text-sm">{a[1]}</p></div>)}
-          <div className="bg-gray-50 rounded-lg p-3"><p className="text-gray-400 text-xs mb-1">{t.roleWord}</p><Bdg role={users[ut].role}/></div>
+          <div className="bg-gray-50 rounded-lg p-3"><p className="text-gray-400 text-xs mb-1">{t.roleWord}</p><Bdg role={users[ut].role} t={t}/></div>
         </div>
         {users[ut].description&&<div className="mt-3 bg-gray-50 rounded-lg p-3 text-sm text-gray-600">{users[ut].description}</div>}
       </div>
@@ -741,7 +963,7 @@ export default function App() {
             <div key={a[1]}><label className="block text-sm font-semibold text-gray-700 mb-1">{a[0]}</label><input type={a[2]} value={uf[a[1]]||""} onChange={e=>{const v=e.target.value;setUf(f=>({...f,[a[1]]:v}));}} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/></div>
           ))}
           <div><label className="block text-sm font-semibold text-gray-700 mb-1">{uv==="edit"?t.fNewPassword:t.fPassword}</label><div className="relative"><input type={sp?"text":"password"} value={uf.password} onChange={e=>{const v=e.target.value;setUf(f=>({...f,password:v}));}} placeholder={uv==="edit"?t.keepCurrent:t.minChars} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none pr-10"/><button type="button" onClick={()=>setSp(v=>!v)} className="absolute right-3 top-2.5 text-gray-400">{sp?<EyeOff className="w-4 h-4"/>:<Eye className="w-4 h-4"/>}</button></div></div>
-          <div><label className="block text-sm font-semibold text-gray-700 mb-1">{t.fRole}</label><select value={uf.role} onChange={e=>{const v=e.target.value;setUf(f=>({...f,role:v}));}} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none bg-white">{ROLES.map(r=><option key={r} value={r}>{r}</option>)}</select></div>
+          <div><label className="block text-sm font-semibold text-gray-700 mb-1">{t.fRole}</label><select value={uf.role} onChange={e=>{const v=e.target.value;setUf(f=>({...f,role:v}));}} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none bg-white">{ROLES.map(r=><option key={r} value={r}>{t.roleNames[r]}</option>)}</select></div>
         </div>
         <div><label className="block text-sm font-semibold text-gray-700 mb-1">{t.fBio}</label><textarea value={uf.description||""} onChange={e=>{const v=e.target.value;setUf(f=>({...f,description:v}));}} rows="2" className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none resize-none"/></div>
         {ue&&<div className="bg-red-50 border border-red-200 rounded-lg px-4 py-2 text-red-700 text-sm">{ue}</div>}
@@ -754,15 +976,15 @@ export default function App() {
   const uList=(tab==="users"&&me.role==="admin"&&uv==="list")?(
     <div className="space-y-4">
       <div className="flex items-center justify-between"><div><h2 className="text-xl font-bold text-gray-800">{t.userMgmt}</h2><p className="text-sm text-gray-500">{Object.keys(users).length} {t.usersWord}</p></div><button onClick={()=>{setUf(EF());setUe("");setUv("create");}} className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90"><Plus className="w-4 h-4"/>{t.addUser}</button></div>
-      <div className="flex gap-3 flex-wrap"><input value={uq} onChange={e=>setUq(e.target.value)} placeholder={t.searchPlaceholder} className="flex-1 min-w-48 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/><select value={ur} onChange={e=>setUr(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none bg-white"><option value="all">{t.allRoles}</option>{ROLES.map(r=><option key={r} value={r}>{r}</option>)}</select></div>
-      <div className="grid grid-cols-4 gap-3">{ROLES.map(r=>{const c=Object.values(users).filter(u=>u.role===r).length;return <div key={r} className={"rounded-lg p-3 text-center border "+(RC[r]||"")}><div className="font-mono text-2xl font-semibold">{c}</div><div className="text-xs capitalize">{r}{c!==1?"s":""}</div></div>;})}</div>
+      <div className="flex gap-3 flex-wrap"><input value={uq} onChange={e=>setUq(e.target.value)} placeholder={t.searchPlaceholder} className="flex-1 min-w-48 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/><select value={ur} onChange={e=>setUr(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none bg-white"><option value="all">{t.allRoles}</option>{ROLES.map(r=><option key={r} value={r}>{t.roleNames[r]}</option>)}</select></div>
+      <div className="grid grid-cols-4 gap-3">{ROLES.map(r=>{const c=Object.values(users).filter(u=>u.role===r).length;return <div key={r} className={"rounded-lg p-3 text-center border "+(RC[r]||"")}><div className="font-mono text-2xl font-semibold">{c}</div><div className="text-xs">{c!==1?t.roleNamesPl[r]:t.roleNames[r]}</div></div>;})}</div>
       <div className="space-y-2">
         {fu.length===0&&<div className="text-center py-10 text-gray-400 text-sm">{t.noUsersMatch}</div>}
         {fu.map(u=>(
           <div key={u.username} className="bg-white border rounded-xl p-4 flex items-center gap-4 hover:shadow-sm">
             <Av user={u} size="md"/>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 flex-wrap"><span className="font-semibold text-gray-800 truncate">{u.name}</span><Bdg role={u.role}/>{u.username===me.username&&<span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">{t.youTag}</span>}</div>
+              <div className="flex items-center gap-2 flex-wrap"><span className="font-semibold text-gray-800 truncate">{u.name}</span><Bdg role={u.role} t={t}/>{u.username===me.username&&<span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">{t.youTag}</span>}</div>
               <p className="text-sm text-gray-500 truncate">@{u.username} · {u.email}</p>
             </div>
             <div className="flex gap-2 flex-shrink-0">
@@ -786,10 +1008,13 @@ export default function App() {
         {partDash}
         {currTab}
         {studyTab}
-        {tab==="coach"&&(
-          <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">{t.ai.loadingCoach}</div>}>
-            <CoachPanel user={me} lang={lang} setLang={setLang} t={t}/>
-          </Suspense>
+        {tab==="development"&&<PersonalDevelopment t={t} lang={lang} done={prog.pd||{}} onToggle={id=>tp("pd",id)} selected={pdSel} onSelect={setPdSel} onCoach={()=>{setTab("coach");window.scrollTo(0,0);}} view={pdView} onView={setPdView} speech={spSel} onSpeech={setSpSel} spDone={prog.sp||{}} onSpToggle={id=>tp("sp",id)} skDone={prog.sk||{}} onSkToggle={id=>tp("sk",id)} skStage={skStage} onSkStage={setSkStage}/>}
+        {coachOpened&&(
+          <div hidden={tab!=="coach"}>
+            <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">{t.ai.loadingCoach}</div>}>
+              <CoachPanel user={me} lang={lang} setLang={setLang} t={t} progress={prog} onNavigate={coachNavigate}/>
+            </Suspense>
+          </div>
         )}
         {resTab}
         {driveTab}

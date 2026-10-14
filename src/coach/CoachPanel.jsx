@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { APIConnectionError } from "@anthropic-ai/sdk";
 import { KeyRound, CheckCircle2 } from "lucide-react";
 import AICoachModule from "./AICoachModule.jsx";
 import { aiMode, connectWithKey, disconnectKey } from "./aiClient.js";
+import { buildPortalMap, NAV_TABS } from "./portalContext.js";
 import { SM, CI } from "../data.js";
+import { COMPETENCIES } from "../competencies.js";
+import { SPEAKERS } from "../development.js";
+import { SPEECHES } from "../speeches.js";
+import { SKILLS } from "../skills.js";
 
 const FR_TITLES = {
   m1: "Connaissance de soi et image personnelle",
@@ -29,7 +34,7 @@ const COACH_MODULES = [...SM, ...CI].map(m => {
     : { en: "Communication: " + m.title, fr: "Communication : " + fr };
 });
 
-function Connection({ t, mode, onChange }) {
+function Connection({ t, mode, onChange, notice }) {
   const [key, setKey] = useState("");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -64,6 +69,7 @@ function Connection({ t, mode, onChange }) {
         <div className="bg-orange-100 p-2 rounded-lg flex-shrink-0"><KeyRound className="w-5 h-5 text-orange-700"/></div>
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-800">{t.offTitle}</h3>
+          {notice&&<p role="status" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mt-2">{notice}</p>}
           <p className="text-sm text-gray-600 mt-1">{t.offBody}</p>
           <label htmlFor="ai-key" className="block text-xs font-semibold text-gray-600 mt-4 mb-1">{t.keyLabel}</label>
           <div className="flex gap-2 flex-wrap">
@@ -79,16 +85,65 @@ function Connection({ t, mode, onChange }) {
   );
 }
 
-export default function CoachPanel({ user, lang, setLang, t }) {
+// Button label for a [[open:target]] link, or null if the target is unknown.
+function navLabel(target, lang, t) {
+  const [kind, id] = target.split(":");
+  if (kind === "tab") return NAV_TABS[id] ? t.nav[id] : null;
+  if (kind === "module") {
+    const m = [...SM, ...CI].find(x => x.id === id);
+    return m ? (lang === "fr" ? FR_TITLES[m.id] || m.title : m.title) : null;
+  }
+  if (kind === "competency") {
+    const i = COMPETENCIES.findIndex(c => c.id === id);
+    return i >= 0 ? t.compItems[i] : null;
+  }
+  if (kind === "speaker") {
+    const s = SPEAKERS.find(x => x.id === id);
+    return s ? s.name + " – " + (s.theme[lang] || s.theme.en) : null;
+  }
+  if (kind === "skill") {
+    const m = SKILLS.find(x => x.id === id);
+    return m ? (m.title[lang] || m.title.en) : null;
+  }
+  if (kind === "speech") {
+    const s = SPEECHES.find(x => x.id === id);
+    return s ? (lang === "fr" ? "Discours : " : "Speech: ") + (s.title[lang] || s.title.en) : null;
+  }
+  return null;
+}
+
+export default function CoachPanel({ user, lang, setLang, t, progress, onNavigate }) {
   const [mode, setMode] = useState(aiMode);
+  const [notice, setNotice] = useState("");
+  const portalMap = useMemo(() => buildPortalMap(user, progress), [user, progress]);
+
+  // Called from the coach when a request needs a (new) connection. A key the
+  // API rejected is removed so the connection form comes back.
+  function onConnect(kind) {
+    if (kind === "auth" && aiMode() === "key") {
+      disconnectKey();
+      setNotice(t.ai.keyRejected);
+    }
+    setMode(aiMode());
+    setTimeout(() => {
+      const el = document.getElementById("ai-key");
+      if (el) { el.scrollIntoView({ block: "center", behavior: "smooth" }); el.focus(); }
+    }, 50);
+  }
+
   return (
     <div>
-      <Connection t={t.ai} mode={mode} onChange={()=>setMode(aiMode())}/>
+      <Connection t={t.ai} mode={mode} notice={notice} onChange={()=>{ setNotice(""); setMode(aiMode()); }}/>
       <AICoachModule
         currentUser={{ username: user.username, name: user.name, role: user.role }}
         modules={COACH_MODULES}
         language={lang}
         onLanguageChange={setLang}
+        portalMap={portalMap}
+        navLabel={target => navLabel(target, lang, t)}
+        onNavigate={onNavigate}
+        aiReady={mode !== "off"}
+        onConnect={onConnect}
         embedded
       />
     </div>

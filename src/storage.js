@@ -48,6 +48,21 @@ export async function clearSession() {
   try { localStorage.removeItem(PREFIX + "portal_session"); } catch (e) {}
 }
 
+// Moves one account's per-user data to another username, without
+// overwriting anything the new account already has. Local data only.
+const USER_PREFIXES = ["prog_", "sessions_", "goals_", "notes_", "coach:", "coachplan:"];
+
+export function moveUserData(from, to) {
+  USER_PREFIXES.forEach(p => {
+    const a = PREFIX + p + from, b = PREFIX + p + to;
+    try {
+      const v = localStorage.getItem(a);
+      if (v != null && localStorage.getItem(b) == null) localStorage.setItem(b, v);
+      localStorage.removeItem(a);
+    } catch (e) {}
+  });
+}
+
 // Per-user shared state (progress, sessions, goals, notes)
 export async function loadJSON(key, fallback) { return sharedGet(key, fallback); }
 export function saveJSON(key, value) { sharedSet(key, value); }
@@ -79,4 +94,9 @@ export async function storeListKeys(prefix, shared) {
     }
   } catch (e) {}
   return out;
+}
+
+// Removes everything stored for a user (used when an admin deletes the account).
+export function deleteUserData(username) {
+  USER_PREFIXES.forEach(p => { try { localStorage.removeItem(PREFIX + p + username); } catch (e) {} });
 }

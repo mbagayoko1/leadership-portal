@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { createPortal } from "react-dom";
-import { aiComplete, aiStream } from "./aiClient.js";
+import { aiComplete, aiStream, aiErrorKind } from "./aiClient.js";
 import { storeGet, storeSet, storeDelete, storeListKeys } from "../storage.js";
+import { COMPANION_INSTR, PORTAL_RULES, LIVE_LINK_RULE, stripNav, navTargets, speechMeta, speechNote, deliverySummary } from "./companion.js";
 
 /*
   AI Coach module (bilingual English / French)
@@ -20,6 +21,14 @@ import { storeGet, storeSet, storeDelete, storeListKeys } from "../storage.js";
                reports switches through this callback.
   embedded:    optional. Drops the outer padding and background so the module
                sits inside a host page.
+  portalMap:   optional text describing the host portal's content and the
+               participant's progress, with link targets in [square brackets].
+               Added to coaching prompts (see companion.js).
+  onNavigate / navLabel: optional. navLabel(target) returns a button label,
+               or null for an unknown target; onNavigate(target) opens it.
+  aiReady / onConnect: optional. aiReady=false means no AI connection is set
+               up yet; onConnect(kind) asks the host to show its connection
+               form (kind "auth" means the current key was rejected).
 
   Voice conversation (Web Speech API, no extra services)
     The "Voice" switch in the header turns on hands-free conversation: replies
@@ -124,7 +133,15 @@ const T = {
     bargeHint: "If the coach keeps stopping itself, use headphones or turn voice interrupt off and tap to interrupt.",
     you: "You",
     liveUnsupported: "Live calls need a browser that can listen, such as Chrome, Edge or Safari.",
-    liveError: "The coach could not answer. Keep talking to try again, or end the call.",
+    liveError: "The coach could not answer. Try again, keep talking, or end the call.",
+    err_not_connected: "The AI Coach is not connected yet. Paste your Anthropic API key at the top of this tab, then try again.",
+    err_auth: "Your API key was not accepted. It may have been deleted or mistyped. Connect a new key, then try again.",
+    err_billing: "Your Anthropic account has run out of credit. Add credit in the Anthropic Console, then try again.",
+    err_busy: "Claude is busy right now. Wait a few seconds, then try again.",
+    err_network: "Claude could not be reached. Check your internet connection, then try again.",
+    err_refusal: "The coach could not respond to that. Try rephrasing it.",
+    tryAgain: "Try again",
+    connectAi: "Connect the AI Coach",
     orbLabel: "Tap to interrupt or to send what you said",
     keysHint: "Space: interrupt or send. Esc: end call.",
     voiceOn: "Voice on",
@@ -140,6 +157,10 @@ const T = {
     tapToTalk: "Voice conversation is on. Select Speak and talk; replies are read aloud.",
     ttsOnly: "Replies are read aloud, but this browser cannot listen. Type your messages.",
     listen: "Listen",
+    speechStat: function (s) {
+      const f = Object.keys(s.fillers).reduce(function (n, k) { return n + s.fillers[k]; }, 0);
+      return "Spoken: " + s.words + " words" + (s.secs >= 4 ? ", about " + Math.round(s.words / s.secs * 60) + " words/min" : "") + ", " + f + " possible filler" + (f === 1 ? "" : "s");
+    },
     listenFeedback: "Listen to feedback",
     stopListening: "Stop reading",
     voiceDenied: "Microphone access is blocked. Allow the microphone for this page in your browser settings, then select Speak again.",
@@ -313,7 +334,15 @@ const T = {
     bargeHint: "Si le coach s'interrompt tout seul, utilisez des \u00e9couteurs ou d\u00e9sactivez l'interruption vocale et touchez pour interrompre.",
     you: "Vous",
     liveUnsupported: "Les appels en direct n\u00e9cessitent un navigateur capable d'\u00e9couter, comme Chrome, Edge ou Safari.",
-    liveError: "Le coach n'a pas pu r\u00e9pondre. Continuez \u00e0 parler pour r\u00e9essayer, ou raccrochez.",
+    liveError: "Le coach n'a pas pu r\u00e9pondre. R\u00e9essayez, continuez \u00e0 parler ou raccrochez.",
+    err_not_connected: "Le Coach IA n'est pas encore connect\u00e9. Collez votre cl\u00e9 API Anthropic en haut de cet onglet, puis r\u00e9essayez.",
+    err_auth: "Votre cl\u00e9 API n'a pas \u00e9t\u00e9 accept\u00e9e. Elle a peut-\u00eatre \u00e9t\u00e9 supprim\u00e9e ou mal saisie. Connectez une nouvelle cl\u00e9, puis r\u00e9essayez.",
+    err_billing: "Votre compte Anthropic n'a plus de cr\u00e9dit. Ajoutez du cr\u00e9dit dans la console Anthropic, puis r\u00e9essayez.",
+    err_busy: "Claude est tr\u00e8s sollicit\u00e9 en ce moment. Patientez quelques secondes, puis r\u00e9essayez.",
+    err_network: "Impossible de joindre Claude. V\u00e9rifiez votre connexion Internet, puis r\u00e9essayez.",
+    err_refusal: "Le coach n'a pas pu r\u00e9pondre \u00e0 cela. Essayez de le reformuler.",
+    tryAgain: "R\u00e9essayer",
+    connectAi: "Connecter le Coach IA",
     orbLabel: "Touchez pour interrompre ou pour envoyer ce que vous avez dit",
     keysHint: "Espace : interrompre ou envoyer. \u00c9chap : raccrocher.",
     voiceOn: "Voix activ\u00e9e",
@@ -329,6 +358,10 @@ const T = {
     tapToTalk: "La conversation vocale est activ\u00e9e. Cliquez sur Parler et exprimez-vous ; les r\u00e9ponses sont lues \u00e0 voix haute.",
     ttsOnly: "Les r\u00e9ponses sont lues \u00e0 voix haute, mais ce navigateur ne peut pas vous \u00e9couter. Tapez vos messages.",
     listen: "\u00c9couter",
+    speechStat: function (s) {
+      const f = Object.keys(s.fillers).reduce(function (n, k) { return n + s.fillers[k]; }, 0);
+      return "\u00c0 l'oral : " + s.words + " mots" + (s.secs >= 4 ? ", environ " + Math.round(s.words / s.secs * 60) + " mots/min" : "") + ", " + f + " tic" + (f > 1 ? "s" : "") + " de langage possible" + (f > 1 ? "s" : "");
+    },
     listenFeedback: "\u00c9couter le retour",
     stopListening: "Arr\u00eater la lecture",
     voiceDenied: "L'acc\u00e8s au microphone est bloqu\u00e9. Autorisez le microphone pour cette page dans les param\u00e8tres du navigateur, puis cliquez de nouveau sur Parler.",
@@ -479,6 +512,19 @@ const DEFAULT_MODULES = [
 ];
 
 const COACH_MODES = [
+  {
+    id: "companion",
+    label: { en: "Leadership companion", fr: "Compagnon de leadership" },
+    desc: {
+      en: "Find your way through the portal, plan your next step, and get live feedback on your voice and vocabulary.",
+      fr: "Orientez-vous dans le portail, préparez votre prochaine étape et recevez un retour en direct sur votre voix et votre vocabulaire."
+    },
+    greet: {
+      en: "I know the programme modules, your progress and the resources in this portal. What are you working on this week? You can also say a key message out loud, and I will give you feedback on your delivery and wording.",
+      fr: "Je connais les modules du programme, votre progression et les ressources de ce portail. Sur quoi travaillez-vous cette semaine ? Vous pouvez aussi prononcer un message clé à voix haute : je vous ferai un retour sur votre expression orale et votre vocabulaire."
+    },
+    instr: COMPANION_INSTR
+  },
   {
     id: "reflect",
     label: { en: "Reflect", fr: "R\u00e9flexion" },
@@ -669,6 +715,10 @@ const CSS = `
 
 const LangCtx = React.createContext("en");
 
+/* Host portal integration: the map given to the model, and how to open a
+   link target and label its button. All optional. */
+const PortalCtx = React.createContext({ map: "", navigate: null, label: null, ready: true, connect: null });
+
 function useLang() {
   return useContext(LangCtx);
 }
@@ -767,7 +817,7 @@ function speakText(text, lang, multi, onDone) {
   const tag = lang === "fr" ? "fr-FR" : "en-GB";
   const speakers = {};
   const segs = [];
-  String(text || "").split(/\n+/).forEach(function (line) {
+  stripNav(text).split(/\n+/).forEach(function (line) {
     let body = line.replace(/^\s*[-*]\s+/, "").replace(/[*_#`]/g, "").trim();
     if (!body) { return; }
     let idx = 0;
@@ -829,9 +879,20 @@ function categoryLabel(id, lang) {
   return c ? L(c.label, lang) : id;
 }
 
+/* A failed AI request as shown to the person: what went wrong and which
+   action fixes it. `fallback` is the message key for an unknown cause. */
+function aiError(t, e, fallback) {
+  const kind = aiErrorKind(e);
+  return { kind: kind, text: kind === "other" ? t(fallback) : t("err_" + kind) };
+}
+
+function needsConnect(err) {
+  return !!err && (err.kind === "not_connected" || err.kind === "auth");
+}
+
 function toApi(msgs, max) {
   let list = msgs.filter(function (m) { return !m.local; }).map(function (m) {
-    return { role: m.role, content: m.content };
+    return { role: m.role, content: m.content + (m.role === "user" ? speechNote(m.speech) : "") };
   });
   if (max && list.length > max) { list = list.slice(list.length - max); }
   while (list.length && list[0].role !== "user") { list = list.slice(1); }
@@ -956,7 +1017,7 @@ function resolveScenario(s, lang) {
 
 /* ---------------- prompts ---------------- */
 
-function coachSystem(user, modeId, moduleName, goals, lang) {
+function coachSystem(user, modeId, moduleName, goals, lang, portal) {
   const m = findMode(modeId);
   const goalText = goals.length
     ? goals.slice(0, 6).map(function (g) { return "- " + g.title + " (" + goalProgress(g) + "% done)"; }).join("\n")
@@ -971,7 +1032,7 @@ function coachSystem(user, modeId, moduleName, goals, lang) {
     "Style: warm, direct and concise, usually under 120 words. Ask one question at a time. Reflect back what you hear before moving on. Do not lecture or give long lists. Give advice only when asked or when it clearly helps, and keep it concrete and grounded in the UN and West and Central African working context: multilateral settings, government counterparts, protocol and hierarchy, multilingual teams, limited time.",
     "Use plain text only. No markdown headings or bold. Short lines starting with '- ' are fine when a list is truly needed.",
     "If the person shares confidential details about named colleagues, gently suggest keeping them general. If they express serious distress, respond with care and encourage them to talk to their mentor, a trusted colleague or the UN staff counsellor."
-  ].join("\n\n");
+  ].concat(portal ? [PORTAL_RULES, portal] : []).join("\n\n");
 }
 
 function wrapSystem(lang) {
@@ -993,6 +1054,7 @@ function roleplaySystem(s, lang) {
 function feedbackSystem(lang) {
   return `You are an expert communication and leadership coach assessing a role-play by a UNFPA WCARO staff member (the learner). Assess only the learner's lines. Be specific, fair and encouraging, and refer to what they actually said. Scores are integers from 1 to 10. Respond ONLY with valid JSON, no markdown, no other text, in exactly this shape:
 {"overall": 7, "headline": "one-sentence verdict", "scores": {"clarity": 7, "structure": 6, "audience": 7, "presence": 8, "concision": 6}, "strengths": ["specific strength", "specific strength"], "improvements": ["specific improvement", "specific improvement"], "rewrite": {"original": "a short line the learner actually said, quoted exactly", "better": "a stronger version of that line, in the same language as the scene"}, "nextDrill": "one specific exercise to practise next"}
+If delivery data is included, the learner spoke their lines aloud: let pace and fillers inform the presence and concision scores, and make one improvement about delivery when the data shows a clear issue (target 140 to 160 words per minute, no fillers). If their wording is weak for the setting, use the rewrite to show stronger vocabulary.
 ` + jsonLanguageRule(lang);
 }
 
@@ -1107,7 +1169,30 @@ function SpeakerIcon(props) {
 
 function Bubble(props) {
   const t = useT();
+  const portal = useContext(PortalCtx);
   const mine = props.role === "user";
+  const shown = mine ? props.text : stripNav(props.text);
+  const targets = !mine && portal.navigate && portal.label
+    ? navTargets(props.text).filter(function (tg) { return !!portal.label(tg); })
+    : [];
+  const sp = mine ? props.speech : null;
+  const links = targets.length ? (
+    <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8, whiteSpace: "normal" }}>
+      {targets.map(function (tg) {
+        const b = (
+          <button
+            key={tg}
+            type="button"
+            onClick={function () { portal.navigate(tg); }}
+            style={{ border: "1px solid " + C.orange, background: C.orangeSoft, color: C.dark, borderRadius: 99, padding: "4px 12px", fontFamily: FONT_B, fontSize: 12, fontWeight: 600, cursor: "pointer" }}
+          >
+            {portal.label(tg)} {"→"}
+          </button>
+        );
+        return b;
+      })}
+    </div>
+  ) : null;
   const el = (
     <div style={{ display: "flex", justifyContent: mine ? "flex-end" : "flex-start", marginBottom: 10 }}>
       <div
@@ -1125,7 +1210,9 @@ function Bubble(props) {
         }}
       >
         {props.label ? <div style={{ fontSize: 12, fontWeight: 700, marginBottom: 3, opacity: 0.8 }}>{props.label}</div> : null}
-        {props.text}
+        {shown}
+        {links}
+        {sp && sp.words ? <div style={{ fontSize: 11, opacity: 0.8, marginTop: 4 }}>{t("speechStat", sp)}</div> : null}
         {props.onListen ? (
           <div style={{ marginTop: 6 }}>
             <button
@@ -1165,6 +1252,7 @@ function ChatBox(props) {
   const t = useT();
   const lang = useLang();
   const voice = useContext(VoiceCtx);
+  const portal = useContext(PortalCtx);
   const [input, setInput] = useState("");
   const [listening, setListening] = useState(false);
   const [speaking, setSpeaking] = useState(false);
@@ -1177,8 +1265,17 @@ function ChatBox(props) {
   const speakTokenRef = useRef(0);
   const spokenRef = useRef(props.speakInitial ? 0 : props.messages.length);
   const listenRef = useRef(null);
+  const speechRef = useRef({ start: 0, last: 0 });
   const live = useRef({});
   live.current = { input: input, props: props, voiceOn: voice.on, stt: voice.stt, tts: voice.tts, lang: lang };
+
+  /* Delivery measurements for a message that was spoken rather than typed:
+     the time between the first and last recognition results. */
+  function takeSpeech(text) {
+    const s = speechRef.current;
+    speechRef.current = { start: 0, last: 0 };
+    return s.start ? speechMeta(text, (s.last - s.start) / 1000) : null;
+  }
 
   useEffect(function () {
     if (boxRef.current) { boxRef.current.scrollTop = boxRef.current.scrollHeight; }
@@ -1270,6 +1367,9 @@ function ChatBox(props) {
           interim += r[0].transcript;
         }
       }
+      const now = Date.now();
+      if (!speechRef.current.start) { speechRef.current.start = now; }
+      speechRef.current.last = now;
       setInput((finalRef.current + interim).replace(/^\s+/, ""));
       armSilence(true);
     };
@@ -1292,7 +1392,7 @@ function ChatBox(props) {
         if (txt && !cur.props.busy && !cur.props.disabled) {
           setInput("");
           finalRef.current = "";
-          cur.props.onSend(txt);
+          cur.props.onSend(txt, takeSpeech(txt));
         }
       }
     };
@@ -1333,7 +1433,7 @@ function ChatBox(props) {
     }
     setInput("");
     finalRef.current = "";
-    props.onSend(v);
+    props.onSend(v, takeSpeech(v));
   }
 
   function onKey(e) {
@@ -1353,6 +1453,19 @@ function ChatBox(props) {
   } else if (voice.on) {
     status = { text: voice.stt ? t("tapToTalk") : t("ttsOnly"), color: C.muted, live: false };
   }
+
+  const err = props.error ? (typeof props.error === "string" ? { kind: "other", text: props.error } : props.error) : null;
+  const errBox = err ? (
+    <div role="alert" style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 8, padding: "8px 10px", borderRadius: 8, background: "#FBF0EE", border: "1px solid #EFC7C2" }}>
+      <span style={{ flex: 1, minWidth: 200, color: C.red, fontSize: 13, lineHeight: 1.45 }}>{err.text}</span>
+      {needsConnect(err) && portal.connect ? (
+        <Btn kind="primary" small onClick={function () { portal.connect(err.kind); }}>{t("connectAi")}</Btn>
+      ) : null}
+      {props.onRetry && err.kind !== "refusal" ? (
+        <Btn kind="ghost" small onClick={props.onRetry} disabled={props.busy}>{t("tryAgain")}</Btn>
+      ) : null}
+    </div>
+  ) : null;
 
   const statusBar = status ? (
     <div role="status" style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 10, fontSize: 13, color: status.color, lineHeight: 1.45 }}>
@@ -1403,6 +1516,7 @@ function ChatBox(props) {
               key={i}
               role={m.role}
               text={m.content}
+              speech={m.speech}
               label={props.labelFor ? props.labelFor(m.role) : null}
               onListen={canListen ? function () { speakMessage(m.content, false); } : null}
             />
@@ -1411,13 +1525,17 @@ function ChatBox(props) {
         })}
         {props.busy ? <Typing /> : null}
       </div>
-      {props.error ? <div role="alert" style={{ color: C.red, fontSize: 13, marginTop: 8 }}>{props.error}</div> : null}
+      {errBox}
       {statusBar}
       <div style={{ display: "flex", gap: 8, marginTop: 10, alignItems: "flex-end" }}>
         {micButton}
         <textarea
           value={input}
-          onChange={function (e) { setInput(e.target.value); finalRef.current = e.target.value ? e.target.value + " " : ""; }}
+          onChange={function (e) {
+            setInput(e.target.value);
+            finalRef.current = e.target.value ? e.target.value + " " : "";
+            if (!e.target.value) { speechRef.current = { start: 0, last: 0 }; }
+          }}
           onKeyDown={onKey}
           rows={2}
           placeholder={props.placeholder}
@@ -1447,6 +1565,7 @@ const STOP_WORDS = ["stop", "wait", "sorry", "hold", "pardon", "attends", "atten
 function liveRules(lang) {
   return [
     "This is a live spoken conversation (a voice call). Your words are read aloud by a speech synthesiser.",
+    LIVE_LINK_RULE,
     "Speak naturally in short turns: usually 1 to 3 sentences and never more than about 60 words. No lists, bullet points, headings, emojis or symbols that sound odd when read aloud.",
     "The other person's words come from speech recognition and may contain transcription errors. Interpret them sensibly, and ask briefly if something is genuinely unclear.",
     "If one of your earlier turns ends with '...', you were interrupted at that point. Do not repeat what you said; respond to what the person says next.",
@@ -1531,6 +1650,8 @@ function LiveCall(props) {
   const [userLine, setUserLine] = useState("");
   const [aiLine, setAiLine] = useState("");
   const [err, setErr] = useState("");
+  const [errKind, setErrKind] = useState("");
+  const portal = useContext(PortalCtx);
   const [seconds, setSeconds] = useState(0);
 
   const R = useRef(null);
@@ -1541,7 +1662,7 @@ function LiveCall(props) {
       rec: null, silence: null, restart: null, controller: null, token: 0,
       queue: [], pending: "", streamDone: true, speakingNow: false,
       spoken: [], generated: "", committed: true, lastAssistant: "",
-      speaker: 0, speakerMap: {}, guard: null
+      speaker: 0, speakerMap: {}, guard: null, turnStart: 0, lastHeard: 0
     };
   }
   const r = R.current;
@@ -1594,7 +1715,7 @@ function LiveCall(props) {
         s = m[2];
       }
     }
-    const clean = s.replace(/[*_#`]/g, "").replace(/^\s*-\s+/, "").trim();
+    const clean = stripNav(s).replace(/[*_#`]/g, "").replace(/^\s*-\s+/, "").trim();
     r.speakingNow = true;
     setPh("speaking");
     setAiLine(clean);
@@ -1655,6 +1776,7 @@ function LiveCall(props) {
     r.lastAssistant = r.generated || r.lastAssistant;
     r.buffer = "";
     r.interim = "";
+    r.turnStart = 0;
     setUserLine("");
     setPh(r.muted ? "muted" : "listening");
     if (r.rec) {
@@ -1685,6 +1807,7 @@ function LiveCall(props) {
     r.committed = false;
     r.speakingNow = false;
     setErr("");
+    setErrKind("");
     setPh("thinking");
     setAiLine("");
     const p = propsRef.current;
@@ -1707,9 +1830,50 @@ function LiveCall(props) {
       if (tok !== r.token || (e && e.name === "AbortError")) { return; }
       r.streamDone = true;
       r.committed = true;
-      setErr(t("liveError"));
-      setPh(r.muted ? "muted" : "listening");
+      const info = aiError(t, e, "liveError");
+      setErr(info.text);
+      setErrKind(info.kind);
+      sayError(info.text, tok);
     }
+  }
+
+  /* Reads a failure aloud, so the person knows what happened without
+     looking at the screen. Spoken in the "speaking" phase, so talking over
+     it interrupts it and the microphone ignores its echo. */
+  function sayError(text, tok) {
+    const back = function () {
+      if (tok === r.token && r.phase === "speaking") { setPh(r.muted ? "muted" : "listening"); }
+    };
+    if (!hasTTS()) { setPh(r.muted ? "muted" : "listening"); return; }
+    r.generated = text;
+    r.lastAssistant = text;
+    r.spoken = [];
+    r.speakingNow = true;
+    setPh("speaking");
+    setAiLine("");
+    const u = new window.SpeechSynthesisUtterance(text);
+    u.lang = lang === "fr" ? "fr-FR" : "en-GB";
+    const voices = voicesFor(lang);
+    if (voices.length) { u.voice = voices[0]; }
+    u.onend = function () { r.speakingNow = false; back(); };
+    u.onerror = u.onend;
+    window.speechSynthesis.speak(u);
+  }
+
+  function retryTurn() {
+    const last = r.msgs[r.msgs.length - 1];
+    setErr("");
+    setErrKind("");
+    if (last && last.role === "user") {
+      stopSpeech();
+      respond();
+    }
+  }
+
+  function turnSpeech(text) {
+    const s = r.turnStart ? speechMeta(text, (r.lastHeard - r.turnStart) / 1000) : null;
+    r.turnStart = 0;
+    return s;
   }
 
   function commitUser(text) {
@@ -1717,7 +1881,7 @@ function LiveCall(props) {
     r.buffer = "";
     r.interim = "";
     setUserLine(text);
-    setMsgs(r.msgs.concat([{ role: "user", content: text }]));
+    setMsgs(r.msgs.concat([{ role: "user", content: text, speech: turnSpeech(text) }]));
     if (r.rec) {
       try { r.rec.abort(); } catch (e) { /* restarts on end */ }
     }
@@ -1743,6 +1907,7 @@ function LiveCall(props) {
     if (last && last.role === "user") {
       setMsgs(r.msgs.slice(0, -1));
       r.buffer = last.content;
+      if (last.speech) { r.turnStart = r.lastHeard - last.speech.secs * 1000; }
     }
   }
 
@@ -1803,6 +1968,9 @@ function LiveCall(props) {
       return;
     }
     if (wordCount(heard) >= 3 && isEcho(heard, current)) { return; }
+    const now = Date.now();
+    if (!r.turnStart) { r.turnStart = now; }
+    r.lastHeard = now;
     if (finals.trim()) { r.buffer = (r.buffer + " " + finals).trim(); }
     r.interim = interim;
     setUserLine((r.buffer + " " + interim).trim());
@@ -1919,7 +2087,7 @@ function LiveCall(props) {
     if (wasActive && pendingUser) {
       r.buffer = "";
       r.interim = "";
-      setMsgs(r.msgs.concat([{ role: "user", content: pendingUser }]));
+      setMsgs(r.msgs.concat([{ role: "user", content: pendingUser, speech: turnSpeech(pendingUser) }]));
     }
   }
 
@@ -1982,6 +2150,16 @@ function LiveCall(props) {
       </button>
       <div aria-live="polite" style={{ marginTop: 22, fontFamily: FONT_H, fontWeight: 700, fontSize: 18 }}>{phaseText}</div>
       {err ? <div role="alert" style={{ color: "#FFD1CC", fontSize: 14, marginTop: 10, maxWidth: 520, lineHeight: 1.5 }}>{err}</div> : null}
+      {err && errKind ? (
+        <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap", marginTop: 14 }}>
+          {needsConnect({ kind: errKind }) && portal.connect ? (
+            <button type="button" onClick={function () { const k = errKind; endCall(); portal.connect(k); }} style={Object.assign({}, ctrlBtn, { background: C.orange, border: "1px solid " + C.orange })}>{t("connectAi")}</button>
+          ) : null}
+          {errKind !== "refusal" ? (
+            <button type="button" onClick={retryTurn} style={ctrlBtn}>{t("tryAgain")}</button>
+          ) : null}
+        </div>
+      ) : null}
       {captions ? (
         <div style={{ marginTop: 26, minHeight: 110, width: "100%" }}>
           {aiLine && (phase === "speaking" || phase === "thinking") ? (
@@ -2058,7 +2236,9 @@ function CoachTab(props) {
   const lang = useLang();
   const data = props.data;
   const [activeId, setActiveId] = useState(null);
-  const [mode, setMode] = useState("reflect");
+  const [mode, setMode] = useState("companion");
+  const [failed, setFailed] = useState("");
+  const portal = useContext(PortalCtx);
   const [moduleIdx, setModuleIdx] = useState(0);
   const [busy, setBusy] = useState(false);
   const [wrapping, setWrapping] = useState(false);
@@ -2100,25 +2280,51 @@ function CoachTab(props) {
     setAdded(false);
   }
 
-  async function send(text) {
-    if (!session) { return; }
-    const msgs = session.messages.concat([{ role: "user", content: text }]);
-    patchSession(session.id, { messages: msgs });
+  // Asks the coach to answer `msgs`, whose last entry is the participant's.
+  async function reply(msgs) {
     setBusy(true);
     setError("");
+    setFailed("");
     try {
-      const reply = await callClaude(coachSystem(props.user, session.mode, session.module, data.goals, lang), toApi(msgs, 30), { tier: "quick" });
-      patchSession(session.id, { messages: msgs.concat([{ role: "assistant", content: reply }]) });
+      const answer = await callClaude(coachSystem(props.user, session.mode, session.module, data.goals, lang, portal.map), toApi(msgs, 30), { tier: "quick" });
+      patchSession(session.id, { messages: msgs.concat([{ role: "assistant", content: answer }]) });
     } catch (e) {
-      setError(t("errCoach"));
+      setError(aiError(t, e, "errCoach"));
+      setFailed("reply");
     }
     setBusy(false);
+  }
+
+  function send(text, speech) {
+    if (!session) { return; }
+    const msgs = session.messages.concat([{ role: "user", content: text, speech: speech || null }]);
+    patchSession(session.id, { messages: msgs });
+    reply(msgs);
+  }
+
+  function retry() {
+    if (!session) { return; }
+    if (failed === "wrap") { wrapUp(); return; }
+    const last = session.messages[session.messages.length - 1];
+    if (last && last.role === "user") { reply(session.messages); }
+  }
+
+  // A live call cannot answer without an AI connection: explain instead.
+  function openLive() {
+    setFreshId(null);
+    if (!portal.ready) {
+      setError({ kind: "not_connected", text: t("err_not_connected") });
+      setFailed("");
+      return;
+    }
+    setLiveOpen(true);
   }
 
   async function wrapUp() {
     if (!session) { return; }
     setWrapping(true);
     setError("");
+    setFailed("");
     try {
       const transcript = session.messages
         .filter(function (m) { return !m.local; })
@@ -2128,7 +2334,8 @@ function CoachTab(props) {
       const w = parseJSON(txt);
       patchSession(session.id, { wrap: w, title: w.title || session.title });
     } catch (e) {
-      setError(t("errWrap"));
+      setError(aiError(t, e, "errWrap"));
+      setFailed("wrap");
     }
     setWrapping(false);
   }
@@ -2137,7 +2344,7 @@ function CoachTab(props) {
     if (!session || !session.wrap) { return; }
     props.addGoal({
       title: session.wrap.goal || session.wrap.insight,
-      category: session.mode === "prepare" ? "Communication" : "Leadership",
+      category: session.mode === "prepare" || session.mode === "companion" ? "Communication" : "Leadership",
       why: session.wrap.insight,
       actions: session.wrap.actions || []
     });
@@ -2208,7 +2415,7 @@ function CoachTab(props) {
       </select>
       <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
         <Btn onClick={startSession}>{t("startSession")}</Btn>
-        <Btn kind="blue" onClick={function () { startSession(); setFreshId(null); setLiveOpen(true); }} disabled={!voice.stt} title={voice.stt ? t("startLiveCall") : t("liveUnsupported")} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+        <Btn kind="blue" onClick={function () { startSession(); openLive(); }} disabled={!voice.stt} title={voice.stt ? t("startLiveCall") : t("liveUnsupported")} style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
           <MicIcon size={16} />{t("startLiveCall")}
         </Btn>
       </div>
@@ -2230,7 +2437,7 @@ function CoachTab(props) {
               <Btn kind="blue" small onClick={wrapUp} disabled={wrapping || busy || userTurns < 2} title={t("wrapHint")}>
                 {wrapping ? t("summarising") : t("wrapUp")}
               </Btn>
-              <Btn kind="primary" small onClick={function () { setFreshId(null); setLiveOpen(true); }} disabled={!voice.stt || busy} title={voice.stt ? t("liveCall") : t("liveUnsupported")} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+              <Btn kind="primary" small onClick={openLive} disabled={!voice.stt || busy} title={voice.stt ? t("liveCall") : t("liveUnsupported")} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
                 <MicIcon size={14} />{t("liveCall")}
               </Btn>
               <Btn kind="danger" small onClick={function () { deleteSession(session.id); }}>{t("del")}</Btn>
@@ -2246,6 +2453,7 @@ function CoachTab(props) {
               busy={busy}
               error={error}
               onSend={send}
+              onRetry={failed ? retry : null}
               placeholder={t("replyPh")}
               labelFor={function (r) { return r === "user" ? null : t("coachLabel"); }}
             />
@@ -2279,7 +2487,7 @@ function CoachTab(props) {
       aiName={t("coachLabel")}
       messages={session.messages}
       speakFirst={userTurns === 0}
-      system={coachSystem(props.user, session.mode, session.module, data.goals, lang)}
+      system={coachSystem(props.user, session.mode, session.module, data.goals, lang, portal.map)}
       buildApi={function (msgs) { return toApi(msgs, 30); }}
       onUpdate={function (list) { patchSession(liveSessionId, { messages: list }); }}
       onClose={function () { setLiveOpen(false); }}
@@ -2405,6 +2613,8 @@ function PracticeTab(props) {
   const [evaluating, setEvaluating] = useState(false);
   const [showCustom, setShowCustom] = useState(false);
   const [form, setForm] = useState({ title: "", who: "", situation: "", aim: "" });
+  const [failed, setFailed] = useState("");
+  const portal = useContext(PortalCtx);
 
   const learnerTurns = messages.filter(function (m) { return m.role === "user"; }).length;
 
@@ -2422,11 +2632,13 @@ function PracticeTab(props) {
     }
     setMessages([]);
     setBusy(true);
+    setFailed("");
     try {
       const reply = await callClaude(roleplaySystem(s, lang), [{ role: "user", content: "Begin the scene. Say your first line." }], { tier: "quick" });
       setMessages([{ role: "assistant", content: reply }]);
     } catch (e) {
-      setError(t("errStart"));
+      setError(aiError(t, e, "errStart"));
+      setFailed("start");
     }
     setBusy(false);
   }
@@ -2438,37 +2650,64 @@ function PracticeTab(props) {
     return [{ role: "user", content: "Begin the scene. Say your first line." }].concat(history);
   }
 
-  async function send(text) {
-    const msgs = messages.concat([{ role: "user", content: text }]);
-    setMessages(msgs);
+  // Asks the other character to answer `msgs`, whose last entry is the learner's.
+  async function reply(msgs) {
     setBusy(true);
     setError("");
+    setFailed("");
     try {
-      const reply = await callClaude(roleplaySystem(scen, sceneLang), practiceApi(msgs), { tier: "quick" });
-      setMessages(msgs.concat([{ role: "assistant", content: reply }]));
+      const answer = await callClaude(roleplaySystem(scen, sceneLang), practiceApi(msgs), { tier: "quick" });
+      setMessages(msgs.concat([{ role: "assistant", content: answer }]));
     } catch (e) {
-      setError(t("errReply"));
+      setError(aiError(t, e, "errReply"));
+      setFailed("reply");
     }
     setBusy(false);
+  }
+
+  function send(text, speech) {
+    const msgs = messages.concat([{ role: "user", content: text, speech: speech || null }]);
+    setMessages(msgs);
+    reply(msgs);
+  }
+
+  function retry() {
+    if (failed === "start") { start(scen); return; }
+    if (failed === "feedback") { evaluate(); return; }
+    const last = messages[messages.length - 1];
+    if (last && last.role === "user") { reply(messages); }
+  }
+
+  function openLive() {
+    setFresh(false);
+    if (!portal.ready) {
+      setError({ kind: "not_connected", text: t("err_not_connected") });
+      setFailed("");
+      return;
+    }
+    setLiveOpen(true);
   }
 
   async function evaluate() {
     setEvaluating(true);
     setError("");
+    setFailed("");
     try {
       const transcript = messages
         .map(function (m) { return (m.role === "user" ? "Learner: " : scen.role + ": ") + m.content; })
         .join("\n\n");
+      const delivery = deliverySummary(messages.filter(function (m) { return m.role === "user"; }).map(function (m) { return m.speech; }));
       const txt = await callClaude(feedbackSystem(lang), [{
         role: "user",
-        content: "Scenario: " + scen.setting + "\nSkill being practised: " + scen.skill + "\n\nTranscript:\n\n" + transcript
+        content: "Scenario: " + scen.setting + "\nSkill being practised: " + scen.skill + "\n\nTranscript:\n\n" + transcript + (delivery ? "\n\n" + delivery : "")
       }]);
       const f = parseJSON(txt);
       setFeedback(f);
       const rec = { id: uid(), scenarioId: scen.id, title: scen.title, skill: scen.skill, lang: sceneLang, date: new Date().toISOString(), feedback: f };
       props.update(function (prev) { return { practice: [rec].concat(prev.practice) }; });
     } catch (e) {
-      setError(t("errFeedback"));
+      setError(aiError(t, e, "errFeedback"));
+      setFailed("feedback");
     }
     setEvaluating(false);
   }
@@ -2514,7 +2753,7 @@ function PracticeTab(props) {
             </div>
             <div style={{ display: "flex", gap: 8 }}>
               {!feedback ? (
-                <Btn kind="primary" small onClick={function () { setFresh(false); setLiveOpen(true); }} disabled={!voice.stt || busy || evaluating || !messages.length} title={voice.stt ? t("liveCall") : t("liveUnsupported")} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
+                <Btn kind="primary" small onClick={openLive} disabled={!voice.stt || busy || evaluating || !messages.length} title={voice.stt ? t("liveCall") : t("liveUnsupported")} style={{ display: "inline-flex", alignItems: "center", gap: 5 }}>
                   <MicIcon size={14} />{t("liveCall")}
                 </Btn>
               ) : null}
@@ -2537,6 +2776,7 @@ function PracticeTab(props) {
               busy={busy}
               error={error}
               onSend={send}
+              onRetry={failed ? retry : null}
               disabled={!!feedback || evaluating}
               placeholder={feedback ? t("sceneEnded") : t("linePh")}
               labelFor={function (r) { return r === "user" ? null : scen.role; }}
@@ -2775,7 +3015,7 @@ function PlanTab(props) {
       const out = parseJSON(txt);
       setSuggestions(out.goals || []);
     } catch (e) {
-      setError(t("errSuggest"));
+      setError(aiError(t, e, "errSuggest").text);
     }
     setSuggesting(false);
   }
@@ -2905,7 +3145,7 @@ function ProgressTab(props) {
       const txt = await callClaude(insightSystem(lang), [{ role: "user", content: JSON.stringify(payload) }]);
       props.update(function () { return { insight: { text: txt, date: new Date().toISOString() } }; });
     } catch (e) {
-      setError(t("errNote"));
+      setError(aiError(t, e, "errNote").text);
     }
     setBusy(false);
   }
@@ -3324,8 +3564,16 @@ export default function AICoachModule(props) {
   useEffect(function () { stopSpeech(); }, [lang]);
   const voiceOn = !!data.voice && (voiceSupport.stt || voiceSupport.tts);
   const voiceValue = { on: voiceOn, stt: voiceSupport.stt, tts: voiceSupport.tts };
+  const portalValue = {
+    map: props.portalMap || "",
+    navigate: props.onNavigate || null,
+    label: props.navLabel || null,
+    ready: props.aiReady !== false,
+    connect: props.onConnect || null
+  };
 
   const el = (
+    <PortalCtx.Provider value={portalValue}>
     <LangCtx.Provider value={lang}>
       <VoiceCtx.Provider value={voiceValue}>
       <CoachShell
@@ -3347,6 +3595,7 @@ export default function AICoachModule(props) {
       />
       </VoiceCtx.Provider>
     </LangCtx.Provider>
+    </PortalCtx.Provider>
   );
   return el;
 }

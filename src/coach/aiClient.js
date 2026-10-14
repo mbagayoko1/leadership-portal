@@ -4,7 +4,10 @@
 //    the browser. Use this for the cohort.
 //  - key: no proxy configured; a user pastes their own Anthropic API key,
 //    which is kept in this browser only and sent straight to Anthropic.
-import Anthropic, { APIUserAbortError } from "@anthropic-ai/sdk";
+import Anthropic, {
+  APIUserAbortError, APIConnectionError, AuthenticationError, PermissionDeniedError,
+  RateLimitError, BadRequestError, InternalServerError
+} from "@anthropic-ai/sdk";
 
 export const AI_MODEL = "claude-sonnet-4-6";
 const MAX_TOKENS = 16000;
@@ -52,6 +55,20 @@ export async function connectWithKey(key) {
 export function disconnectKey() {
   try { localStorage.removeItem(KEY_STORE); } catch (e) {}
   client = null;
+}
+
+// What went wrong, in terms a person can act on. The SDK has already retried
+// rate limits, overloads and dropped connections twice before we see them.
+//   not_connected | auth | billing | busy | network | refusal | other
+export function aiErrorKind(e) {
+  if (!e) return "other";
+  if (e.message === "ai_not_configured") return "not_connected";
+  if (e.message === "refusal") return "refusal";
+  if (e instanceof AuthenticationError || e instanceof PermissionDeniedError) return "auth";
+  if (e instanceof BadRequestError && /credit balance/i.test(e.message)) return "billing";
+  if (e instanceof RateLimitError || e instanceof InternalServerError) return "busy";
+  if (e instanceof APIConnectionError) return "network";
+  return "other";
 }
 
 // The coach module distinguishes a user-cancelled request by name.
