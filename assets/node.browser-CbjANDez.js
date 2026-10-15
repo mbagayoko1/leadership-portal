@@ -1,1 +1,0 @@
-import{A as o}from"./CoachPanel-DehZe_y6.js";import"./index-D6nyxJR_.js";import"./speeches-BNLrElau.js";import"./skills-HK27TQZK.js";function n(e){return new Proxy({},{get(i,t){if(typeof t!="symbol")throw new o(`\`${e}.${t}\` is not available in this environment; it needs a Node.js-compatible runtime`)}})}const p=n("fs"),f=n("path");export{p as fs,f as path};
