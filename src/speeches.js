@@ -69,6 +69,9 @@ export const DEVICES = {
 
 const q = (...keys) => keys.map(k => Q[k]);
 
+// The quote bank is shared with the speech builder, which may only use these lines.
+export const QUOTES = Q;
+
 export const SPEECHES = [
   {
     id: "s01", theme: "purpose",

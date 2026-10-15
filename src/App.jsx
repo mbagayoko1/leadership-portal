@@ -4,7 +4,8 @@ import {
   Calendar, Target, LogOut, User, Settings, Plus, Trash2, Edit2,
   Eye, EyeOff, Save, FolderOpen, ChevronRight, ChevronDown,
   Shield, Play, FileText, Link, ExternalLink, Sparkles,
-  UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone, Lightbulb
+  UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone, Lightbulb,
+  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder
 } from "lucide-react";
 import { RC, ROLES, TC, EF, IU, CUR, SM, CI, DS, DDC, DEFAULT_GOALS } from "./data.js";
 import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON, moveUserData, deleteUserData } from "./storage.js";
@@ -15,6 +16,7 @@ import { SPEAKERS, PD_PLAN } from "./development.js";
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
 const SpeechLibrary = lazy(() => import("./SpeechLibrary.jsx"));
 const SkillModule = lazy(() => import("./SkillModule.jsx"));
+const SpeechBuilder = lazy(() => import("./SpeechBuilder.jsx"));
 
 // ─── COMPONENTS ───────────────────────────────────────────────────────────────
 function Av({ user, size }) {
@@ -117,9 +119,9 @@ function CompetencyDetail({ t, lang, index }) {
     </div>
   );
 }
-function PersonalDevelopment({ t, lang, done, onToggle, selected, onSelect, onCoach, view, onView, speech, onSpeech, spDone, onSpToggle, skDone, onSkToggle, skStage, onSkStage }) {
+function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect, onCoach, onConnect, view, onView, speech, onSpeech, spDone, onSpToggle, skDone, onSkToggle, skStage, onSkStage }) {
   const p=t.pd;
-  const views=[["plan",p.viewPlan],["speeches",p.viewSpeeches],["facilitation",p.viewFac],["mc",p.viewMc],["money",p.viewMoney]];
+  const views=[["plan",p.viewPlan,Compass],["speeches",p.viewSpeeches,BookOpen],["builder",p.viewBuilder,PenLine],["facilitation",p.viewFac,Users],["mc",p.viewMc,Mic],["money",p.viewMoney,Wallet]];
   const sp=SPEAKERS[selected]||SPEAKERS[0];
   const nWeeks=PD_PLAN.filter(w=>done[w.id]).length;
   const nameOf=id=>(SPEAKERS.find(s=>s.id===id)||{}).name;
@@ -132,18 +134,24 @@ function PersonalDevelopment({ t, lang, done, onToggle, selected, onSelect, onCo
   return (
     <div className="space-y-4">
       <div className="ldp-card overflow-hidden">
-        <div className="ldp-phase-header"><h2 className="text-xl font-semibold">{p.title}</h2></div>
-        <div className="p-4 space-y-2">
-          <p className="text-sm text-gray-700">{p.sub}</p>
-          <p className="text-xs text-gray-500 bg-gray-50 border border-gray-100 rounded-lg px-3 py-2">{p.note}</p>
-          <div role="tablist" className="flex flex-wrap gap-1 pt-1">
-            {views.map(([k,label])=>(
-              <button key={k} role="tab" aria-selected={view===k} onClick={()=>onView(k)} className={"text-sm px-3 py-1.5 rounded-lg font-semibold transition-colors "+(view===k?"bg-purple-700 text-white":"text-gray-600 hover:bg-gray-100")}>{label}</button>
-            ))}
-          </div>
+        <div className="ldp-phase-header flex-col items-start gap-1">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orange-300">{t.nav.development}</p>
+          <h2 className="text-2xl font-semibold font-serif">{p.title}</h2>
+          <p className="text-sm text-blue-100/90 max-w-3xl">{p.sub}</p>
+        </div>
+        <div role="tablist" aria-label={p.title} className="flex overflow-x-auto no-scrollbar border-t border-white/10">
+          {views.map(([k,label,Icon])=>(
+            <button key={k} role="tab" aria-selected={view===k} onClick={()=>onView(k)} className={"flex items-center gap-2 px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(view===k?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-800")}>
+              <Icon className="w-4 h-4"/>{label}
+            </button>
+          ))}
         </div>
       </div>
-      {view==="speeches"?(
+      {view==="builder"?(
+        <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">…</div>}>
+          <SpeechBuilder t={t} lang={lang} user={user} onCoach={onCoach} onConnect={onConnect}/>
+        </Suspense>
+      ):view==="speeches"?(
         <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">…</div>}>
           <SpeechLibrary t={t} lang={lang} done={spDone} onToggle={onSpToggle} selected={speech} onSelect={onSpeech} onCoach={onCoach}/>
         </Suspense>
@@ -219,6 +227,10 @@ function PersonalDevelopment({ t, lang, done, onToggle, selected, onSelect, onCo
           </div>
         </div>
       </div>
+      <details className="ldp-card px-4 py-3 text-xs text-gray-600">
+        <summary className="cursor-pointer font-semibold text-gray-700">{p.sources}</summary>
+        <p className="mt-2 leading-relaxed">{p.note}</p>
+      </details>
       </>}
     </div>
   );
@@ -246,6 +258,7 @@ function DN({ node, depth, open, setOpen, openLabel }) {
         onClick={()=>{ if(has) setOpen(s=>({...s,[node.id]:!s[node.id]})); }}
         onKeyDown={e=>{ if(has&&e.target===e.currentTarget&&(e.key==="Enter"||e.key===" ")){ e.preventDefault(); setOpen(s=>({...s,[node.id]:!s[node.id]})); } }}>
         {ico}
+        <Folder className="w-4 h-4 text-blue-400 flex-shrink-0" aria-hidden="true"/>
         <span className="text-sm text-gray-700 flex-1">{node.label}</span>
         {/* Always visible on touch screens; revealed on hover or keyboard focus on larger screens. */}
         <a href={node.url} target="_blank" rel="noopener noreferrer" onClick={e=>e.stopPropagation()} className="lg:opacity-0 lg:group-hover:opacity-100 focus:opacity-100 text-xs text-blue-500 pr-3 transition-opacity">{openLabel}</a>
@@ -514,8 +527,7 @@ export default function App() {
           </div>
           <div className="min-w-0">
             <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5 hidden sm:block">{t.eyebrow}</p>
-            <h1 className="text-base sm:text-xl font-semibold leading-tight sm:truncate">Leadership &amp; Communication Mastery</h1>
-            <p className="font-mono text-[9px] text-blue-300/70 mt-0.5 hidden sm:block">UNFPA WCARO · Cohort 1 · 2026</p>
+            <h1 className="text-base sm:text-lg lg:text-xl font-semibold leading-tight lg:truncate">Leadership &amp; Communication Mastery</h1>
           </div>
         </div>
         <div className="flex items-center gap-2.5 flex-shrink-0">
@@ -536,7 +548,7 @@ export default function App() {
 
   const nav=(
     <div className="bg-white border-b sticky top-0 z-40">
-    <div ref={navRef} className="flex overflow-x-auto">
+    <div ref={navRef} className="flex overflow-x-auto no-scrollbar">
       {tabs.map(tb=>(
         <button key={tb.k} onClick={()=>setTab(tb.k)} aria-current={tab===tb.k?"page":undefined} className={"flex items-center gap-1.5 px-5 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(tab===tb.k?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700")}>
           <tb.I className="w-4 h-4"/>{tb.l}
@@ -562,8 +574,8 @@ export default function App() {
             </div>
           </div>
           <div className="flex gap-2 mt-5 border-t border-white/15 pt-4 flex-wrap">
-            {[["overview",t.mTabs.overview],["participants",t.mTabs.participants],["sessions",t.mTabs.sessions],["goals",t.mTabs.goals],["notes",t.mTabs.notes]].map(arr=>(
-              <button key={arr[0]} onClick={()=>setMt(arr[0])} className={"px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors "+(mt===arr[0]?"bg-white text-purple-900":"bg-white/15 hover:bg-white/25 text-white border border-white/20")}>{arr[1]}</button>
+            {[["overview",t.mTabs.overview,BarChart3],["participants",t.mTabs.participants,UsersRound],["sessions",t.mTabs.sessions,Calendar],["goals",t.mTabs.goals,Target],["notes",t.mTabs.notes,FileText]].map(([k,label,Icon])=>(
+              <button key={k} onClick={()=>setMt(k)} aria-pressed={mt===k} className={"inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors "+(mt===k?"bg-white text-purple-900":"bg-white/15 hover:bg-white/25 text-white border border-white/20")}><Icon className="w-4 h-4"/>{label}</button>
             ))}
           </div>
         </div>
@@ -784,7 +796,7 @@ export default function App() {
         <Band/>
       </div>
       <div className="flex bg-white border rounded-xl overflow-hidden shadow-sm">
-        {sgTabs.map(a=><button key={a[0]} onClick={()=>setSt(a[0])} className={"flex-1 py-2.5 text-xs font-semibold border-b-2 transition-colors "+(st===a[0]?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50")}>{a[1]}</button>)}
+        {sgTabs.map(a=>{const Icon={guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={st===a[0]} className={"flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold border-b-2 transition-colors "+(st===a[0]?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50")}><Icon className="w-3.5 h-3.5 hidden sm:block"/>{a[1]}</button>;})}
       </div>
       {st==="guide"&&(
         <div className="space-y-3">
@@ -890,7 +902,7 @@ export default function App() {
           </div>
           {cur.cp&&(
             <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-xl p-4">
-              <p className="text-sm font-bold text-yellow-900 mb-1">{t.checkpointFlag}</p>
+              <p className="text-sm font-bold text-yellow-900 mb-1 flex items-center gap-1.5"><Flag className="w-4 h-4"/>{t.checkpointFlag}</p>
               <p className="text-sm text-yellow-800">{cur.cp}</p>
               {cur.fld&&<a href={cur.fld} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-yellow-700 mt-2 underline"><FolderOpen className="w-3.5 h-3.5"/>{t.uploadToDrive}</a>}
             </div>
@@ -914,8 +926,8 @@ export default function App() {
   // drive
   const driveTab=tab==="drive"?(
     <div className="space-y-4">
-      <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg"><h3 className="font-bold text-blue-900">{t.driveRepo}</h3><p className="text-blue-700 text-sm mt-0.5">{t.driveRepoDesc}</p></div>
-      <div className="flex justify-between items-center"><p className="text-sm text-gray-500">{t.driveRoot}</p><a href="https://drive.google.com/drive/folders/1e3nvDC36AptxDysRtO0C5dYiTqSS-H87" target="_blank" rel="noopener noreferrer" className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg">{t.openRoot}</a></div>
+      <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg"><h3 className="font-bold text-blue-900 flex items-center gap-2"><FolderOpen className="w-4 h-4"/>{t.driveRepo}</h3><p className="text-blue-700 text-sm mt-0.5">{t.driveRepoDesc}</p></div>
+      <div className="flex justify-between items-center"><p className="text-sm text-gray-500 flex items-center gap-1.5"><Folder className="w-4 h-4 text-gray-400"/>{t.driveRoot}</p><a href="https://drive.google.com/drive/folders/1e3nvDC36AptxDysRtO0C5dYiTqSS-H87" target="_blank" rel="noopener noreferrer" className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg">{t.openRoot}</a></div>
       <div className="border rounded-xl overflow-hidden bg-white shadow-sm">
         <div className="p-3">{DS.map(n=><DN key={n.id} node={n} depth={0} open={dop} setOpen={setDop} openLabel={t.openLink}/>)}</div>
         <div className="border-t bg-gray-50 px-4 py-2 text-xs text-gray-400">{t.driveFooter}</div>
@@ -1008,7 +1020,7 @@ export default function App() {
         {partDash}
         {currTab}
         {studyTab}
-        {tab==="development"&&<PersonalDevelopment t={t} lang={lang} done={prog.pd||{}} onToggle={id=>tp("pd",id)} selected={pdSel} onSelect={setPdSel} onCoach={()=>{setTab("coach");window.scrollTo(0,0);}} view={pdView} onView={setPdView} speech={spSel} onSpeech={setSpSel} spDone={prog.sp||{}} onSpToggle={id=>tp("sp",id)} skDone={prog.sk||{}} onSkToggle={id=>tp("sk",id)} skStage={skStage} onSkStage={setSkStage}/>}
+        {tab==="development"&&<PersonalDevelopment t={t} lang={lang} user={me} onConnect={()=>{setTab("coach");window.scrollTo(0,0);}} done={prog.pd||{}} onToggle={id=>tp("pd",id)} selected={pdSel} onSelect={setPdSel} onCoach={()=>{setTab("coach");window.scrollTo(0,0);}} view={pdView} onView={setPdView} speech={spSel} onSpeech={setSpSel} spDone={prog.sp||{}} onSpToggle={id=>tp("sp",id)} skDone={prog.sk||{}} onSkToggle={id=>tp("sk",id)} skStage={skStage} onSkStage={setSkStage}/>}
         {coachOpened&&(
           <div hidden={tab!=="coach"}>
             <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">{t.ai.loadingCoach}</div>}>

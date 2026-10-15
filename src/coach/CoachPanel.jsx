@@ -102,6 +102,7 @@ function navLabel(target, lang, t) {
     return s ? s.name + " – " + (s.theme[lang] || s.theme.en) : null;
   }
   if (kind === "skill") {
+    if (id === "builder") return lang === "fr" ? "Rédacteur de discours" : "Speech builder";
     const m = SKILLS.find(x => x.id === id);
     return m ? (m.title[lang] || m.title.en) : null;
   }
