@@ -10,6 +10,7 @@ import {
 import { RC, ROLES, TC, EF, IU, CUR, SM, CI, DS, DDC, DEFAULT_GOALS } from "./data.js";
 import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON, moveUserData, deleteUserData } from "./storage.js";
 import { STR } from "./i18n.js";
+import { localizeCurriculum } from "./curriculumFr.js";
 import { COMPETENCIES } from "./competencies.js";
 import { SPEAKERS, PD_PLAN } from "./development.js";
 import { LIBRARY } from "./library.js";
@@ -47,18 +48,18 @@ function Mark() {
   );
 }
 const ROMAN = { p1:"I", p2:"II", p3:"III", p4:"IV" };
-const MODULES = Object.entries(CUR).flatMap(([pk,ph])=>ph.modules.map(m=>({...m,pk,phase:ph.name})));
+const modulesOf = cur => Object.entries(cur).flatMap(([pk,ph])=>ph.modules.map(m=>({...m,pk,phase:ph.name})));
 const modNum = id => Number(id.slice(1));
 const phaseName = (t,pk) => t["phase"+pk.slice(1)].replace(/^[─\s]*Phase \d+\s*:\s*/,"");
 const phaseMonths = (t,ph) => ((/\(([^)]*)\)/.exec(ph.name)||[])[1]||"").replace("Months",t.route.months);
 
 // Signature element: the whole programme on one line, four phases and eleven
 // modules, each as wide as its number of weeks. Pass onOpen to make it navigable.
-function Route({ t, done={}, current, onOpen, dark }) {
+function Route({ t, cur=CUR, done={}, current, onOpen, dark }) {
   const bar=(id)=>done[id]?"bg-green-500":id===current?"bg-orange-500":dark?"bg-white/40":"bg-gray-200";
   return (
     <ol className="flex flex-col md:flex-row gap-3 md:gap-1.5" aria-label={t.route.title}>
-      {Object.entries(CUR).map(([pk,ph])=>{
+      {Object.entries(cur).map(([pk,ph])=>{
         const weeks=ph.modules.reduce((n,m)=>n+m.weeks,0);
         return (
           <li key={pk} className="min-w-0 flex flex-col md:[flex:var(--g)_1_0%]" style={{"--g":weeks}}>
@@ -209,7 +210,7 @@ function CompetencyDetail({ t, lang, index }) {
 }
 function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect, onCoach, onConnect, view, onView, speech, onSpeech, spDone, onSpToggle, skDone, onSkToggle, skStage, onSkStage }) {
   const p=t.pd;
-  const views=[["plan",p.viewPlan,Compass],["speeches",p.viewSpeeches,BookOpen],["builder",p.viewBuilder,PenLine],["facilitation",p.viewFac,Users],["mc",p.viewMc,Mic],["money",p.viewMoney,Wallet]];
+  const views=[["plan",p.viewPlan,Compass],["speeches",p.viewSpeeches,BookOpen],["builder",p.viewBuilder,PenLine],["data",p.viewData,BarChart3],["writing",p.viewWriting,FileText],["facilitation",p.viewFac,Users],["mc",p.viewMc,Mic],["money",p.viewMoney,Wallet]];
   const sp=SPEAKERS[selected]||SPEAKERS[0];
   const nWeeks=PD_PLAN.filter(w=>done[w.id]).length;
   const nameOf=id=>(SPEAKERS.find(s=>s.id===id)||{}).name;
@@ -244,7 +245,7 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
         <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">…</div>}>
           <SpeechLibrary t={t} lang={lang} done={spDone} onToggle={onSpToggle} selected={speech} onSelect={onSpeech} onCoach={onCoach}/>
         </Suspense>
-      ):(view==="facilitation"||view==="mc"||view==="money")?(
+      ):(["data","writing","facilitation","mc","money"].includes(view))?(
         <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">…</div>}>
           <SkillModule key={view} id={view} t={t} lang={lang} done={skDone} onToggle={onSkToggle} stage={skStage[view]} onStage={id=>onSkStage({...skStage,[view]:id})} onCoach={onCoach}/>
         </Suspense>
@@ -373,6 +374,9 @@ function DN({ node, depth, open, setOpen, openLabel }) {
 // ─── APP ──────────────────────────────────────────────────────────────────────
 export default function App() {
   const [lang,setLangState]=useState(()=>{ try { return localStorage.getItem("ldp_lang")||"en"; } catch(e){ return "en"; } });
+  // Curriculum text in the interface language (module titles, tasks, questions).
+  const L=useMemo(()=>localizeCurriculum(lang),[lang]);
+  const MODULES=useMemo(()=>modulesOf(L.CUR),[L]);
   function setLang(l){ setLangState(l); try { localStorage.setItem("ldp_lang",l); } catch(e){} }
   const t = STR[lang];
 
@@ -510,7 +514,7 @@ export default function App() {
     setProg({mod:{},rt:{},ve:{}});setMs([]);setMg(DEFAULT_GOALS);setMn({});
     setSm("m1");setSt("guide");setCp(0);setPdSel(0);setPdView("plan");setSpSel("s01");setSkStage({});setOpenMods({});setMt("overview");setUv("list");setUt(null);}
   function tp(cat,id){setProg(p=>{const c=p[cat]||{};return {...p,[cat]:{...c,[id]:!c[id]}};})}
-  function pct(){let tt=0,d=0;Object.values(CUR).forEach(ph=>ph.modules.forEach(m=>{tt++;if(prog.mod[m.id])d++;}));return tt?Math.round(d/tt*100):0;}
+  function pct(){let tt=0,d=0;Object.values(L.CUR).forEach(ph=>ph.modules.forEach(m=>{tt++;if(prog.mod[m.id])d++;}));return tt?Math.round(d/tt*100):0;}
   const pts=Object.values(users).filter(u=>u.role==="participant");
   const dg=mg.filter(g=>g.done).length;
   const gp=mg.length?Math.round(dg/mg.length*100):0;
@@ -536,8 +540,8 @@ export default function App() {
   function ud(un){if(un===me.username)return;deleteUserData(un);setUsers(p=>{const n={...p};delete n[un];saveUsers(n);return n;});setDc(null);if(uv==="detail"&&ut===un){setUv("list");setUt(null);}}
   function ui(e){const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onloadend=()=>setUf(fm=>({...fm,profilePicture:r.result}));r.readAsDataURL(f);}
   const fu=Object.values(users).filter(u=>{const q=uq.toLowerCase();return(!q||u.name.toLowerCase().includes(q)||u.username.toLowerCase().includes(q)||u.email.toLowerCase().includes(q))&&(ur==="all"||u.role===ur);});
-  const all=[...SM,...CI];
-  const cur=all.find(m=>m.id===sm)||SM[0];
+  const all=[...L.SM,...L.CI];
+  const cur=all.find(m=>m.id===sm)||L.SM[0];
   const op=pct();
   const nextMod=MODULES.find(m=>!prog.mod[m.id]);
   const nDone=MODULES.filter(m=>prog.mod[m.id]).length;
@@ -554,7 +558,7 @@ export default function App() {
             <h1 className="text-3xl lg:text-5xl font-semibold leading-[1.08] max-w-xl">Leadership &amp; Communication Development Portal</h1>
             <p className="text-blue-100 mt-3 lg:mt-5 max-w-lg lg:text-lg">{t.loginIntro}</p>
           </div>
-          <div className="hidden lg:block mt-10 mb-auto"><Route t={t} dark/></div>
+          <div className="hidden lg:block mt-10 mb-auto"><Route t={t} cur={L.CUR} dark/></div>
           <p className="hidden lg:block text-xs text-blue-200 mt-10">{t.loginSubtitle}</p>
         </aside>
         <main className="relative flex flex-col items-center justify-center px-6 py-10 lg:py-12">
@@ -700,7 +704,7 @@ export default function App() {
             </div>
             <section className="ldp-card p-5">
               <h3 className="font-semibold text-gray-800 mb-3">{t.route.cohortTitle}</h3>
-              <Route t={t} onOpen={openModule}/>
+              <Route t={t} cur={L.CUR} onOpen={openModule}/>
             </section>
             <section className="ldp-card p-5">
               <div className="flex justify-between items-center mb-3"><h3 className="font-semibold text-gray-800">{t.recentSessions}</h3><button onClick={()=>setMt("sessions")} className="text-sm font-semibold text-orange-700 hover:underline">{t.viewAll}</button></div>
@@ -800,7 +804,7 @@ export default function App() {
           <h3 className="font-semibold text-gray-800">{t.route.title}</h3>
           <p className="font-mono text-xs text-gray-600">{t.route.progress(nDone,MODULES.length)}</p>
         </div>
-        <Route t={t} done={prog.mod} current={nextMod&&nextMod.id} onOpen={openModule}/>
+        <Route t={t} cur={L.CUR} done={prog.mod} current={nextMod&&nextMod.id} onOpen={openModule}/>
         <RouteLegend t={t}/>
       </section>
       <DailyQuote t={t} lang={lang}/>
@@ -863,11 +867,11 @@ export default function App() {
     <div>
       <PageHead title={t.nav.curriculum} sub={t.pageSubs.curriculum}/>
       <section className="ldp-card p-5 mb-6">
-        <Route t={t} done={prog.mod} current={nextMod&&nextMod.id} onOpen={openModule}/>
+        <Route t={t} cur={L.CUR} done={prog.mod} current={nextMod&&nextMod.id} onOpen={openModule}/>
         <RouteLegend t={t}/>
       </section>
       <div className="space-y-8">
-        {Object.entries(CUR).map(([pk,ph])=>(
+        {Object.entries(L.CUR).map(([pk,ph])=>(
           <section key={pk} aria-labelledby={"ph-"+pk}>
             <div className="flex flex-wrap items-baseline gap-x-3 mb-2">
               <h3 id={"ph-"+pk} className="text-xl font-semibold font-serif text-gray-900">{t.phaseLabel} {ROMAN[pk]}: {phaseName(t,pk)}</h3>
@@ -917,12 +921,12 @@ export default function App() {
       <div className="lg:hidden">
         <label htmlFor="sg-mod" className="ldp-label">{t.selectModule}</label>
         <select id="sg-mod" value={sm} onChange={e=>{setSm(e.target.value);setSt("guide");}} className="ldp-input py-2 bg-white">
-          {[1,2,3,4].map(n=><optgroup key={n} label={phaseName(t,"p"+n)}>{SM.filter(m=>m.ph===n).map(m=><option key={m.id} value={m.id}>{m.title} ({m.wk})</option>)}</optgroup>)}
-          <optgroup label={t.commGroup.replace(/^[─\s]*/,"")}>{CI.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</optgroup>
+          {[1,2,3,4].map(n=><optgroup key={n} label={phaseName(t,"p"+n)}>{L.SM.filter(m=>m.ph===n).map(m=><option key={m.id} value={m.id}>{m.title} ({m.wk})</option>)}</optgroup>)}
+          <optgroup label={t.commGroup.replace(/^[─\s]*/,"")}>{L.CI.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</optgroup>
         </select>
       </div>
       <nav aria-label={t.selectModule} className="hidden lg:block ldp-card p-3 sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto space-y-4">
-        {[...[1,2,3,4].map(n=>[phaseName(t,"p"+n),SM.filter(m=>m.ph===n)]),[t.commGroup.replace(/^[─\s]*/,""),CI]].map(([label,mods])=>(
+        {[...[1,2,3,4].map(n=>[phaseName(t,"p"+n),L.SM.filter(m=>m.ph===n)]),[t.commGroup.replace(/^[─\s]*/,""),L.CI]].map(([label,mods])=>(
           <div key={label}>
             <p className="ldp-eyebrow px-2 mb-1">{label}</p>
             <ul>{mods.map(m=>(
@@ -956,6 +960,7 @@ export default function App() {
                 const content=DDC[cur.id];
                 if(!content){ return <div><p className="text-sm text-gray-500 italic mb-3">{t.driveOnly}</p>{cur.doc&&<a href={cur.doc} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-2 rounded-lg text-sm font-semibold"><FileText className="w-4 h-4"/>{t.openRG}</a>}</div>; }
                 const lines=content.split("\n").slice(2);
+                const enNote=t.rgEnglish?<p key="en-note" className="text-xs text-gray-500 italic mb-3">{t.rgEnglish}</p>:null;
                 const sentence=x=>x.toLowerCase().replace(/^./,c=>c.toUpperCase()).replace(/\b(unfpa|un|ted|hbr|ccl|ceo|ep|my why|sbi)\b/gi,m=>m.toUpperCase());
                 const out=[];
                 lines.forEach((line,i)=>{
@@ -971,7 +976,7 @@ export default function App() {
                   const body=url?<a href={url} target="_blank" rel="noopener noreferrer" className="font-medium text-blue-700 hover:underline inline-flex items-start gap-1">{txt}<ExternalLink className="w-3 h-3 flex-shrink-0 mt-1" aria-hidden="true"/></a>:txt;
                   out.push(<p key={i} className={"text-sm text-gray-700 py-0.5 "+(bullet?"pl-3 border-l-2 border-gray-200 my-1":"")}>{body}</p>);
                 });
-                return out;
+                return [enNote,...out];
               })()}
             </div>
           </div>

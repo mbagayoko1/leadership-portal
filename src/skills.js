@@ -9,6 +9,7 @@
 //   resources: t, u (optional for books), by, kind video|article|tool|book
 
 import { MONEY } from "./money.js";
+import { DATA_STORY, WRITING } from "./skillsExtra.js";
 
 const ted = slug => "https://www.ted.com/talks/" + slug;
 
@@ -673,5 +674,7 @@ Informations pratiques : [attestations, déjeuner, transport, photo de groupe].
       { t: "The Art of Gathering (Priya Parker, 2018)", by: "Riverhead", kind: "book" }
     ]
   },
+  DATA_STORY,
+  WRITING,
   MONEY
 ];

@@ -50,6 +50,11 @@ New participants can self-register via **Request Access** on the sign-in screen.
 The interface is bilingual — use the EN/FR switch in the top bar (or on the
 sign-in screen). The choice is remembered per browser.
 
+Curriculum text in French (module titles, daily tasks, vocal exercises,
+checkpoints, reflection questions) lives in
+[`src/curriculumFr.js`](src/curriculumFr.js); `src/data.js` stays the English
+source. Book titles stay in their original language.
+
 ## Shared data with Supabase (optional)
 
 By default all data lives in each visitor's browser (localStorage), so users
@@ -137,7 +142,7 @@ and it needs microphone permission. Reading aloud works in all modern browsers.
 
 ## Personal Development
 
-The **Personal Development** tab has six views:
+The **Personal Development** tab has eight views:
 
 - **Plan and voices**: a four-week plan, plus speakers, coaches, researchers,
   African leaders and classic public-domain thinkers, each with key lessons,
@@ -150,14 +155,15 @@ The **Personal Development** tab has six views:
   ([`src/library.js`](src/library.js)).
 - **Speech library**: 30 original speeches with quotes, analogies, techniques,
   delivery notes and read-aloud ([`src/speeches.js`](src/speeches.js)).
-- **Meeting facilitation**, **Master of ceremonies** and **Money & financial
-  freedom**: stage-by-stage skill modules with tips, phrases, copyable
-  templates, quotes and resources ([`src/skills.js`](src/skills.js),
+- **Data stories**, **Writing**, **Meeting facilitation**, **Master of
+  ceremonies** and **Money & financial freedom**: stage-by-stage skill modules
+  with tips, phrases, copyable templates, quotes and resources
+  ([`src/skills.js`](src/skills.js), [`src/skillsExtra.js`](src/skillsExtra.js),
   [`src/money.js`](src/money.js)). The money module adds savings-growth and
   debt-payoff calculators and is general education, not personal advice.
 
 Progress (weeks, speeches delivered, stages practised) is saved per user.
-Links were checked on 14 October 2026; YouTube links via oEmbed.
+Links were last checked on 17 November 2026 (`npm run check:links`); YouTube links via oEmbed.
 
 ## Stack & architecture
 

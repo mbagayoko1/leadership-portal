@@ -4,26 +4,12 @@ import AICoachModule from "./AICoachModule.jsx";
 import { aiMode, aiProvider, aiErrorKind, connectWithKey, disconnectKey, connectWithCode, disconnectCode } from "./aiClient.js";
 import { buildPortalMap, NAV_TABS } from "./portalContext.js";
 import { SM, CI } from "../data.js";
+import { FR_TITLES } from "../curriculumFr.js";
 import { COMPETENCIES } from "../competencies.js";
 import { SPEAKERS } from "../development.js";
 import { SPEECHES } from "../speeches.js";
 import { SKILLS } from "../skills.js";
 
-const FR_TITLES = {
-  m1: "Connaissance de soi et image personnelle",
-  m2: "Fondamentaux de la présence exécutive",
-  m3: "Communication stratégique",
-  m4: "Influencer sans autorité hiérarchique",
-  m5: "Maîtrise de la prise de parole en public",
-  m6: "Dialogue avec la haute direction",
-  m7: "Communication de crise et adaptabilité",
-  m8: "Leadership visionnaire",
-  m9: "Navigation organisationnelle",
-  m10: "Préparation au niveau de Représentant",
-  m11: "Héritage et impact durable",
-  vocal: "Entraînement vocal",
-  reading: "Lectures et guides d'étude"
-};
 
 // The coach's "module in focus" picker uses the portal's real curriculum.
 const COACH_MODULES = [...SM, ...CI].map(m => {
