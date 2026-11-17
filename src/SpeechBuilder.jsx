@@ -1,13 +1,13 @@
 // Speech builder (Personal Development tab): a speech brief (goal, audience,
 // occasion, format, content, protocol) that produces a full draft. With the
-// AI Coach connected the draft is written by Claude and streamed in; without
+// AI Coach connected the draft is written by the AI and streamed in; without
 // it, a structured template draft is built locally. Drafts can be edited,
 // refined, read aloud, copied, downloaded and saved per user.
 import { useState, useEffect, useRef } from "react";
 import { PenLine, Sparkles, FileText, Volume2, Square, Copy, Check, Download, Save, Trash2, RotateCcw, Wand2 } from "lucide-react";
 import { OPTIONS, emptyBrief, buildPrompt, revisePrompt, parseOutput, buildDraft, targetWords, wordCount } from "./speechBuilder.js";
 import { DEVICES } from "./speeches.js";
-import { aiMode, aiStream, aiErrorKind } from "./coach/aiClient.js";
+import { aiConnected, aiStream, aiErrorKind, aiErrorDetail } from "./coach/aiClient.js";
 import { useReadAloud } from "./readAloud.js";
 import { loadJSON, saveJSON } from "./storage.js";
 
@@ -47,7 +47,7 @@ export default function SpeechBuilder({ t, lang, user, onCoach, onConnect }) {
   const [lib, setLib] = useState([]);
   const [justSaved, setJustSaved] = useState(false);
   const abortRef = useRef(null);
-  const mode = aiMode();
+  const connected = aiConnected();
   const tts = useReadAloud(out ? (b.language === "fr" ? "fr" : "en") : lang);
 
   useEffect(() => { memo[uname] = { b, out, raw }; }, [uname, b, out, raw]);
@@ -67,7 +67,10 @@ export default function SpeechBuilder({ t, lang, user, onCoach, onConnect }) {
       const full = await aiStream(system, messages, d => { acc += d; setOut({ ...parseOutput(acc), streaming: true }); }, ctrl.signal);
       setRaw(full); setOut(parseOutput(full));
     } catch (e) {
-      if (e.name !== "AbortError") setErr(k.errors[aiErrorKind(e)] || k.errors.other);
+      if (e.name !== "AbortError") {
+        const detail = aiErrorDetail(e);
+        setErr((k.errors[aiErrorKind(e)] || k.errors.other) + (detail ? " (" + detail + ")" : ""));
+      }
       if (acc) { setRaw(acc); setOut(parseOutput(acc)); }
     }
     setBusy(false); abortRef.current = null;
@@ -128,12 +131,12 @@ export default function SpeechBuilder({ t, lang, user, onCoach, onConnect }) {
 
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 items-start">
         {/* ── Brief ── */}
-        <form className="ldp-card p-5 space-y-6 lg:col-span-2" onSubmit={e => { e.preventDefault(); mode === "off" ? template() : generateAi(); }}>
+        <form className="ldp-card p-5 space-y-6 lg:col-span-2" onSubmit={e => { e.preventDefault(); !connected ? template() : generateAi(); }}>
           <section className="space-y-3">
             <p className="ldp-section-title"><span className="w-5 h-5 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center font-semibold">1</span>{k.s1}</p>
             <Text id="sb-topic" label={k.topic} value={b.topic} onChange={v => set("topic", v)} placeholder={k.topicPh} />
             <Text id="sb-title" label={k.workingTitle} value={b.title} onChange={v => set("title", v)} />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               <Select id="sb-goal" label={k.goal} value={b.goal} onChange={v => set("goal", v)}>{opt("goal")}</Select>
               <Select id="sb-occ" label={k.occasion} value={b.occasion} onChange={v => set("occasion", v)}>{opt("occasion")}</Select>
             </div>
@@ -149,7 +152,7 @@ export default function SpeechBuilder({ t, lang, user, onCoach, onConnect }) {
 
           <section className="space-y-3">
             <p className="ldp-section-title"><span className="w-5 h-5 rounded-full bg-orange-100 text-orange-700 flex items-center justify-center font-semibold">3</span>{k.s3}</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3">
               <Select id="sb-min" label={k.minutes} value={b.minutes} onChange={v => set("minutes", +v)}>{OPTIONS.minutes.map(n => <option key={n} value={n}>{k.minutesOpt(n)}</option>)}</Select>
               <Select id="sb-tone" label={k.tone} value={b.tone} onChange={v => set("tone", v)}>{opt("tone")}</Select>
               <Select id="sb-lang" label={k.language} value={b.language} onChange={v => set("language", v)}><option value="en">English</option><option value="fr">Français</option></Select>
@@ -185,7 +188,7 @@ export default function SpeechBuilder({ t, lang, user, onCoach, onConnect }) {
             </label>
           </section>
 
-          {mode === "off" && (
+          {!connected && (
             <div className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
               {k.aiOff} <button type="button" onClick={onConnect} className="font-semibold underline">{k.connectAi}</button>
             </div>
@@ -194,7 +197,7 @@ export default function SpeechBuilder({ t, lang, user, onCoach, onConnect }) {
           <div className="flex flex-wrap gap-2">
             {busy
               ? <button type="button" onClick={() => abortRef.current && abortRef.current.abort()} className="ldp-btn"><Square className="w-3.5 h-3.5" />{k.stop}</button>
-              : <button type="submit" disabled={mode === "off"} className="ldp-btn-accent"><Sparkles className="w-4 h-4" />{k.generateAi}</button>}
+              : <button type="submit" disabled={!connected} className="ldp-btn-accent"><Sparkles className="w-4 h-4" />{k.generateAi}</button>}
             <button type="button" onClick={template} disabled={busy} className="ldp-btn-outline"><FileText className="w-4 h-4" />{k.template}</button>
           </div>
         </form>
@@ -244,7 +247,7 @@ export default function SpeechBuilder({ t, lang, user, onCoach, onConnect }) {
                     className="w-full font-serif text-[17px] leading-relaxed text-gray-800 bg-white border border-gray-200 rounded-lg p-4 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 outline-none" />
                 )}
 
-                {!busy && raw && mode !== "off" && (
+                {!busy && raw && connected && (
                   <div>
                     <p className="ldp-label flex items-center gap-1.5"><Wand2 className="w-3.5 h-3.5 text-purple-700" />{k.refine}</p>
                     <div className="flex flex-wrap gap-1.5">
@@ -257,13 +260,13 @@ export default function SpeechBuilder({ t, lang, user, onCoach, onConnect }) {
 
                 {out.delivery.length > 0 && (
                   <section className="bg-purple-50 border-l-4 border-purple-700 rounded-lg px-4 py-3">
-                    <h4 className="text-xs font-bold text-purple-800 uppercase tracking-wide mb-2">{k.delivery}</h4>
+                    <h4 className="text-xs font-bold text-purple-800 mb-2">{k.delivery}</h4>
                     <ul className="space-y-1">{out.delivery.map((d, i) => <li key={i} className="text-sm text-gray-800">{d}</li>)}</ul>
                   </section>
                 )}
                 {out.notes.length > 0 && (
                   <section className="bg-amber-50 border-l-4 border-amber-400 rounded-lg px-4 py-3">
-                    <h4 className="text-xs font-bold text-amber-900 uppercase tracking-wide mb-2">{k.toCheck}</h4>
+                    <h4 className="text-xs font-bold text-amber-900 mb-2">{k.toCheck}</h4>
                     <ul className="space-y-1">{out.notes.map((d, i) => <li key={i} className="text-sm text-gray-800">{d}</li>)}</ul>
                   </section>
                 )}

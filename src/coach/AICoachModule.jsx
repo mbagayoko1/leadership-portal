@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { createPortal } from "react-dom";
-import { aiComplete, aiStream, aiErrorKind } from "./aiClient.js";
+import { aiComplete, aiStream, aiErrorKind, aiErrorDetail } from "./aiClient.js";
 import { storeGet, storeSet, storeDelete, storeListKeys } from "../storage.js";
 import { COMPANION_INSTR, PORTAL_RULES, LIVE_LINK_RULE, stripNav, navTargets, speechMeta, speechNote, deliverySummary } from "./companion.js";
 
@@ -134,11 +134,11 @@ const T = {
     you: "You",
     liveUnsupported: "Live calls need a browser that can listen, such as Chrome, Edge or Safari.",
     liveError: "The coach could not answer. Try again, keep talking, or end the call.",
-    err_not_connected: "The AI Coach is not connected yet. Paste your Anthropic API key at the top of this tab, then try again.",
-    err_auth: "Your API key was not accepted. It may have been deleted or mistyped. Connect a new key, then try again.",
-    err_billing: "Your Anthropic account has run out of credit. Add credit in the Anthropic Console, then try again.",
-    err_busy: "Claude is busy right now. Wait a few seconds, then try again.",
-    err_network: "Claude could not be reached. Check your internet connection, then try again.",
+    err_not_connected: "The AI Coach is not connected yet. Use the connection card at the top of this tab, then try again.",
+    err_auth: "Your AI connection was not accepted. The key or access code may have been changed or mistyped. Reconnect at the top of this tab, then try again.",
+    err_billing: "Your AI provider reported a billing problem with this key. Check billing with your provider, then try again.",
+    err_busy: "The AI service is busy or has reached its usage limit. Wait a minute, then try again.",
+    err_network: "The AI service could not be reached. Check your internet connection, then try again.",
     err_refusal: "The coach could not respond to that. Try rephrasing it.",
     tryAgain: "Try again",
     connectAi: "Connect the AI Coach",
@@ -170,7 +170,7 @@ const T = {
     yourSessions: "Your sessions",
     noSessions: "Your coaching conversations will appear here.",
     startTitle: "Start a coaching session",
-    startSub: "Choose what you need today. Your conversations are private to you and are not shared with your mentor.",
+    startSub: "Choose what you need today. Your mentor does not see these conversations. They are sent to the connected AI service to generate replies.",
     moduleFocus: "Curriculum module in focus",
     startSession: "Start session",
     sessionTitle: function (m) { return m + " session"; },
@@ -335,11 +335,11 @@ const T = {
     you: "Vous",
     liveUnsupported: "Les appels en direct n\u00e9cessitent un navigateur capable d'\u00e9couter, comme Chrome, Edge ou Safari.",
     liveError: "Le coach n'a pas pu r\u00e9pondre. R\u00e9essayez, continuez \u00e0 parler ou raccrochez.",
-    err_not_connected: "Le Coach IA n'est pas encore connect\u00e9. Collez votre cl\u00e9 API Anthropic en haut de cet onglet, puis r\u00e9essayez.",
-    err_auth: "Votre cl\u00e9 API n'a pas \u00e9t\u00e9 accept\u00e9e. Elle a peut-\u00eatre \u00e9t\u00e9 supprim\u00e9e ou mal saisie. Connectez une nouvelle cl\u00e9, puis r\u00e9essayez.",
-    err_billing: "Votre compte Anthropic n'a plus de cr\u00e9dit. Ajoutez du cr\u00e9dit dans la console Anthropic, puis r\u00e9essayez.",
-    err_busy: "Claude est tr\u00e8s sollicit\u00e9 en ce moment. Patientez quelques secondes, puis r\u00e9essayez.",
-    err_network: "Impossible de joindre Claude. V\u00e9rifiez votre connexion Internet, puis r\u00e9essayez.",
+    err_not_connected: "Le Coach IA n'est pas encore connect\u00e9. Utilisez la carte de connexion en haut de cet onglet, puis r\u00e9essayez.",
+    err_auth: "Votre connexion \u00e0 l'IA n'a pas \u00e9t\u00e9 accept\u00e9e. La cl\u00e9 ou le code d'acc\u00e8s a peut-\u00eatre \u00e9t\u00e9 modifi\u00e9 ou mal saisi. Reconnectez-vous en haut de cet onglet, puis r\u00e9essayez.",
+    err_billing: "Votre fournisseur d'IA signale un probl\u00e8me de facturation pour cette cl\u00e9. V\u00e9rifiez la facturation aupr\u00e8s de votre fournisseur, puis r\u00e9essayez.",
+    err_busy: "Le service d'IA est tr\u00e8s sollicit\u00e9 ou a atteint sa limite d'utilisation. Patientez une minute, puis r\u00e9essayez.",
+    err_network: "Impossible de joindre le service d'IA. V\u00e9rifiez votre connexion Internet, puis r\u00e9essayez.",
     err_refusal: "Le coach n'a pas pu r\u00e9pondre \u00e0 cela. Essayez de le reformuler.",
     tryAgain: "R\u00e9essayer",
     connectAi: "Connecter le Coach IA",
@@ -371,7 +371,7 @@ const T = {
     yourSessions: "Vos s\u00e9ances",
     noSessions: "Vos conversations de coaching appara\u00eetront ici.",
     startTitle: "Commencer une s\u00e9ance de coaching",
-    startSub: "Choisissez ce dont vous avez besoin aujourd'hui. Vos conversations sont priv\u00e9es et ne sont pas partag\u00e9es avec votre mentor.",
+    startSub: "Choisissez ce dont vous avez besoin aujourd'hui. Votre mentor ne voit pas ces conversations. Elles sont envoy\u00e9es au service d'IA connect\u00e9 pour g\u00e9n\u00e9rer les r\u00e9ponses.",
     moduleFocus: "Module du programme concern\u00e9",
     startSession: "Commencer la s\u00e9ance",
     sessionTitle: function (m) { return "S\u00e9ance : " + m; },
@@ -883,7 +883,8 @@ function categoryLabel(id, lang) {
    action fixes it. `fallback` is the message key for an unknown cause. */
 function aiError(t, e, fallback) {
   const kind = aiErrorKind(e);
-  return { kind: kind, text: kind === "other" ? t(fallback) : t("err_" + kind) };
+  const detail = aiErrorDetail(e);
+  return { kind: kind, text: (kind === "other" ? t(fallback) : t("err_" + kind)) + (detail ? " (" + detail + ")" : "") };
 }
 
 function needsConnect(err) {
@@ -2407,7 +2408,7 @@ function CoachTab(props) {
         })}
       </div>
       <label style={{ fontSize: 13, fontWeight: 600, color: C.ink, display: "block", marginBottom: 6 }}>{t("moduleFocus")}</label>
-      <select value={moduleIdx} onChange={function (e) { setModuleIdx(Number(e.target.value)); }} style={Object.assign({}, INPUT, { marginBottom: 16 })}>
+      <select aria-label={t("moduleFocus")} value={moduleIdx} onChange={function (e) { setModuleIdx(Number(e.target.value)); }} style={Object.assign({}, INPUT, { marginBottom: 16 })}>
         {props.modules.map(function (mod, i) {
           const opt = <option key={i} value={i}>{L(mod, lang)}</option>;
           return opt;
@@ -2844,10 +2845,10 @@ function PracticeTab(props) {
         {showCustom ? (
           <div className="aic-reveal" style={{ marginTop: 16, padding: 16, border: "1px solid " + C.line, borderRadius: 10, background: C.bg }}>
             <div style={{ display: "grid", gap: 10 }}>
-              <input style={INPUT} placeholder={t("phTitle")} value={form.title} onChange={function (e) { setField("title", e.target.value); }} />
-              <input style={INPUT} placeholder={t("phWho")} value={form.who} onChange={function (e) { setField("who", e.target.value); }} />
-              <textarea style={Object.assign({}, INPUT, { minHeight: 70 })} placeholder={t("phSituation")} value={form.situation} onChange={function (e) { setField("situation", e.target.value); }} />
-              <input style={INPUT} placeholder={t("phAim")} value={form.aim} onChange={function (e) { setField("aim", e.target.value); }} />
+              <input style={INPUT} placeholder={t("phTitle")} aria-label={t("phTitle")} value={form.title} onChange={function (e) { setField("title", e.target.value); }} />
+              <input style={INPUT} placeholder={t("phWho")} aria-label={t("phWho")} value={form.who} onChange={function (e) { setField("who", e.target.value); }} />
+              <textarea style={Object.assign({}, INPUT, { minHeight: 70 })} placeholder={t("phSituation")} aria-label={t("phSituation")} value={form.situation} onChange={function (e) { setField("situation", e.target.value); }} />
+              <input style={INPUT} placeholder={t("phAim")} aria-label={t("phAim")} value={form.aim} onChange={function (e) { setField("aim", e.target.value); }} />
               <div><Btn onClick={startCustom} disabled={!form.who.trim() || !form.situation.trim()}>{t("startScene")}</Btn></div>
             </div>
           </div>
@@ -2944,6 +2945,7 @@ function GoalItem(props) {
         <input
           style={Object.assign({}, INPUT, { padding: "6px 10px", fontSize: 13 })}
           placeholder={t("addAction")}
+          aria-label={t("addAction")}
           value={actionText}
           onChange={function (e) { setActionText(e.target.value); }}
           onKeyDown={function (e) { if (e.key === "Enter") { addAction(); } }}
@@ -3049,7 +3051,7 @@ function PlanTab(props) {
         <Card>
           <Heading title={t("addGoalTitle")} sub={t("addGoalSub")} />
           <div style={{ display: "grid", gap: 10 }}>
-            <input style={INPUT} placeholder={t("goalPh")} value={form.title} onChange={function (e) { setField("title", e.target.value); }} />
+            <input style={INPUT} placeholder={t("goalPh")} aria-label={t("goalPh")} value={form.title} onChange={function (e) { setField("title", e.target.value); }} />
             <div style={{ display: "flex", gap: 10 }}>
               <select style={INPUT} value={form.category} onChange={function (e) { setField("category", e.target.value); }} aria-label={t("category")}>
                 {CATEGORIES.map(function (c) {
@@ -3199,8 +3201,8 @@ function ProgressTab(props) {
         <Card>
           <Heading title={t("checkinTitle")} sub={t("checkinSub")} />
           <div style={{ display: "grid", gap: 10 }}>
-            <textarea style={Object.assign({}, INPUT, { minHeight: 64 })} placeholder={t("wentWellPh")} value={wentWell} onChange={function (e) { setWentWell(e.target.value); }} />
-            <textarea style={Object.assign({}, INPUT, { minHeight: 64 })} placeholder={t("challengePh")} value={challenge} onChange={function (e) { setChallenge(e.target.value); }} />
+            <textarea style={Object.assign({}, INPUT, { minHeight: 64 })} placeholder={t("wentWellPh")} aria-label={t("wentWellPh")} value={wentWell} onChange={function (e) { setWentWell(e.target.value); }} />
+            <textarea style={Object.assign({}, INPUT, { minHeight: 64 })} placeholder={t("challengePh")} aria-label={t("challengePh")} value={challenge} onChange={function (e) { setChallenge(e.target.value); }} />
             <div>
               <div style={{ fontSize: 13, fontWeight: 600, color: C.ink, marginBottom: 6 }}>{t("confidenceQ")}</div>
               <div style={{ display: "flex", gap: 6 }} role="group" aria-label={t("confidenceGroup")}>

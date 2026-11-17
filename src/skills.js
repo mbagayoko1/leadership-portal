@@ -341,7 +341,7 @@ Merci, en particulier pour [contribution précise]. Nous terminons à l'heure. �
       { t: "1-2-4-All: engage everyone at once", u: "https://www.liberatingstructures.com/1-1-2-4-all/", by: "Liberating Structures", kind: "tool" },
       { t: "DACI: a decision-making framework", u: "https://www.atlassian.com/team-playbook/plays/daci", by: "Atlassian Team Playbook", kind: "tool" },
       { t: "Retrospective: review what worked and what to change", u: "https://www.atlassian.com/team-playbook/plays/retrospective", by: "Atlassian Team Playbook", kind: "tool" },
-      { t: "Facilitating meetings (free guide)", u: "https://www.seedsforchange.org.uk/facilitationmeeting", by: "Seeds for Change", kind: "tool" },
+      { t: "Facilitating meetings (free guide)", u: "https://seedsforchange.org.uk/facilitationmeeting", by: "Seeds for Change", kind: "tool" },
       { t: "The Cornell note-taking system", u: "https://lsc.cornell.edu/how-to-study/taking-notes/cornell-note-taking-system/", by: "Cornell Learning Strategies Center", kind: "tool" },
       { t: "The Chatham House Rule", u: "https://www.chathamhouse.org/about-us/chatham-house-rule", by: "Chatham House", kind: "tool" },
       { t: "Facilitator's Guide to Participatory Decision-Making, 3rd ed. (Sam Kaner and colleagues, 2014)", by: "Jossey-Bass", kind: "book" },

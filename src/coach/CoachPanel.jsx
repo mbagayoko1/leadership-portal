@@ -1,8 +1,7 @@
 import { useState, useMemo } from "react";
-import { APIConnectionError } from "@anthropic-ai/sdk";
-import { KeyRound, CheckCircle2 } from "lucide-react";
+import { KeyRound, CheckCircle2, ShieldCheck } from "lucide-react";
 import AICoachModule from "./AICoachModule.jsx";
-import { aiMode, connectWithKey, disconnectKey } from "./aiClient.js";
+import { aiMode, aiProvider, aiErrorKind, connectWithKey, disconnectKey, connectWithCode, disconnectCode } from "./aiClient.js";
 import { buildPortalMap, NAV_TABS } from "./portalContext.js";
 import { SM, CI } from "../data.js";
 import { COMPETENCIES } from "../competencies.js";
@@ -44,22 +43,58 @@ function Connection({ t, mode, onChange, notice }) {
     setBusy(true);
     setErr("");
     try {
-      await connectWithKey(key);
+      if (mode === "code") await connectWithCode(key); else await connectWithKey(key);
       setKey("");
       onChange();
     } catch (e) {
-      setErr(e instanceof APIConnectionError ? t.netError : t.badKey);
+      // "other" can be something the key's owner must fix, such as a region or
+      // plan limit, so Google's or Anthropic's own message is shown.
+      const kind = aiErrorKind(e);
+      const bad = mode === "code" ? t.badCode : t.badKey;
+      setErr(kind === "network" ? t.netError : kind === "auth" ? bad : (e.message || bad));
     }
     setBusy(false);
   }
 
-  if (mode === "proxy") return null;
-  if (mode === "key") {
+  if (mode === "proxy") {
     return (
       <div className="flex items-center gap-2 text-xs text-gray-500 mb-3">
         <CheckCircle2 className="w-3.5 h-3.5 text-green-600"/>
-        <span>{t.connectedKey}</span>
-        <button onClick={()=>{disconnectKey();onChange();}} className="text-orange-700 hover:underline font-semibold">{t.remove}</button>
+        <span>{t.connectedProxy}</span>
+        <button onClick={()=>{disconnectCode();onChange();}} className="text-orange-700 hover:underline font-semibold">{t.forgetCode}</button>
+      </div>
+    );
+  }
+  if (mode === "code") {
+    return (
+      <div className="ldp-card p-5 mb-4 border-l-4 border-l-orange-500">
+        <div className="flex items-start gap-3">
+          <div className="bg-orange-100 p-2 rounded-lg flex-shrink-0"><ShieldCheck className="w-5 h-5 text-orange-700"/></div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-gray-800">{t.codeTitle}</h3>
+            {notice&&<p role="status" className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mt-2">{notice}</p>}
+            <p className="text-sm text-gray-600 mt-1">{t.codeBody}</p>
+            <label htmlFor="ai-key" className="block text-xs font-semibold text-gray-600 mt-4 mb-1">{t.codeLabel}</label>
+            <div className="flex gap-2 flex-wrap">
+              <input id="ai-key" type="password" autoComplete="off" value={key} onChange={e=>setKey(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")connect();}} className="ldp-input flex-1 min-w-[220px]"/>
+              <button onClick={connect} disabled={busy||!key.trim()} className="bg-purple-700 hover:bg-purple-800 disabled:opacity-50 text-white px-5 py-2.5 rounded-lg text-sm font-semibold">{busy?t.checking:t.connect}</button>
+            </div>
+            {err&&<p role="alert" className="text-sm text-red-700 mt-2">{err}</p>}
+            <p className="text-xs text-gray-500 mt-2">{t.codeHelp}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+  if (mode === "key") {
+    return (
+      <div className="text-xs text-gray-500 mb-3">
+        <div className="flex items-center gap-2">
+          <CheckCircle2 className="w-3.5 h-3.5 text-green-600"/>
+          <span>{aiProvider() === "gemini" ? t.connectedGemini : t.connectedAnthropic}</span>
+          <button onClick={()=>{disconnectKey();onChange();}} className="text-orange-700 hover:underline font-semibold">{t.remove}</button>
+        </div>
+        {aiProvider() === "gemini" && <p className="mt-1 max-w-3xl">{t.geminiData}</p>}
       </div>
     );
   }
@@ -73,12 +108,16 @@ function Connection({ t, mode, onChange, notice }) {
           <p className="text-sm text-gray-600 mt-1">{t.offBody}</p>
           <label htmlFor="ai-key" className="block text-xs font-semibold text-gray-600 mt-4 mb-1">{t.keyLabel}</label>
           <div className="flex gap-2 flex-wrap">
-            <input id="ai-key" type="password" autoComplete="off" value={key} onChange={e=>setKey(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")connect();}} placeholder="sk-ant-…" className="ldp-input flex-1 min-w-[220px]"/>
+            <input id="ai-key" type="password" autoComplete="off" value={key} onChange={e=>setKey(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")connect();}} placeholder="AQ.… / sk-ant-…" className="ldp-input flex-1 min-w-[220px]"/>
             <button onClick={connect} disabled={busy||!key.trim()} className="bg-purple-700 hover:bg-purple-800 disabled:opacity-50 text-white px-5 py-2.5 rounded-lg text-sm font-semibold">{busy?t.checking:t.connect}</button>
           </div>
           {err&&<p role="alert" className="text-sm text-red-700 mt-2">{err}</p>}
           <p className="text-xs text-gray-500 mt-2">{t.keyHelp}</p>
-          <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" className="inline-block text-xs text-blue-700 hover:underline mt-1">{t.getKey}</a>
+          <p className="text-xs text-gray-500 mt-1">{t.geminiData}</p>
+          <p className="text-xs mt-1 flex flex-wrap gap-x-4">
+            <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">{t.getKey}</a>
+            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">{t.getKeyAnthropic}</a>
+          </p>
         </div>
       </div>
     </div>
@@ -125,6 +164,10 @@ export default function CoachPanel({ user, lang, setLang, t, progress, onNavigat
       disconnectKey();
       setNotice(t.ai.keyRejected);
     }
+    if (kind === "auth" && aiMode() === "proxy") {
+      disconnectCode();
+      setNotice(t.ai.codeRejected);
+    }
     setMode(aiMode());
     setTimeout(() => {
       const el = document.getElementById("ai-key");
@@ -143,7 +186,7 @@ export default function CoachPanel({ user, lang, setLang, t, progress, onNavigat
         portalMap={portalMap}
         navLabel={target => navLabel(target, lang, t)}
         onNavigate={onNavigate}
-        aiReady={mode !== "off"}
+        aiReady={mode === "key" || mode === "proxy"}
         onConnect={onConnect}
         embedded
       />

@@ -11,6 +11,17 @@ npm run dev        # http://localhost:3005
 npm run build      # production build to dist/
 ```
 
+## Checks
+
+```bash
+npm run check         # content (EN/FR parity, quote sources, ids) + Gemini client unit tests
+npm run check:links   # opens every external link; about a minute, needs internet
+```
+
+`check:links` lists Google Drive links without opening them (they need a
+sign-in) and reports sites that block scripts (HTTP 403) so they can be checked
+by hand. Last full run: 12 November 2026.
+
 ## Demo accounts
 
 | Role   | Username      | Password    |
@@ -76,37 +87,65 @@ French, shows them under the message, and passes them to the coach and to
 practice-scene scoring. These are estimates: browser speech recognition often
 drops hesitations such as "um".
 
-Privacy: coaching conversations, practice and check-ins stay in the user's
-browser. Only a participant's opt-in growth-plan summary (goals, progress,
-practice scores) is shared, and it syncs through Supabase when configured,
-so mentors and admins see it under **Mentor view**.
+Privacy: coaching conversations, practice and check-ins are stored in the
+user's browser and mentors cannot see them. What goes into an AI request is
+sent to the connected provider. On Gemini's free tier, Google may use it to
+improve its products and human reviewers may read it, and
+[its terms](https://aistudio.google.com/docs/terms) say not to submit sensitive,
+confidential or personal information. On a paid key, Google says it does not
+use prompts or responses to improve its products and logs them for a limited
+time to detect policy violations. Only a participant's opt-in growth-plan
+summary (goals, progress, practice scores) is shared, and it syncs through
+Supabase when configured, so mentors and admins see it under **Mentor view**.
 
-Connecting it to Claude, either way:
+Connecting it to an AI model, either way:
 
-- **Proxy (after real sign-in is in place).**
-  [`supabase/functions/ai-coach`](supabase/functions/ai-coach/index.ts) keeps
-  your Anthropic key on the server and pins the model and token limits. It is
-  not safe to deploy yet: it can only check the request's `Origin` header,
-  which scripts can forge, so anyone with its URL could spend your credit.
-  Deploy it only after the portal moves to Supabase Auth and the function
-  verifies each caller's session (see the file header).
+- **Shared key behind the proxy (for the cohort).**
+  [`supabase/functions/ai-coach`](supabase/functions/ai-coach/index.ts) is a
+  Supabase Edge Function that keeps the Anthropic key as a server secret and
+  pins the model and token limits. Because the portal's sign-in is
+  browser-only, the proxy is gated by a **cohort access code**: the mentor
+  sets it as a secret and gives it to participants, who enter it once in the
+  AI Coach tab (kept in that browser as `ldp_ai_code`). The code is never in
+  the repo or the built site. If it leaks, set a new one and participants
+  re-enter it. Cost is bounded three ways: the proxy refuses more than 400
+  requests or 800k output tokens per UTC day (counter in the private
+  `ai_usage` table, [migration](supabase/migrations)), a per-connection rate
+  limit, and a monthly spend limit you set in the Anthropic Console.
+  Run the guided setup, which creates the project, stores the secrets,
+  deploys and writes `VITE_AI_PROXY_URL` to `.env`:
+
+  ```bash
+  scripts/setup-ai-proxy.sh
+  ```
+
+  The site must be rebuilt after that (`.env` is read at build time). This
+  is still weaker than real accounts: anyone with the code can use the budget.
+  Moving sign-in to Supabase Auth and verifying the caller's session in the
+  function remains the next hardening step.
 - **Personal key.** With no proxy configured, each user can paste their own
-  Anthropic API key in the tab. It is kept in that browser only and sent
-  straight to Anthropic.
+  Gemini key (from Google AI Studio) or Anthropic key in the tab. The portal
+  works out the provider from the key. It is kept in that browser only and sent
+  straight to that provider. Never commit a key or set one at build time: this
+  repository and the published site are public. Google advises against
+  client-side keys in production, so restrict the key and set a budget alert.
 
 The Web Speech API powers voice: listening works in Chrome, Edge and Safari,
 and it needs microphone permission. Reading aloud works in all modern browsers.
 
 ## Personal Development
 
-The **Personal Development** tab has five views:
+The **Personal Development** tab has six views:
 
-- **Plan and voices**: a four-week plan, plus speakers, researchers, African
-  leaders and classic public-domain thinkers, each with key lessons, quotes,
-  a practice and checked videos ([`src/development.js`](src/development.js),
-  [`src/developmentExtra.js`](src/developmentExtra.js), [`src/classics.js`](src/classics.js)).
-  Classic quotes are verbatim from Project Gutenberg translations; modern
-  quotes are limited to well-documented lines.
+- **Plan and voices**: a four-week plan, plus speakers, coaches, researchers,
+  African leaders and classic public-domain thinkers, each with key lessons,
+  quotes, a practice and checked videos ([`src/development.js`](src/development.js),
+  [`src/developmentExtra.js`](src/developmentExtra.js), [`src/voicesExtra.js`](src/voicesExtra.js),
+  [`src/classics.js`](src/classics.js)). Classic quotes are verbatim from Project
+  Gutenberg translations. Each modern quote carries a source label, and any line
+  without a primary source says "Widely attributed" (see the note at the top of
+  `voicesExtra.js`). The Resources tab holds a public reference library
+  ([`src/library.js`](src/library.js)).
 - **Speech library**: 30 original speeches with quotes, analogies, techniques,
   delivery notes and read-aloud ([`src/speeches.js`](src/speeches.js)).
 - **Meeting facilitation**, **Master of ceremonies** and **Money & financial

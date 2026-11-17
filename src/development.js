@@ -7,6 +7,7 @@
 //   vids: t title shown, u url, by publisher
 
 import { EXTRA } from "./developmentExtra.js";
+import { VOICES, EXTRA_QUOTES, QUOTE_FR } from "./voicesExtra.js";
 import { CLASSICS } from "./classics.js";
 
 const yt = id => "https://www.youtube.com/watch?v=" + id;
@@ -803,10 +804,12 @@ export const SPEAKERS = [
     const x = EXTRA[s.id] || {};
     return {
       ...s,
-      quotes: [...(quote ? [quote] : []), ...(x.quotes || [])],
+      quotes: [...(quote ? [quote] : []), ...(x.quotes || []), ...(EXTRA_QUOTES[s.id] || [])]
+        .map(q => (q.fr || !QUOTE_FR[q.text] ? q : { ...q, fr: QUOTE_FR[q.text] })),
       ideas: x.ideas ? { en: [...s.ideas.en, ...x.ideas.en], fr: [...s.ideas.fr, ...x.ideas.fr] } : s.ideas
     };
   }),
+  ...VOICES,
   ...CLASSICS
 ];
 

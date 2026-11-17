@@ -69,7 +69,7 @@ export default function SpeechLibrary({ t, lang, done, onToggle, selected, onSel
           </header>
           <div className="p-5 space-y-5">
             <div className="bg-purple-50 border-l-4 border-purple-700 rounded-lg px-4 py-3">
-              <p className="text-xs font-bold text-purple-800 uppercase tracking-wide mb-1">{l.key}</p>
+              <p className="text-xs font-bold text-purple-800 mb-1">{l.key}</p>
               <p className="text-sm text-gray-800">{L(sp.key, lang)}</p>
             </div>
 
@@ -121,11 +121,11 @@ export default function SpeechLibrary({ t, lang, done, onToggle, selected, onSel
             </div>
 
             <div className="bg-orange-50 border-l-4 border-orange-500 rounded-lg px-4 py-3">
-              <p className="text-xs font-bold text-orange-800 uppercase tracking-wide mb-1">{l.cta}</p>
+              <p className="text-xs font-bold text-orange-800 mb-1">{l.cta}</p>
               <p className="text-sm text-gray-800">{L(sp.cta, lang)}</p>
             </div>
             <div className="bg-gray-50 border border-gray-100 rounded-lg px-4 py-3">
-              <p className="text-xs font-bold text-gray-600 uppercase tracking-wide mb-1">{l.reflect}</p>
+              <p className="text-xs font-bold text-gray-600 mb-1">{l.reflect}</p>
               <p className="text-sm text-gray-800 italic">{L(sp.reflect, lang)}</p>
             </div>
 

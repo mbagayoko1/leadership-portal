@@ -3,3 +3,11 @@ dist/
 .DS_Store
 *.local
 .env
+
+# ebook build
+ebook/node_modules/
+ebook/dist/
+ebook/baobab/dist/
+
+# Supabase CLI scratch
+supabase/.temp/

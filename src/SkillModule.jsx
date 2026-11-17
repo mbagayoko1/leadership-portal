@@ -60,22 +60,27 @@ export default function SkillModule({ id, t, lang, done, onToggle, stage, onStag
         <p className="text-sm text-gray-600">{L(m.sub, lang)}</p>
         {m.disclaimer && <p className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">{L(m.disclaimer, lang)}</p>}
         <div className="ldp-progress-bar h-1.5"><div className="ldp-progress-fill h-1.5" style={{ width: (nDone / m.stages.length * 100) + "%" }} /></div>
-        <ol className="flex flex-wrap gap-1.5" aria-label={k.stages}>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-[15rem_minmax(0,1fr)] gap-4 items-start">
+      <nav aria-label={k.stages} className="ldp-card p-2 lg:sticky lg:top-6">
+        <ol className="flex lg:block gap-1 overflow-x-auto no-scrollbar">
           {m.stages.map((s, n) => (
-            <li key={s.id}>
+            <li key={s.id} className="flex-shrink-0 lg:flex-shrink">
               <button onClick={() => onStage(s.id)} aria-current={n === i ? "step" : undefined}
-                className={"text-xs px-2.5 py-1.5 rounded-lg border flex items-center gap-1.5 transition-colors " + (n === i ? "bg-purple-700 border-purple-700 text-white" : done[s.id] ? "bg-green-50 border-green-200 text-green-800" : "bg-white border-gray-200 text-gray-700 hover:border-purple-300")}>
-                <span className="font-mono">{n + 1}</span>{L(s.title, lang)}
+                className={"w-full flex items-start gap-2 text-left text-sm leading-snug px-2 py-2 rounded-lg transition-colors " + (n === i ? "bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#E85D1F]" : "text-gray-700 hover:bg-gray-100")}>
+                {done[s.id] ? <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" aria-label={k.practised} /> : <span className="font-mono text-xs text-gray-500 w-4 mt-0.5 flex-shrink-0">{n + 1}</span>}
+                <span className="whitespace-nowrap lg:whitespace-normal">{L(s.title, lang)}</span>
               </button>
             </li>
           ))}
         </ol>
-      </div>
+      </nav>
 
-      <article className="ldp-card overflow-hidden fade-up" key={st.id + lang}>
+      <article className="ldp-card overflow-hidden fade-up min-w-0" key={st.id + lang}>
         <header className="p-5 border-b border-gray-100">
           <p className="ldp-eyebrow">{k.stages} {i + 1} / {m.stages.length}</p>
-          <h3 className="text-xl font-semibold text-gray-800 font-serif">{L(st.title, lang)}</h3>
+          <h3 className="text-2xl font-semibold text-gray-900 font-serif">{L(st.title, lang)}</h3>
           <p className="text-sm text-gray-600 mt-1"><span className="font-semibold">{k.goal}:</span> {L(st.goal, lang)}</p>
         </header>
         <div className="p-5 space-y-5">
@@ -84,7 +89,7 @@ export default function SkillModule({ id, t, lang, done, onToggle, stage, onStag
             <ul className="space-y-2">{(st.tips[lang] || st.tips.en).map((x, n) => <li key={n} className="text-sm text-gray-700 pl-3 border-l-2 border-orange-300 leading-relaxed">{x}</li>)}</ul>
           </section>
           <section className="bg-purple-50 border-l-4 border-purple-700 rounded-lg px-4 py-3">
-            <h4 className="text-xs font-bold text-purple-800 uppercase tracking-wide mb-2">{m.sayLabel ? L(m.sayLabel, lang) : k.say}</h4>
+            <h4 className="text-xs font-bold text-purple-800 mb-2">{m.sayLabel ? L(m.sayLabel, lang) : k.say}</h4>
             <ul className="space-y-1.5">{(st.say[lang] || st.say.en).map((x, n) => <li key={n} className="text-sm text-gray-800 font-serif italic">{x}</li>)}</ul>
           </section>
           <div className="flex flex-wrap gap-2 justify-between items-center">
@@ -100,6 +105,7 @@ export default function SkillModule({ id, t, lang, done, onToggle, stage, onStag
           <button onClick={onCoach} className="text-sm px-3 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-800 text-white font-semibold">{k.rehearse}</button>
         </div>
       </article>
+      </div>
 
       {m.id === "money" && <MoneyTools k={t.pd.mt} lang={lang} />}
 

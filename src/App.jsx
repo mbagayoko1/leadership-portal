@@ -1,17 +1,18 @@
-import { useState, useEffect, useRef, lazy, Suspense } from "react";
+import { useState, useEffect, useMemo, useRef, lazy, Suspense } from "react";
 import {
   CheckCircle2, Circle, Book, Mic, Users, Trophy, TrendingUp,
   Calendar, Target, LogOut, User, Settings, Plus, Trash2, Edit2,
   Eye, EyeOff, Save, FolderOpen, ChevronRight, ChevronDown,
   Shield, Play, FileText, Link, ExternalLink, Sparkles,
   UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone, Lightbulb,
-  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder
+  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder, Search
 } from "lucide-react";
 import { RC, ROLES, TC, EF, IU, CUR, SM, CI, DS, DDC, DEFAULT_GOALS } from "./data.js";
 import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON, moveUserData, deleteUserData } from "./storage.js";
 import { STR } from "./i18n.js";
 import { COMPETENCIES } from "./competencies.js";
 import { SPEAKERS, PD_PLAN } from "./development.js";
+import { LIBRARY } from "./library.js";
 
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
 const SpeechLibrary = lazy(() => import("./SpeechLibrary.jsx"));
@@ -23,7 +24,7 @@ function Av({ user, size }) {
   const s = size==="sm"?"w-8 h-8 text-xs":size==="lg"?"w-16 h-16 text-2xl":"w-10 h-10 text-sm";
   if (user.profilePicture) return <img src={user.profilePicture} alt="" className={s+" rounded-full object-cover flex-shrink-0"} />;
   const ini = user.name.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
-  return <div className={s+" rounded-full bg-gradient-to-br from-purple-400 to-blue-500 flex items-center justify-center text-white font-bold flex-shrink-0"}>{ini}</div>;
+  return <div className={s+" rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold flex-shrink-0"}>{ini}</div>;
 }
 // Signature element: asymmetric UNFPA-orange / brass / verdigris band
 function Band() {
@@ -35,34 +36,134 @@ function Band() {
     </div>
   );
 }
+// The three-bar mark from the band, used as the portal's logo.
+function Mark() {
+  return (
+    <div className="flex flex-col gap-0.5 flex-shrink-0" aria-hidden="true">
+      <div className="h-4 w-1 bg-orange-500 rounded-full"/>
+      <div className="h-2 w-1 bg-yellow-400 rounded-full"/>
+      <div className="h-1.5 w-1 bg-green-500 rounded-full"/>
+    </div>
+  );
+}
 const ROMAN = { p1:"I", p2:"II", p3:"III", p4:"IV" };
+const MODULES = Object.entries(CUR).flatMap(([pk,ph])=>ph.modules.map(m=>({...m,pk,phase:ph.name})));
+const modNum = id => Number(id.slice(1));
+const phaseName = (t,pk) => t["phase"+pk.slice(1)].replace(/^[─\s]*Phase \d+\s*:\s*/,"");
+const phaseMonths = (t,ph) => ((/\(([^)]*)\)/.exec(ph.name)||[])[1]||"").replace("Months",t.route.months);
+
+// Signature element: the whole programme on one line, four phases and eleven
+// modules, each as wide as its number of weeks. Pass onOpen to make it navigable.
+function Route({ t, done={}, current, onOpen, dark }) {
+  const bar=(id)=>done[id]?"bg-green-500":id===current?"bg-orange-500":dark?"bg-white/40":"bg-gray-200";
+  return (
+    <ol className="flex flex-col md:flex-row gap-3 md:gap-1.5" aria-label={t.route.title}>
+      {Object.entries(CUR).map(([pk,ph])=>{
+        const weeks=ph.modules.reduce((n,m)=>n+m.weeks,0);
+        return (
+          <li key={pk} className="min-w-0 flex flex-col md:[flex:var(--g)_1_0%]" style={{"--g":weeks}}>
+            <p className={"text-xs font-semibold leading-snug "+(dark?"text-white":"text-gray-800")}>{phaseName(t,pk)}</p>
+            <p className={"text-xs leading-snug "+(dark?"text-blue-200":"text-gray-500")}>{phaseMonths(t,ph)}</p>
+            <ol className="flex gap-0.5 mt-auto pt-1.5">
+              {ph.modules.map(m=>{
+                const label=t.moduleWord+" "+modNum(m.id)+": "+m.title+" ("+(done[m.id]?t.route.done:m.id===current?t.route.current:t.route.upcoming)+")";
+                return (
+                  <li key={m.id} className="[flex:var(--g)_1_0%]" style={{"--g":m.weeks}}>
+                    {onOpen
+                      ?<button onClick={()=>onOpen(m.id)} title={label} aria-label={label} aria-current={m.id===current?"step":undefined} className="group block w-full h-7"><span className={"block h-2.5 rounded-sm transition-all group-hover:h-4 "+bar(m.id)}/></button>
+                      :<span title={label} className={"block h-2.5 rounded-sm "+bar(m.id)}/>}
+                  </li>
+                );
+              })}
+            </ol>
+          </li>
+        );
+      })}
+    </ol>
+  );
+}
+function RouteLegend({ t }) {
+  return (
+    <ul className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 mt-1">
+      {[["bg-green-500",t.route.done],["bg-orange-500",t.route.current],["bg-gray-200",t.route.upcoming]].map(([c,l])=>(
+        <li key={l} className="flex items-center gap-1.5"><span className={"w-2.5 h-2.5 rounded-sm "+c}/>{l}</li>
+      ))}
+    </ul>
+  );
+}
+function PageHead({ title, sub, children }) {
+  return (
+    <header className="flex flex-wrap items-end justify-between gap-3 mb-5">
+      <div className="min-w-0">
+        <h2 className="text-3xl font-semibold text-gray-900 leading-tight">{title}</h2>
+        {sub&&<p className="text-sm text-gray-600 mt-1 max-w-2xl">{sub}</p>}
+      </div>
+      {children}
+    </header>
+  );
+}
+// One quiet row for every external resource, whatever its type.
+function ResLink({ href, icon:I, title, meta, tag }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 px-3 py-2.5 bg-white border border-gray-200 rounded-lg hover:border-orange-300 hover:bg-orange-50/50 transition-colors">
+      <I className="w-4 h-4 text-orange-600 flex-shrink-0" aria-hidden="true"/>
+      <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-gray-800 leading-snug">{title}</span>{meta&&<span className="block text-xs text-gray-500">{meta}</span>}</span>
+      {tag&&<Tg tag={tag}/>}
+    </a>
+  );
+}
+// Public reference documents, grouped, in the Resources tab.
+function Library({ t, lang }) {
+  return (
+    <section className="ldp-card p-5 mt-4" aria-labelledby="library-title">
+      <h3 id="library-title" className="font-semibold text-gray-800">{t.library.title}</h3>
+      <p className="text-sm text-gray-600 mt-1 mb-4">{t.library.sub}</p>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-x-6 gap-y-5 items-start">
+        {LIBRARY.map(g=>(
+          <div key={g.id}>
+            <h4 className="text-sm font-bold text-gray-700 mb-2">{g.title[lang]||g.title.en}</h4>
+            <div className="space-y-2">{g.items.map(x=><ResLink key={x.u} href={x.u} icon={x.pdf?FileText:BookOpen} title={x.t} meta={x.by+". "+(x.d[lang]||x.d.en)} tag={x.pdf?"PDF":undefined}/>)}</div>
+          </div>
+        ))}
+      </div>
+      <p className="text-xs text-gray-500 mt-4">{t.library.note}</p>
+    </section>
+  );
+}
+// One sourced line for the day, the same for everyone. Skips unsourced lines and book titles.
+function DailyQuote({ t, lang }) {
+  const pool=useMemo(()=>SPEAKERS.flatMap(s=>s.quotes.filter(q=>!/widely attributed|attributed|title/i.test(q.source)).map(q=>({...q,by:s.name}))),[]);
+  const q=pool[Math.floor(Date.now()/86400000)%pool.length];
+  if(!q) return null;
+  return (
+    <figure className="ldp-card p-5 border-l-4 border-l-yellow-400">
+      <figcaption className="text-xs font-semibold text-gray-500 mb-1">{t.dailyQuote}</figcaption>
+      <blockquote className="font-serif italic text-lg text-gray-800 leading-snug">“{lang==="fr"&&q.fr?q.fr:q.text}”</blockquote>
+      <p className="text-xs text-gray-500 mt-2">{q.by}, {q.source}</p>
+    </figure>
+  );
+}
 // One icon per entry of STR[lang].compItems, in the same order.
 const COMP_ICONS = [UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone];
 function Competencies({ t, selected, onSelect }) {
   return (
-    <div className="ldp-card overflow-hidden">
-      <div className="ldp-phase-header">
-        <h3 className="font-semibold">{t.compTitle}</h3>
-      </div>
-      <div className="p-4">
-        <p className="text-sm text-gray-600 mb-1">{t.compSub}</p>
-        <p className="text-xs text-gray-400 mb-3">{t.compPick}</p>
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {t.compItems.map((item,i)=>{
-            const Icon=COMP_ICONS[i]||CheckCircle2;
-            const on=selected===i;
-            return (
-              <li key={i}>
-                <button onClick={()=>onSelect(i)} aria-pressed={on} className={"w-full text-left flex items-start gap-3 p-3 rounded-lg border transition-colors "+(on?"bg-orange-50 border-orange-300":"bg-gray-50 border-gray-100 hover:border-orange-200 hover:bg-orange-50/50")}>
-                  <span className={"w-8 h-8 rounded-lg border flex items-center justify-center flex-shrink-0 "+(on?"bg-orange-500 border-orange-500":"bg-orange-50 border-orange-100")}><Icon className={"w-4 h-4 "+(on?"text-white":"text-orange-600")}/></span>
-                  <span className="text-sm text-gray-700 leading-snug pt-1 flex-1">{item}</span>
-                  <ChevronRight className={"w-4 h-4 mt-2 flex-shrink-0 "+(on?"text-orange-600":"text-gray-300")}/>
-                </button>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
+    <div className="ldp-card p-4">
+      <h3 className="font-semibold text-gray-800">{t.compTitle}</h3>
+      <p className="text-xs text-gray-500 mt-0.5 mb-3">{t.compPick}</p>
+      <ul className="space-y-1">
+        {t.compItems.map((item,i)=>{
+          const Icon=COMP_ICONS[i]||CheckCircle2;
+          const on=selected===i;
+          return (
+            <li key={i}>
+              <button onClick={()=>onSelect(i)} aria-pressed={on} className={"w-full text-left flex items-start gap-2.5 px-2.5 py-2 rounded-lg transition-colors "+(on?"bg-orange-50 shadow-[inset_3px_0_0_#E85D1F]":"hover:bg-gray-100")}>
+                <Icon className={"w-4 h-4 mt-0.5 flex-shrink-0 "+(on?"text-orange-700":"text-gray-500")} aria-hidden="true"/>
+                <span className={"text-sm leading-snug flex-1 "+(on?"font-semibold text-gray-900":"text-gray-700")}>{item}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 }
@@ -74,10 +175,9 @@ function CompetencyDetail({ t, lang, index }) {
   return (
     <div className="ldp-card overflow-hidden fade-up">
       <div className="p-5 border-b border-gray-100 flex items-start gap-3">
-        <span className="w-10 h-10 rounded-lg bg-orange-500 flex items-center justify-center flex-shrink-0"><Icon className="w-5 h-5 text-white"/></span>
+        <Icon className="w-5 h-5 text-orange-600 flex-shrink-0 mt-1" aria-hidden="true"/>
         <div>
-          <p className="ldp-eyebrow">{t.compOverview}</p>
-          <h3 className="text-lg font-semibold text-gray-800 leading-snug">{t.compItems[index]}</h3>
+          <h3 className="text-xl font-semibold font-serif text-gray-900 leading-snug">{t.compItems[index]}</h3>
         </div>
       </div>
       <div className="p-5 space-y-5">
@@ -88,23 +188,11 @@ function CompetencyDetail({ t, lang, index }) {
         </div>
         <div>
           {head(Play,t.compVideos,c.vids.length)}
-          <div className="space-y-2">{c.vids.map((v,i)=>(
-            <a key={i} href={v.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
-              <span className="w-8 h-8 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0"><Play className="w-4 h-4 text-red-700"/></span>
-              <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-gray-800">{v.t}</span><span className="block text-xs text-gray-500">{v.s}{v.d?" · "+v.d:""}</span></span>
-              <Tg tag={v.g}/>
-            </a>
-          ))}</div>
+          <div className="space-y-2">{c.vids.map((v,i)=><ResLink key={i} href={v.u} icon={Play} title={v.t} meta={v.s+(v.d?" · "+v.d:"")} tag={v.g}/>)}</div>
         </div>
         <div>
           {head(Link,t.compArticles,c.arts.length)}
-          <div className="space-y-2">{c.arts.map((a,i)=>(
-            <a key={i} href={a.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
-              <span className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center flex-shrink-0">{/\((PDF|image)\)$/.test(a.t)?<FileText className="w-4 h-4 text-blue-700"/>:<Link className="w-4 h-4 text-blue-700"/>}</span>
-              <span className="flex-1 min-w-0 text-sm font-semibold text-gray-800">{a.t}</span>
-              <Tg tag={a.s}/>
-            </a>
-          ))}</div>
+          <div className="space-y-2">{c.arts.map((a,i)=><ResLink key={i} href={a.u} icon={/\((PDF|image)\)$/.test(a.t)?FileText:Link} title={a.t} tag={a.s}/>)}</div>
         </div>
         <div>
           {head(Book,t.compBooks,c.books.length)}
@@ -125,24 +213,25 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
   const sp=SPEAKERS[selected]||SPEAKERS[0];
   const nWeeks=PD_PLAN.filter(w=>done[w.id]).length;
   const nameOf=id=>(SPEAKERS.find(s=>s.id===id)||{}).name;
-  const chips=kind=>SPEAKERS.map((s,i)=>s.kind!==kind?null:(
-    <button key={s.id} onClick={()=>onSelect(i)} aria-pressed={selected===i} className={"text-left px-3 py-2 rounded-lg border transition-colors "+(selected===i?"bg-orange-50 border-orange-300":"bg-white border-gray-200 hover:border-orange-200")}>
-      <span className="block text-sm font-semibold text-gray-800">{s.name}</span>
-      <span className="block text-xs text-gray-500">{s.theme[lang]||s.theme.en}</span>
-    </button>
-  ));
+  const groups=[["speaker",p.speakers],["coach",p.coaches],["research",p.research],["africa",p.africa],["classic",p.classics],["channel",p.channels]];
+  const [q,setQ]=useState("");
+  const norm=x=>x.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+  const shown=s=>{const k=norm(q.trim());return !k||norm(s.name+" "+(s.theme[lang]||s.theme.en)+" "+(s.role[lang]||s.role.en)).includes(k);};
+  const nShown=SPEAKERS.filter(shown).length;
+  const finder=(
+    <div className="relative">
+      <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" aria-hidden="true"/>
+      <input type="search" value={q} onChange={e=>setQ(e.target.value)} placeholder={p.findVoice} aria-label={p.findVoice} className="ldp-input py-2 pl-9"/>
+    </div>
+  );
   return (
     <div className="space-y-4">
-      <div className="ldp-card overflow-hidden">
-        <div className="ldp-phase-header flex-col items-start gap-1">
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orange-300">{t.nav.development}</p>
-          <h2 className="text-2xl font-semibold font-serif">{p.title}</h2>
-          <p className="text-sm text-blue-100/90 max-w-3xl">{p.sub}</p>
-        </div>
-        <div role="tablist" aria-label={p.title} className="flex overflow-x-auto no-scrollbar border-t border-white/10">
+      <div>
+        <PageHead title={p.title} sub={p.sub}/>
+        <div role="tablist" aria-label={p.title} className="ldp-subtabs">
           {views.map(([k,label,Icon])=>(
-            <button key={k} role="tab" aria-selected={view===k} onClick={()=>onView(k)} className={"flex items-center gap-2 px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(view===k?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-600 hover:bg-gray-50 hover:text-gray-800")}>
-              <Icon className="w-4 h-4"/>{label}
+            <button key={k} role="tab" aria-selected={view===k} onClick={()=>onView(k)} className="ldp-subtab">
+              <Icon className="w-4 h-4" aria-hidden="true"/>{label}
             </button>
           ))}
         </div>
@@ -177,15 +266,33 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
           ))}
         </div>
       </div>
-      <div className="ldp-card p-4 space-y-3">
-        {[["speaker",p.speakers],["research",p.research],["africa",p.africa],["classic",p.classics],["channel",p.channels]].map(([kind,label])=>(
-          <div key={kind}><p className="ldp-eyebrow mb-2">{label}</p><div className="grid grid-cols-2 md:grid-cols-4 gap-2">{chips(kind)}</div></div>
-        ))}
+      <div className="grid grid-cols-1 lg:grid-cols-[16rem_minmax(0,1fr)] gap-4 items-start">
+      <div className="lg:hidden space-y-2">
+        {finder}
+        <label htmlFor="pd-voice" className="ldp-label">{p.voices} <span className="font-mono font-normal text-gray-400">({nShown})</span></label>
+        <select id="pd-voice" value={selected} onChange={e=>onSelect(+e.target.value)} className="ldp-input py-2">
+          {groups.map(([kind,label])=>SPEAKERS.some((s,i)=>s.kind===kind&&(shown(s)||i===selected))&&<optgroup key={kind} label={label}>{SPEAKERS.map((s,i)=>s.kind===kind&&(shown(s)||i===selected)&&<option key={s.id} value={i}>{s.name}</option>)}</optgroup>)}
+        </select>
       </div>
+      <nav aria-label={p.voices} className="hidden lg:block ldp-card p-3 sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto space-y-4">
+        {finder}
+        {nShown===0&&<p className="text-sm text-gray-500 px-2">{p.noVoice}</p>}
+        {groups.map(([kind,label])=>SPEAKERS.some(s=>s.kind===kind&&shown(s))&&(
+          <div key={kind}>
+            <p className="ldp-eyebrow px-2 mb-1">{label} <span className="font-mono font-normal text-gray-400">{SPEAKERS.filter(s=>s.kind===kind&&shown(s)).length}</span></p>
+            <ul>{SPEAKERS.map((s,i)=>s.kind===kind&&shown(s)&&(
+              <li key={s.id}><button onClick={()=>onSelect(i)} aria-current={selected===i?"true":undefined} className={"w-full text-left px-2 py-1.5 rounded-lg transition-colors "+(selected===i?"bg-orange-50 shadow-[inset_3px_0_0_#E85D1F]":"hover:bg-gray-100")}>
+                <span className={"block text-sm leading-snug "+(selected===i?"font-semibold text-gray-900":"text-gray-700")}>{s.name}</span>
+                <span className="block text-xs text-gray-500 leading-snug">{s.theme[lang]||s.theme.en}</span>
+              </button></li>
+            ))}</ul>
+          </div>
+        ))}
+      </nav>
       <div className="ldp-card overflow-hidden fade-up" key={sp.id}>
         <div className="p-5 border-b border-gray-100">
           <p className="ldp-eyebrow">{sp.theme[lang]||sp.theme.en}</p>
-          <h3 className="text-xl font-semibold text-gray-800 font-serif">{sp.name}</h3>
+          <h3 className="text-2xl font-semibold text-gray-900 font-serif">{sp.name}</h3>
           <p className="text-sm text-gray-500">{sp.role[lang]||sp.role.en}</p>
         </div>
         <div className="p-5 space-y-5">
@@ -195,11 +302,11 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
               <div className="space-y-3">{sp.quotes.map((q,i)=>(
                 <figure key={i} className={"border-l-4 border-yellow-400 pl-4 "+(i?"":"pb-1")}>
                   <blockquote className={"font-serif italic text-gray-800 leading-snug "+(i?"":"text-lg")}>“{lang==="fr"&&q.fr?q.fr:q.text}”</blockquote>
-                  {lang==="fr"&&q.fr&&<p className="text-xs text-gray-500 italic mt-0.5">“{q.text}”</p>}
-                  <figcaption className="text-xs text-gray-500 mt-1">— {sp.name}, {q.source}{lang==="fr"?" · "+(q.fr?p.freeTr:p.quoteNote):""}</figcaption>
+                  {lang==="fr"&&q.fr&&q.orig!=="fr"&&<p className="text-xs text-gray-500 italic mt-0.5">“{q.text}”</p>}
+                  <figcaption className="text-xs text-gray-500 mt-1">— {sp.name}, {q.source}{q.orig==="fr"?(lang==="fr"?"":" · "+p.fromFr):lang==="fr"?" · "+(q.fr?p.freeTr:p.quoteNote):""}</figcaption>
                 </figure>
               ))}</div>
-              {sp.kind==="classic"&&<p className="text-[11px] text-gray-400 mt-2">{p.classicNote}</p>}
+              {sp.kind==="classic"&&sp.channel.includes("gutenberg.org")&&<p className="text-[11px] text-gray-400 mt-2">{p.classicNote}</p>}
             </div>
           )}
           <div>
@@ -208,24 +315,19 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
           </div>
           {sp.caution&&<div className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2"><strong>{p.note2}:</strong> {sp.caution[lang]||sp.caution.en}</div>}
           <div className="bg-orange-50 border-l-4 border-orange-500 rounded-lg px-4 py-3">
-            <p className="text-xs font-bold text-orange-800 uppercase tracking-wide mb-1">{p.practice}</p>
+            <p className="text-xs font-bold text-orange-800 mb-1">{p.practice}</p>
             <p className="text-sm text-gray-800">{sp.practice[lang]||sp.practice.en}</p>
           </div>
           {sp.vids.length>0&&<div>
             <h4 className="text-sm font-bold text-gray-700 mb-2 flex items-center gap-2"><Play className="w-4 h-4 text-orange-500"/>{p.watch}</h4>
-            <div className="space-y-2">{sp.vids.map((v,i)=>(
-              <a key={i} href={v.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-red-50 hover:bg-red-100 rounded-lg transition-colors">
-                <span className="w-8 h-8 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0"><Play className="w-4 h-4 text-red-700"/></span>
-                <span className="flex-1 min-w-0"><span className="block text-sm font-semibold text-gray-800">{v.t}</span><span className="block text-xs text-gray-500">{v.by}</span></span>
-                <Tg tag={v.u.includes("ted.com")?"TED":"YouTube"}/>
-              </a>
-            ))}</div>
+            <div className="space-y-2">{sp.vids.map((v,i)=><ResLink key={i} href={v.u} icon={Play} title={v.t} meta={v.by} tag={v.u.includes("ted.com")?"TED":v.u.includes("youtube.com")?"YouTube":undefined}/>)}</div>
           </div>}
           <div className="flex flex-wrap gap-2">
-            <a href={sp.channel} target="_blank" rel="noopener noreferrer" className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700">{sp.channel.includes("gutenberg.org")?p.openBook:sp.channel.includes("ted.com")?p.openTed:p.openChannel}</a>
+            <a href={sp.channel} target="_blank" rel="noopener noreferrer" className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 text-gray-700">{sp.channel.includes("gutenberg.org")?p.openBook:sp.channel.includes("ted.com/speakers")?p.openTed:sp.channel.includes("youtube.com")?p.openChannel:p.openSite}</a>
             <button onClick={onCoach} className="text-sm px-3 py-1.5 rounded-lg bg-purple-700 hover:bg-purple-800 text-white font-semibold">{p.practiseCoach}</button>
           </div>
         </div>
+      </div>
       </div>
       <details className="ldp-card px-4 py-3 text-xs text-gray-600">
         <summary className="cursor-pointer font-semibold text-gray-700">{p.sources}</summary>
@@ -235,11 +337,11 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
     </div>
   );
 }
-function LangSwitch({ lang, setLang }) {
+function LangSwitch({ lang, setLang, light }) {
   return (
-    <div className="flex rounded-lg overflow-hidden border border-white/25 font-mono text-[11px]">
-      {["en","fr"].map(l=>(
-        <button key={l} onClick={()=>setLang(l)} className={"px-2.5 py-1 uppercase tracking-wider "+(lang===l?"bg-white text-purple-800 font-semibold":"text-white/80 hover:bg-white/10")}>{l}</button>
+    <div className={"flex rounded-lg overflow-hidden border text-xs "+(light?"border-gray-300":"border-white/25")}>
+      {[["en","EN"],["fr","FR"]].map(([l,label])=>(
+        <button key={l} onClick={()=>setLang(l)} aria-pressed={lang===l} className={"px-2.5 py-1 font-semibold "+(lang===l?(light?"bg-purple-700 text-white":"bg-white text-purple-800"):(light?"text-gray-600 hover:bg-gray-100":"text-white/80 hover:bg-white/10"))}>{label}</button>
       ))}
     </div>
   );
@@ -314,7 +416,7 @@ export default function App() {
   const [prog,setProg]=useState({mod:{},rt:{},ve:{}});
   const [sm,setSm]=useState("m1");
   const [st,setSt]=useState("guide");
-  const [dop,setDop]=useState({});
+  const [dop,setDop]=useState(()=>Object.fromEntries(DS.map(n=>[n.id,true])));
   const [uv,setUv]=useState("list");
   const [ut,setUt]=useState(null);
   const [uf,setUf]=useState(EF());
@@ -334,6 +436,12 @@ export default function App() {
   const [coachOpened,setCoachOpened]=useState(false);
   useEffect(()=>{ if(tab==="coach") setCoachOpened(true); },[tab]);
   // On narrow screens the tab bar scrolls sideways; keep the active tab visible.
+  // A new section always starts at the top of the page.
+  useEffect(()=>{ window.scrollTo(0,0); },[tab]);
+  useEffect(()=>{ const tb=tabs.find(x=>x.k===tab); document.title=(li&&tb?tb.l+" · ":"")+"Leadership & Communication Mastery · UNFPA WCARO"; },[tab,lang,li]);
+  const [openMods,setOpenMods]=useState({});
+  // Opens a module in the Curriculum (from the Route) and scrolls to it.
+  function openModule(id){ setTab("curriculum"); setOpenMods(o=>({...o,[id]:true})); setTimeout(()=>{ const el=document.getElementById("mod-"+id); if(el) el.scrollIntoView({block:"start"}); },60); }
   const navRef=useRef(null);
   useEffect(()=>{ const el=navRef.current&&navRef.current.querySelector('[aria-current="page"]'); if(el) el.scrollIntoView({block:"nearest",inline:"nearest"}); },[tab]);
   // Opens a target from an AI Coach link: tab:<name>, module:<id>,
@@ -400,7 +508,7 @@ export default function App() {
   // to the next person who signs in on this browser.
   function logout(){setLi(false);setMe(null);setLf({username:"",password:""});setLe("");setTab("dashboard");setCoachOpened(false);clearSession();
     setProg({mod:{},rt:{},ve:{}});setMs([]);setMg(DEFAULT_GOALS);setMn({});
-    setSm("m1");setSt("guide");setCp(0);setPdSel(0);setPdView("plan");setSpSel("s01");setSkStage({});setMt("overview");setUv("list");setUt(null);}
+    setSm("m1");setSt("guide");setCp(0);setPdSel(0);setPdView("plan");setSpSel("s01");setSkStage({});setOpenMods({});setMt("overview");setUv("list");setUt(null);}
   function tp(cat,id){setProg(p=>{const c=p[cat]||{};return {...p,[cat]:{...c,[id]:!c[id]}};})}
   function pct(){let tt=0,d=0;Object.values(CUR).forEach(ph=>ph.modules.forEach(m=>{tt++;if(prog.mod[m.id])d++;}));return tt?Math.round(d/tt*100):0;}
   const pts=Object.values(users).filter(u=>u.role==="participant");
@@ -431,77 +539,63 @@ export default function App() {
   const all=[...SM,...CI];
   const cur=all.find(m=>m.id===sm)||SM[0];
   const op=pct();
+  const nextMod=MODULES.find(m=>!prog.mod[m.id]);
+  const nDone=MODULES.filter(m=>prog.mod[m.id]).length;
+  const firstName=me?me.name.split(" ")[0]:"";
   const tabs=[{k:"dashboard",l:t.nav.dashboard,I:TrendingUp},{k:"curriculum",l:t.nav.curriculum,I:Calendar},{k:"study-guide",l:t.nav.study,I:Book},{k:"development",l:t.nav.development,I:Lightbulb},{k:"coach",l:t.nav.coach,I:Sparkles},{k:"resources",l:t.nav.resources,I:Trophy},{k:"drive",l:t.nav.drive,I:FolderOpen},...(me&&me.role==="admin"?[{k:"users",l:t.nav.users,I:Users}]:[])];
 
-  if(!ready){ return <div className="min-h-screen bg-gradient-to-br from-purple-700 to-blue-700 flex items-center justify-center"><div className="text-center text-white"><div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"/><p className="font-semibold">{t.loading}</p></div></div>; }
+  if(!ready){ return <div className="min-h-screen bg-purple-700 flex items-center justify-center"><div className="text-center text-white"><div className="w-12 h-12 border-4 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-4"/><p className="font-semibold">{t.loading}</p></div></div>; }
   if(!li){
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-700 via-blue-700 to-indigo-800 flex items-center justify-center p-6 relative">
-        <div className="absolute top-4 right-4"><LangSwitch lang={lang} setLang={setLang}/></div>
-        <div className="w-full max-w-md space-y-4">
-          <div className="text-center mb-2">
-            <div className="flex items-center justify-center gap-3 mb-5">
-              <div className="flex flex-col gap-1">
-                <div className="h-5 w-1.5 bg-orange-500 rounded-full"/>
-                <div className="h-2.5 w-1.5 bg-yellow-400 rounded-full"/>
-                <div className="h-2 w-1.5 bg-green-500 rounded-full"/>
-              </div>
-              <div className="text-left">
-                <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5">UNFPA · WCARO</p>
-                <h1 className="text-3xl font-semibold text-white leading-tight">Leadership &amp; Communication</h1>
-                <p className="text-xl font-light text-white/80 leading-tight">Development Portal</p>
-              </div>
-            </div>
-            <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-purple-300">{t.loginSubtitle}</p>
+      <div className="min-h-screen bg-gray-50 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+        <aside className="bg-purple-700 text-white flex flex-col px-6 py-6 lg:px-14 lg:py-12">
+          <div className="flex items-center gap-3"><Mark/><p className="text-sm font-semibold">UNFPA WCARO</p></div>
+          <div className="mt-6 lg:mt-auto">
+            <h1 className="text-3xl lg:text-5xl font-semibold leading-[1.08] max-w-xl">Leadership &amp; Communication Development Portal</h1>
+            <p className="text-blue-100 mt-3 lg:mt-5 max-w-lg lg:text-lg">{t.loginIntro}</p>
           </div>
-          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-            <Band/>
-            <div className="flex border-b">
-              <button onClick={()=>{setSr(false);setRe("");setLe("");}} className={"flex-1 py-3 text-sm font-semibold transition-colors "+(!sr?"bg-orange-50 text-orange-700 border-b-2 border-orange-500":"text-gray-500 hover:bg-gray-50 border-b-2 border-transparent")}>{t.signIn}</button>
-              <button onClick={()=>{setSr(true);setRe("");setLe("");}} className={"flex-1 py-3 text-sm font-semibold transition-colors "+(sr?"bg-orange-50 text-orange-700 border-b-2 border-orange-500":"text-gray-500 hover:bg-gray-50 border-b-2 border-transparent")}>{t.requestAccess}</button>
-            </div>
-            <div className="p-6">
-              {!sr?(
-                <div className="space-y-4">
-                  <div><label className="block text-sm font-semibold text-gray-600 mb-1">{t.username}</label><input type="text" value={lf.username} onChange={e=>setLf(f=>({...f,username:e.target.value}))} onKeyDown={e=>{if(e.key==="Enter")login();}} className="ldp-input" placeholder={t.enterUsername}/></div>
-                  <div><label className="block text-sm font-semibold text-gray-600 mb-1">{t.password}</label><input type="password" value={lf.password} onChange={e=>setLf(f=>({...f,password:e.target.value}))} onKeyDown={e=>{if(e.key==="Enter")login();}} className="ldp-input" placeholder={t.enterPassword}/></div>
-                  {le&&<div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-red-700 text-sm text-center">{le}</div>}
-                  <button onClick={login} className="ldp-btn-primary">{t.signInBtn}</button>
+          <div className="hidden lg:block mt-10 mb-auto"><Route t={t} dark/></div>
+          <p className="hidden lg:block text-xs text-blue-200 mt-10">{t.loginSubtitle}</p>
+        </aside>
+        <main className="relative flex flex-col items-center justify-center px-6 py-10 lg:py-12">
+          <div className="absolute top-4 right-4"><LangSwitch lang={lang} setLang={setLang} light/></div>
+          <div className="w-full max-w-sm">
+            <h2 className="text-3xl font-semibold text-gray-900 mb-5">{sr?t.requestAccess:t.signIn}</h2>
+            {!sr?(
+              <form className="space-y-4" onSubmit={e=>{e.preventDefault();login();}}>
+                <div><label htmlFor="li-user" className="ldp-label">{t.username}</label><input id="li-user" type="text" autoComplete="username" value={lf.username} onChange={e=>setLf(f=>({...f,username:e.target.value}))} className="ldp-input bg-white" placeholder={t.enterUsername}/></div>
+                <div><label htmlFor="li-pass" className="ldp-label">{t.password}</label><input id="li-pass" type="password" autoComplete="current-password" value={lf.password} onChange={e=>setLf(f=>({...f,password:e.target.value}))} className="ldp-input bg-white" placeholder={t.enterPassword}/></div>
+                {le&&<div role="alert" className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-red-700 text-sm">{le}</div>}
+                <button type="submit" className="ldp-btn-primary">{t.signInBtn}</button>
+                <p className="text-sm text-gray-600">{t.needAccess} <button type="button" onClick={()=>{setSr(true);setRe("");setLe("");}} className="font-semibold text-orange-700 hover:underline">{t.requestAccess}</button></p>
+              </form>
+            ):rok?(
+              <div className="space-y-3">
+                <CheckCircle2 className="w-10 h-10 text-green-600"/>
+                <h3 className="font-semibold text-gray-800 text-lg">{t.accountCreated}</h3>
+                <p className="text-gray-600 text-sm">{t.accountCreatedDesc}</p>
+                <div className="ldp-card p-3 space-y-1.5">
+                  <p className="text-xs font-semibold text-gray-800">{t.accessIncludes}</p>
+                  <p className="text-xs text-gray-600">{t.accessGuides}</p>
+                  <p className="text-xs text-gray-600">{t.accessVideos}</p>
+                  <p className="text-xs text-gray-600">{t.accessFolders}</p>
                 </div>
-              ):(
-                <div className="space-y-3">
-                  {rok?(
-                    <div className="text-center py-4 space-y-3">
-                      <CheckCircle2 className="w-14 h-14 text-green-500 mx-auto"/>
-                      <h3 className="font-bold text-gray-800 text-lg">{t.accountCreated}</h3>
-                      <p className="text-gray-500 text-sm">{t.accountCreatedDesc}</p>
-                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-left space-y-2">
-                        <p className="text-xs font-semibold text-blue-900">{t.accessIncludes}</p>
-                        <p className="text-xs text-blue-700">{t.accessGuides}</p>
-                        <p className="text-xs text-blue-700">{t.accessVideos}</p>
-                        <p className="text-xs text-blue-700">{t.accessFolders}</p>
-                        <a href="https://drive.google.com/drive/folders/1e3nvDC36AptxDysRtO0C5dYiTqSS-H87" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 text-xs text-blue-700 font-semibold hover:underline"><FolderOpen className="w-3.5 h-3.5"/>{t.openDriveRepo}</a>
-                      </div>
-                      <p className="text-gray-400 text-xs">{t.redirecting}</p>
-                    </div>
-                  ):(
-                    <div className="space-y-3">
-                      <p className="text-xs text-gray-500 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2">{t.regNote1}<strong>{t.regNoteBold}</strong>{t.regNote2}</p>
-                      {[[t.fullName,"name","text"],[t.username,"username","text"],[t.email,"email","email"],[t.password,"password","password"],[t.confirmPassword,"confirm","password"]].map(arr=>{
-                        const lb=arr[0],fd=arr[1],tp2=arr[2];
-                        return <div key={fd}><label className="block text-xs font-semibold text-gray-700 mb-1">{lb}</label><input type={tp2} value={rf[fd]} onChange={e=>{const v=e.target.value;setRf(f=>({...f,[fd]:v}));}} onKeyDown={e=>{if(e.key==="Enter")reg();}} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/></div>;
-                      })}
-                      {re&&<div className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-red-700 text-sm">{re}</div>}
-                      <button onClick={reg} className="ldp-btn-primary">{t.createAccount}</button>
-                      <p className="text-center text-xs text-gray-400">{t.haveAccount} <button onClick={()=>{setSr(false);setRe("");}} className="text-purple-600 hover:underline font-semibold">{t.signIn}</button></p>
-                    </div>
-                  )}
-                </div>
-              )}
-            </div>
+                <p className="text-gray-500 text-xs">{t.redirecting}</p>
+              </div>
+            ):(
+              <form className="space-y-3" onSubmit={e=>{e.preventDefault();reg();}}>
+                <p className="text-xs text-gray-600">{t.regNote1}<strong>{t.regNoteBold}</strong>{t.regNote2}</p>
+                {[[t.fullName,"name","text","name"],[t.username,"username","text","username"],[t.email,"email","email","email"],[t.password,"password","password","new-password"],[t.confirmPassword,"confirm","password","new-password"]].map(([lb,fd,tp2,ac])=>(
+                  <div key={fd}><label htmlFor={"rg-"+fd} className="ldp-label">{lb}</label><input id={"rg-"+fd} type={tp2} autoComplete={ac} value={rf[fd]} onChange={e=>{const v=e.target.value;setRf(f=>({...f,[fd]:v}));}} className="ldp-input bg-white py-2"/></div>
+                ))}
+                {re&&<div role="alert" className="bg-red-50 border border-red-200 rounded-lg px-3 py-2 text-red-700 text-sm">{re}</div>}
+                <button type="submit" className="ldp-btn-primary">{t.createAccount}</button>
+                <p className="text-sm text-gray-600">{t.haveAccount} <button type="button" onClick={()=>{setSr(false);setRe("");}} className="font-semibold text-orange-700 hover:underline">{t.signIn}</button></p>
+              </form>
+            )}
           </div>
-          <p className="text-center text-purple-300 text-xs">{t.loginFooter}</p>
-        </div>
+          <p className="text-xs text-gray-500 mt-10 text-center">{t.loginFooter}</p>
+        </main>
       </div>
     );
   }
@@ -516,98 +610,110 @@ export default function App() {
     </div>
   ):null;
 
-  const topbar=(
-    <div className="text-white" style={{background:"linear-gradient(135deg,#1b2540 0%,#1e2a44 60%,#2f5077 100%)"}}>
-      <div className="px-4 sm:px-6 py-3 sm:py-4 flex items-center justify-between gap-3 sm:gap-4">
-        <div className="flex items-center gap-3 min-w-0">
-          <div className="flex flex-col gap-0.5 flex-shrink-0">
-            <div className="h-4 w-1 bg-orange-500 rounded-full"/>
-            <div className="h-2 w-1 bg-yellow-400 rounded-full"/>
-            <div className="h-1.5 w-1 bg-green-500 rounded-full"/>
-          </div>
-          <div className="min-w-0">
-            <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5 hidden sm:block">{t.eyebrow}</p>
-            <h1 className="text-base sm:text-lg lg:text-xl font-semibold leading-tight lg:truncate">Leadership &amp; Communication Mastery</h1>
-          </div>
-        </div>
-        <div className="flex items-center gap-2.5 flex-shrink-0">
-          <LangSwitch lang={lang} setLang={setLang}/>
-          <div className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-lg px-2.5 py-1.5">
-            <Av user={me} size="sm"/>
-            <div className="hidden sm:block">
-              <p className="text-xs font-semibold leading-none">{me.name}</p>
-              <p className="font-mono text-[9px] uppercase tracking-wider text-orange-300 mt-0.5">{t.roleNames[me.role]||me.role}</p>
-            </div>
-          </div>
-          <button onClick={logout} aria-label={t.logout} title={t.logout} className="ldp-btn-ghost text-white flex items-center gap-1.5"><LogOut className="w-4 h-4"/><span className="hidden sm:inline">{t.logout}</span></button>
+  const groupsNav=[["programme",["dashboard","curriculum","study-guide"]],["growth",["development","coach"]],["library",["resources","drive"]],...(me.role==="admin"?[["admin",["users"]]]:[])];
+  const rail=(
+    <aside className="hidden lg:flex fixed inset-y-0 left-0 w-60 flex-col bg-purple-700 text-white z-40">
+      <div className="flex gap-3 px-5 pt-6 pb-5">
+        <Mark/>
+        <div className="min-w-0">
+          <p className="font-serif text-lg font-semibold leading-tight">Leadership &amp; Communication Mastery</p>
+          <p className="text-xs text-blue-200 mt-1">UNFPA WCARO, Cohort 1</p>
         </div>
       </div>
-      <Band/>
+      <nav className="flex-1 overflow-y-auto px-3 pb-3 space-y-5">
+        {groupsNav.map(([g,keys])=>(
+          <div key={g}>
+            <p className="px-2 mb-1 text-xs text-blue-200">{t.navGroups[g]}</p>
+            <ul className="space-y-0.5">{keys.map(k=>{const tb=tabs.find(x=>x.k===k);const on=tab===k;return (
+              <li key={k}><button onClick={()=>setTab(k)} aria-current={on?"page":undefined} className={"w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm transition-colors "+(on?"bg-white/10 text-white font-semibold shadow-[inset_3px_0_0_#E85D1F]":"text-blue-100 hover:bg-white/5")}>
+                <tb.I className="w-4 h-4 flex-shrink-0" aria-hidden="true"/>{tb.l}
+                {k==="users"&&<span className="ml-auto text-xs text-blue-200">{Object.keys(users).length}</span>}
+              </button></li>
+            );})}</ul>
+          </div>
+        ))}
+      </nav>
+      {me.role!=="mentor"&&(
+        <div className="px-5 pb-3">
+          <p className="text-xs text-blue-100 mb-1.5">{t.route.progress(nDone,MODULES.length)}</p>
+          <div className="h-1 bg-white/15 rounded-full overflow-hidden"><div className="h-full bg-orange-500 rounded-full transition-all" style={{width:op+"%"}}/></div>
+        </div>
+      )}
+      <div className="border-t border-white/10 p-3 space-y-3">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Av user={me} size="sm"/>
+          <div className="min-w-0"><p className="text-sm font-semibold leading-tight truncate">{me.name}</p><p className="text-xs text-blue-200">{t.roleNames[me.role]||me.role}</p></div>
+        </div>
+        <div className="flex items-center justify-between">
+          <LangSwitch lang={lang} setLang={setLang}/>
+          <button onClick={logout} className="flex items-center gap-1.5 text-sm text-blue-100 hover:text-white px-2 py-1 rounded-lg hover:bg-white/10"><LogOut className="w-4 h-4" aria-hidden="true"/>{t.logout}</button>
+        </div>
+      </div>
+    </aside>
+  );
+
+  const topbar=(
+    <div className="lg:hidden bg-purple-700 text-white">
+      <div className="px-4 py-3 flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2.5 min-w-0"><Mark/><p className="font-serif text-base font-semibold leading-tight">Leadership &amp; Communication Mastery</p></div>
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <LangSwitch lang={lang} setLang={setLang}/>
+          <button onClick={logout} aria-label={t.logout} title={t.logout} className="ldp-btn-ghost text-white"><LogOut className="w-4 h-4"/></button>
+        </div>
+      </div>
     </div>
   );
 
   const nav=(
-    <div className="bg-white border-b sticky top-0 z-40">
+    <div className="lg:hidden bg-white border-b sticky top-0 z-40">
     <div ref={navRef} className="flex overflow-x-auto no-scrollbar">
       {tabs.map(tb=>(
-        <button key={tb.k} onClick={()=>setTab(tb.k)} aria-current={tab===tb.k?"page":undefined} className={"flex items-center gap-1.5 px-5 py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(tab===tb.k?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50 hover:text-gray-700")}>
-          <tb.I className="w-4 h-4"/>{tb.l}
-          {tb.k==="users"&&<span className="ml-1 bg-orange-100 text-orange-700 text-xs rounded-full px-1.5 py-0.5">{Object.keys(users).length}</span>}
+        <button key={tb.k} onClick={()=>setTab(tb.k)} aria-current={tab===tb.k?"page":undefined} className={"flex items-center gap-1.5 px-4 py-3 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors "+(tab===tb.k?"border-orange-500 text-gray-900":"border-transparent text-gray-500 hover:text-gray-700")}>
+          <tb.I className="w-4 h-4" aria-hidden="true"/>{tb.l}
+          {tb.k==="users"&&<span className="ml-1 text-xs text-gray-500">{Object.keys(users).length}</span>}
         </button>
       ))}
     </div>
-    <div aria-hidden="true" className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white lg:hidden"/>
+    <div aria-hidden="true" className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-white"/>
     </div>
   );
 
   // dashboard – mentor
   const mentorDash=(tab==="dashboard"&&me.role==="mentor")?(
     <div className="space-y-5">
-      <div className="rounded-xl overflow-hidden shadow-md">
-        <div style={{background:"linear-gradient(135deg,#1e2a44 0%,#2f5077 100%)"}} className="text-white p-5">
-          <div className="flex items-center gap-4">
-            <div className="ring-2 ring-orange-400/60 ring-offset-2 ring-offset-transparent rounded-full flex-shrink-0"><Av user={me} size="lg"/></div>
-            <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5">{t.mentorDash}</p>
-              <h2 className="text-2xl font-bold">{me.name}</h2>
-              <p className="text-blue-200 text-sm">{me.title||t.mentorDefault} · {me.organization||"UNFPA WCARO"}</p>
-            </div>
-          </div>
-          <div className="flex gap-2 mt-5 border-t border-white/15 pt-4 flex-wrap">
-            {[["overview",t.mTabs.overview,BarChart3],["participants",t.mTabs.participants,UsersRound],["sessions",t.mTabs.sessions,Calendar],["goals",t.mTabs.goals,Target],["notes",t.mTabs.notes,FileText]].map(([k,label,Icon])=>(
-              <button key={k} onClick={()=>setMt(k)} aria-pressed={mt===k} className={"inline-flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-semibold transition-colors "+(mt===k?"bg-white text-purple-900":"bg-white/15 hover:bg-white/25 text-white border border-white/20")}><Icon className="w-4 h-4"/>{label}</button>
-            ))}
-          </div>
+      <div>
+        <PageHead title={t.welcome+", "+firstName} sub={(me.title||t.mentorDefault)+", "+(me.organization||"UNFPA WCARO")}/>
+        <div className="ldp-subtabs">
+          {[["overview",t.mTabs.overview,BarChart3],["participants",t.mTabs.participants,UsersRound],["sessions",t.mTabs.sessions,Calendar],["goals",t.mTabs.goals,Target],["notes",t.mTabs.notes,FileText]].map(([k,label,Icon])=>(
+            <button key={k} onClick={()=>setMt(k)} aria-pressed={mt===k} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{label}</button>
+          ))}
         </div>
-        <Band/>
       </div>
       {mt==="overview"&&(
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[[pts.length,t.statParticipants,"text-purple-700","#4c1d95"],[ms.length,t.statSessions,"text-blue-700","#1d4ed8"],[dg+"/"+mg.length,t.statGoalsDone,"text-green-700","#15803d"],[gp+"%",t.statProgress,"text-orange-600","#e85d1f"]].map(arr=>(
-              <div key={arr[1]} className="ldp-stat text-center" style={{"--stat-accent":arr[3]}}><p className={"font-mono text-3xl font-semibold "+arr[2]}>{arr[0]}</p><p className="text-xs text-gray-500 mt-1">{arr[1]}</p></div>
-            ))}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+          <div className="lg:col-span-2 space-y-4">
+            <DailyQuote t={t} lang={lang}/>
+            <div className="ldp-card grid grid-cols-3 divide-x divide-gray-100">
+              {[[pts.length,t.statParticipants],[ms.length,t.statSessions],[dg+"/"+mg.length,t.statGoalsDone]].map(([v,l])=>(
+                <div key={l} className="p-4"><p className="font-mono text-3xl font-semibold text-gray-900">{v}</p><p className="text-xs text-gray-500 mt-1">{l}</p></div>
+              ))}
+            </div>
+            <section className="ldp-card p-5">
+              <h3 className="font-semibold text-gray-800 mb-3">{t.route.cohortTitle}</h3>
+              <Route t={t} onOpen={openModule}/>
+            </section>
+            <section className="ldp-card p-5">
+              <div className="flex justify-between items-center mb-3"><h3 className="font-semibold text-gray-800">{t.recentSessions}</h3><button onClick={()=>setMt("sessions")} className="text-sm font-semibold text-orange-700 hover:underline">{t.viewAll}</button></div>
+              {ms.length===0?<div className="text-sm text-gray-500"><p>{t.noSessions}</p><button onClick={()=>setMt("sessions")} className="ldp-btn-outline mt-3 text-xs py-1.5"><Plus className="w-3.5 h-3.5" aria-hidden="true"/>{t.logSession}</button></div>:<ul className="divide-y divide-gray-100">{ms.slice(-3).reverse().map(s=>(
+                <li key={s.id} className="py-2"><p className="text-sm font-semibold text-gray-800">{users[s.participant]?users[s.participant].name:s.participant}</p><p className="text-xs text-gray-500">{s.date} · {t.sessionTypes[s.type]||s.type}</p></li>
+              ))}</ul>}
+            </section>
+            <section className="ldp-card p-5">
+              <div className="flex justify-between items-center mb-2"><h3 className="font-semibold text-gray-800">{t.goalProgress}</h3><button onClick={()=>setMt("goals")} className="font-mono text-sm font-semibold text-orange-700 hover:underline">{gp}%</button></div>
+              <div className="ldp-progress-bar h-2"><div className="ldp-progress-fill h-2" style={{width:gp+"%"}}/></div>
+            </section>
           </div>
-          <div className="ldp-card p-4">
-            <div className="flex justify-between mb-2"><p className="text-sm font-semibold text-gray-700">{t.goalProgress}</p><span className="font-mono text-sm font-semibold text-orange-600">{gp}%</span></div>
-            <div className="ldp-progress-bar h-2.5"><div className="ldp-progress-fill h-2.5" style={{width:gp+"%"}}/></div>
-          </div>
-          <Competencies t={t} selected={null} onSelect={i=>{setCp(i);setTab("resources");window.scrollTo(0,0);}}/>
-          <div className="ldp-card p-4">
-            <div className="flex justify-between items-center mb-3"><h4 className="font-semibold text-gray-800">{t.cohortProgramme}</h4><span className="ldp-eyebrow">Cohort 1</span></div>
-            {Object.entries(CUR).map((e,ci)=>(
-              <div key={e[0]} className="flex items-center gap-3 py-1.5 border-b last:border-0">
-                <span className="font-mono text-[10px] font-semibold text-orange-500 w-5 flex-shrink-0">{ROMAN["p"+(ci+1)]||""}</span>
-                <div className="flex-1"><p className="text-sm font-semibold text-gray-700">{e[1].name}</p><p className="text-xs text-gray-400">{e[1].modules.length} {t.modules}</p></div>
-              </div>
-            ))}
-          </div>
-          <div className="ldp-card p-4">
-            <div className="flex justify-between items-center mb-3"><h4 className="font-semibold text-gray-800">{t.recentSessions}</h4><button onClick={()=>setMt("sessions")} className="text-xs text-orange-600 hover:underline">{t.viewAll}</button></div>
-            {ms.length===0?<p className="text-sm text-gray-400 italic">{t.noSessions}</p>:ms.slice(-3).reverse().map(s=>(
-              <div key={s.id} className="flex items-center gap-3 py-2 border-b last:border-0"><div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center"><Calendar className="w-4 h-4 text-blue-600"/></div><div><p className="text-sm font-semibold text-gray-700">{users[s.participant]?users[s.participant].name:s.participant}</p><p className="text-xs text-gray-400">{s.date} · {t.sessionTypes[s.type]||s.type}</p></div></div>
-            ))}
-          </div>
+          <Competencies t={t} selected={null} onSelect={i=>{setCp(i);setTab("resources");}}/>
         </div>
       )}
       {mt==="participants"&&(
@@ -635,7 +741,7 @@ export default function App() {
         <div className="space-y-3">
           <div className="flex justify-between items-center">
             <h3 className="font-bold text-gray-800">{t.statSessions} ({ms.length})</h3>
-            <button onClick={()=>setSas(v=>!v)} className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:opacity-90"><Plus className="w-4 h-4"/>{t.logSession}</button>
+            <button onClick={()=>setSas(v=>!v)} className="ldp-btn"><Plus className="w-4 h-4"/>{t.logSession}</button>
           </div>
           {sas&&(
             <div className="bg-white border-2 border-purple-200 rounded-xl p-4 space-y-3">
@@ -650,9 +756,9 @@ export default function App() {
           )}
           {ms.length===0?<div className="bg-white border rounded-xl p-8 text-center text-gray-400"><Calendar className="w-10 h-10 mx-auto mb-2 text-gray-200"/><p className="text-sm">{t.noSessions}</p></div>:[...ms].reverse().map(s=>(
             <div key={s.id} className="bg-white border rounded-xl p-4 flex items-start gap-3 shadow-sm">
-              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center flex-shrink-0"><Calendar className="w-4 h-4 text-white"/></div>
+              <Calendar className="w-4 h-4 text-gray-400 flex-shrink-0 mt-0.5" aria-hidden="true"/>
               <div className="flex-1"><div className="flex items-center gap-2 flex-wrap"><p className="font-semibold text-gray-800 text-sm">{users[s.participant]?users[s.participant].name:s.participant}</p><span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-semibold">{t.sessionTypes[s.type]||s.type}</span><span className="text-xs text-gray-400">{s.date}</span></div>{s.notes&&<p className="text-xs text-gray-500 mt-1">{s.notes}</p>}</div>
-              <button onClick={()=>{const sid=s.id;setMs(p=>p.filter(x=>x.id!==sid));}} className="p-1.5 text-gray-300 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-3.5 h-3.5"/></button>
+              <button onClick={()=>{const sid=s.id;setMs(p=>p.filter(x=>x.id!==sid));}} aria-label={t.del} className="p-1.5 text-gray-400 hover:text-red-400 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-3.5 h-3.5"/></button>
             </div>
           ))}
         </div>
@@ -663,12 +769,12 @@ export default function App() {
           <div className="ldp-progress-bar h-2"><div className="ldp-progress-fill h-2" style={{width:gp+"%"}}/></div>
           {mg.map(g=>(
             <div key={g.id} className={"flex items-start gap-3 bg-white border rounded-xl p-4 shadow-sm "+(g.done?"border-green-200 bg-green-50":"")}>
-              <button onClick={()=>tg(g.id)} className="flex-shrink-0 mt-0.5">{g.done?<CheckCircle2 className="w-5 h-5 text-green-500"/>:<Circle className="w-5 h-5 text-gray-300"/>}</button>
+              <button onClick={()=>tg(g.id)} aria-pressed={!!g.done} aria-label={t.markDone+": "+g.text} className="flex-shrink-0 mt-0.5">{g.done?<CheckCircle2 className="w-5 h-5 text-green-500"/>:<Circle className="w-5 h-5 text-gray-300"/>}</button>
               <p className={"text-sm flex-1 "+(g.done?"line-through text-gray-400":"text-gray-700")}>{g.text}</p>
-              <button onClick={()=>dg2(g.id)} className="p-1 text-gray-200 hover:text-red-400 transition-colors"><Trash2 className="w-3.5 h-3.5"/></button>
+              <button onClick={()=>dg2(g.id)} aria-label={t.del+": "+g.text} className="p-1 text-gray-400 hover:text-red-500 transition-colors"><Trash2 className="w-3.5 h-3.5"/></button>
             </div>
           ))}
-          <div className="flex gap-2"><input value={ng} onChange={e=>setNg(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")ag();}} placeholder={t.addGoal} className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/><button onClick={ag} className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm"><Plus className="w-4 h-4"/></button></div>
+          <div className="flex gap-2"><input value={ng} onChange={e=>setNg(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")ag();}} placeholder={t.addGoal} className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/><button onClick={ag} aria-label={t.addGoal} className="ldp-btn"><Plus className="w-4 h-4"/></button></div>
         </div>
       )}
       {mt==="notes"&&(
@@ -687,139 +793,185 @@ export default function App() {
 
   // dashboard – participant/admin
   const partDash=(tab==="dashboard"&&me.role!=="mentor")?(
-    <div className="space-y-5">
-      <div className="rounded-xl overflow-hidden shadow-md">
-        <div style={{background:"linear-gradient(135deg,#1e2a44 0%,#2f5077 100%)"}} className="text-white p-5">
-          <div className="flex items-center gap-4">
-            <div className="ring-2 ring-orange-400/60 ring-offset-2 ring-offset-transparent rounded-full flex-shrink-0"><Av user={me} size="lg"/></div>
-            <div>
-              <p className="font-mono text-[9px] uppercase tracking-[0.28em] text-orange-300 mb-0.5">{t.welcome}</p>
-              <h2 className="text-2xl font-bold">{me.name}</h2>
-              <p className="text-blue-200 text-sm">{me.title||t.participantDefault}{me.organization?" · "+me.organization:""}</p>
+    <div className="space-y-4">
+      <PageHead title={t.welcome+", "+firstName} sub={[me.title||t.participantDefault,me.organization].filter(Boolean).join(", ")}/>
+      <section className="ldp-card p-5">
+        <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+          <h3 className="font-semibold text-gray-800">{t.route.title}</h3>
+          <p className="font-mono text-xs text-gray-600">{t.route.progress(nDone,MODULES.length)}</p>
+        </div>
+        <Route t={t} done={prog.mod} current={nextMod&&nextMod.id} onOpen={openModule}/>
+        <RouteLegend t={t}/>
+      </section>
+      <DailyQuote t={t} lang={lang}/>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+        {nextMod?(
+          <section className="ldp-card lg:col-span-2 overflow-hidden">
+            <div className="h-1 bg-orange-500"/>
+            <div className="p-5 sm:p-6">
+              <p className="ldp-eyebrow">{t.next.title}</p>
+              <h3 className="text-2xl font-semibold font-serif text-gray-900 leading-snug mt-0.5">{t.moduleWord} {modNum(nextMod.id)}: {nextMod.title}</h3>
+              <p className="text-sm text-gray-500 mt-0.5">{phaseName(t,nextMod.pk)}, {nextMod.weeks} {t.weeksWord}</p>
+              <h4 className="text-sm font-semibold text-gray-800 mt-4 mb-1.5">{t.dailyTasks}</h4>
+              <ul className="space-y-1">{nextMod.dt.map((x,i)=><li key={i} className="text-sm text-gray-700 pl-3 border-l-2 border-gray-200">{x}</li>)}</ul>
+              <p className="text-sm text-yellow-900 bg-yellow-50 rounded-lg px-3 py-2 mt-4"><strong>{t.checkpointLabel}</strong> {nextMod.cp}</p>
+              <div className="flex flex-wrap gap-2 mt-4">
+                <button onClick={()=>{setSm(nextMod.id);setSt("guide");setTab("study-guide");}} className="ldp-btn-accent"><Book className="w-4 h-4" aria-hidden="true"/>{t.next.open}</button>
+                <button onClick={()=>tp("mod",nextMod.id)} className="ldp-btn-outline"><CheckCircle2 className="w-4 h-4" aria-hidden="true"/>{t.next.complete}</button>
+              </div>
             </div>
-          </div>
-        </div>
-        <Band/>
-      </div>
-      <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
-        <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5"/>
-        <div className="flex-1">
-          <p className="font-semibold text-green-900 text-sm">{t.resourcesReady}</p>
-          <p className="text-green-700 text-xs mt-0.5">{t.resourcesReadyDesc}</p>
-          <div className="flex flex-wrap gap-2 mt-3">
-            <a href="https://drive.google.com/drive/folders/1e3nvDC36AptxDysRtO0C5dYiTqSS-H87" target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white border border-green-300 hover:bg-green-50 text-green-800 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"><FolderOpen className="w-3.5 h-3.5"/>{t.openDriveRepo}</a>
-            <button onClick={()=>setTab("study-guide")} className="flex items-center gap-1.5 bg-white border border-green-300 hover:bg-green-50 text-green-800 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors"><Book className="w-3.5 h-3.5"/>{t.goToStudy}</button>
-          </div>
-        </div>
-      </div>
-      <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg"><h3 className="font-bold text-blue-900">{t.journeyTitle}</h3><p className="text-blue-700 text-sm mt-0.5">{t.journeyDesc}</p></div>
-      <div className="grid grid-cols-3 gap-4">
-        <div className="ldp-stat" style={{"--stat-accent":"#e85d1f"}}><div className="flex justify-between items-start"><Target className="w-7 h-7 text-orange-500"/><span className="font-mono text-2xl font-semibold text-orange-600">{op}%</span></div><p className="text-xs text-gray-500 mt-1">{t.overallProgress}</p><div className="ldp-progress-bar h-1.5 mt-2"><div className="ldp-progress-fill h-1.5" style={{width:op+"%"}}/></div></div>
-        <div className="ldp-stat" style={{"--stat-accent":"#15803d"}}><div className="flex justify-between items-start"><Book className="w-7 h-7 text-green-600"/><span className="font-mono text-2xl font-semibold text-green-700">{Object.values(prog.rt).filter(Boolean).length}</span></div><p className="text-xs text-gray-500 mt-1">{t.readingTests}</p></div>
-        <div className="ldp-stat" style={{"--stat-accent":"#c08f1f"}}><div className="flex justify-between items-start"><Mic className="w-7 h-7 text-yellow-600"/><span className="font-mono text-2xl font-semibold text-yellow-700">{Object.values(prog.ve).filter(Boolean).length}</span></div><p className="text-xs text-gray-500 mt-1">{t.vocalSessions}</p></div>
-      </div>
-      <div className="ldp-card p-4">
-        <h4 className="font-semibold text-gray-800 mb-3">{t.quickAccessStudy}</h4>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-          {SM.slice(0,4).map(m=>(
-            <button key={m.id} onClick={()=>{setTab("study-guide");setSm(m.id);setSt("guide");}} className="text-left p-3 bg-orange-50 hover:bg-orange-100 rounded-lg transition-colors border border-orange-100"><p className="font-mono text-[9px] uppercase tracking-wider text-orange-500">{t.phaseLabel} {m.ph}</p><p className="text-sm font-semibold text-gray-800 leading-tight mt-0.5">{m.title}</p></button>
-          ))}
-        </div>
-      </div>
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
-        <h4 className="font-semibold text-amber-900 mb-2 flex items-center gap-2"><Trophy className="w-4 h-4"/>{t.challenges}</h4>
-        <div className="space-y-1 text-sm text-amber-800">
-          {t.challengeItems.map((c,i)=><p key={i}><strong>{c[0]}</strong> {c[1]}</p>)}
+          </section>
+        ):(
+          <section className="ldp-card lg:col-span-2 p-6">
+            <CheckCircle2 className="w-8 h-8 text-green-600 mb-2"/>
+            <h3 className="text-2xl font-semibold font-serif text-gray-900">{t.next.doneTitle}</h3>
+            <p className="text-sm text-gray-600 mt-1 mb-4">{t.next.doneBody}</p>
+            <button onClick={()=>setTab("development")} className="ldp-btn-accent">{t.next.doneBtn}</button>
+          </section>
+        )}
+        <div className="space-y-4">
+          <section className="ldp-card p-4">
+            <h3 className="font-semibold text-gray-800 mb-2">{t.tally}</h3>
+            <dl className="divide-y divide-gray-100">
+              {[[op+"%",t.overallProgress],[Object.values(prog.rt).filter(Boolean).length,t.readingTests],[Object.values(prog.ve).filter(Boolean).length,t.vocalSessions]].map(([v,l])=>(
+                <div key={l} className="flex items-baseline justify-between gap-3 py-1.5"><dt className="text-sm text-gray-600">{l}</dt><dd className="font-mono text-lg font-semibold text-gray-900">{v}</dd></div>
+              ))}
+            </dl>
+          </section>
+          <section className="ldp-card p-2">
+            <h3 className="font-semibold text-gray-800 px-2 pt-2 mb-1">{t.grow.title}</h3>
+            <ul>
+              {[[t.grow.plan,Compass,()=>{setPdView("plan");setTab("development");}],[t.grow.builder,PenLine,()=>{setPdView("builder");setTab("development");}],[t.grow.coach,Sparkles,()=>setTab("coach")]].map(([[a,b],I,go])=>(
+                <li key={a}><button onClick={go} className="w-full flex items-start gap-2.5 text-left px-2 py-2 rounded-lg hover:bg-gray-100"><I className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" aria-hidden="true"/><span><span className="block text-sm font-semibold text-gray-800 leading-snug">{a}</span><span className="block text-xs text-gray-500">{b}</span></span></button></li>
+              ))}
+              <li><a href="https://drive.google.com/drive/folders/1e3nvDC36AptxDysRtO0C5dYiTqSS-H87" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-100"><FolderOpen className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" aria-hidden="true"/><span><span className="block text-sm font-semibold text-gray-800 leading-snug">{t.grow.drive[0]}</span><span className="block text-xs text-gray-500">{t.grow.drive[1]}</span></span></a></li>
+            </ul>
+          </section>
         </div>
       </div>
+      <section className="ldp-card p-5">
+        <h3 className="font-semibold text-gray-800 mb-2">{t.challenges}</h3>
+        <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2">
+          {t.challengeItems.map((c,i)=><div key={i} className="text-sm"><dt className="inline font-semibold text-gray-800">{c[0]}</dt> <dd className="inline text-gray-600">{c[1]}</dd></div>)}
+        </dl>
+      </section>
     </div>
   ):null;
 
   // curriculum
   const currTab=tab==="curriculum"?(
-    <div className="space-y-5">
-      {Object.entries(CUR).map(e=>{
-        const pk=e[0],ph=e[1];
-        return (
-          <div key={pk} className="ldp-card overflow-hidden">
-            <div className="ldp-phase-header">
-              <span className="font-mono text-2xl font-semibold text-yellow-400/80 flex-shrink-0">{ROMAN[pk]}</span>
-              <div><p className="font-mono text-[9px] uppercase tracking-[0.22em] text-blue-300">{t.phaseLabel} {ROMAN[pk]}</p><h3 className="font-bold text-white">{ph.name}</h3></div>
+    <div>
+      <PageHead title={t.nav.curriculum} sub={t.pageSubs.curriculum}/>
+      <section className="ldp-card p-5 mb-6">
+        <Route t={t} done={prog.mod} current={nextMod&&nextMod.id} onOpen={openModule}/>
+        <RouteLegend t={t}/>
+      </section>
+      <div className="space-y-8">
+        {Object.entries(CUR).map(([pk,ph])=>(
+          <section key={pk} aria-labelledby={"ph-"+pk}>
+            <div className="flex flex-wrap items-baseline gap-x-3 mb-2">
+              <h3 id={"ph-"+pk} className="text-xl font-semibold font-serif text-gray-900">{t.phaseLabel} {ROMAN[pk]}: {phaseName(t,pk)}</h3>
+              <p className="text-sm text-gray-500">{phaseMonths(t,ph)}, {ph.modules.filter(m=>prog.mod[m.id]).length}/{ph.modules.length}</p>
             </div>
-            <div className="p-4 space-y-3">
-              {ph.modules.map((mod,idx)=>(
-                <div key={mod.id} className="border rounded-lg overflow-hidden">
-                  <div className="bg-gray-50 px-4 py-3 flex items-center gap-3 cursor-pointer hover:bg-gray-100" onClick={()=>tp("mod",mod.id)}>
-                    {prog.mod[mod.id]?<CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0"/>:<Circle className="w-5 h-5 text-gray-300 flex-shrink-0"/>}
-                    <div className="flex-1"><p className="font-semibold text-gray-800">{t.moduleWord} {idx+1}: {mod.title}</p><p className="text-xs text-gray-500">{mod.weeks} {t.weeksWord}</p></div>
-                    <button onClick={ev=>{ev.stopPropagation();setSm(mod.id);setSt("guide");setTab("study-guide");}} className="text-xs bg-purple-100 hover:bg-purple-200 text-purple-700 px-2.5 py-1 rounded-lg">{t.studyGuideBtn}</button>
-                  </div>
-                  <div className="px-4 py-3 space-y-3 bg-white">
-                    <div><p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t.dailyTasks}</p>{mod.dt.map((tk,i)=><p key={i} className="text-sm text-gray-600 pl-3 border-l-2 border-blue-200 mb-1">{tk}</p>)}</div>
-                    <div><p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t.readingsLabel}</p>{mod.rd.map((r,i)=>{const tid=mod.id+"_r"+i;return <div key={i} className="flex items-center gap-2 mb-1">{r.x&&<button onClick={()=>tp("rt",tid)} aria-pressed={!!prog.rt[tid]} aria-label={t.markDone+": "+r.t}>{prog.rt[tid]?<CheckCircle2 className="w-3.5 h-3.5 text-green-500"/>:<Circle className="w-3.5 h-3.5 text-gray-300"/>}</button>}<span className="text-sm text-gray-600"><strong>{r.t}</strong> — {r.c}{r.x&&<span className="text-blue-500 ml-1 text-xs">{t.testTag}</span>}</span></div>;})}</div>
-                    <div><p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">{t.vocalTraining}</p>{mod.ve.map((ex,i)=>{const eid=mod.id+"_v"+i;return <div key={i} className="flex items-center gap-2 mb-1"><button onClick={()=>tp("ve",eid)} aria-pressed={!!prog.ve[eid]} aria-label={t.markDone+": "+ex}>{prog.ve[eid]?<CheckCircle2 className="w-3.5 h-3.5 text-orange-500"/>:<Circle className="w-3.5 h-3.5 text-gray-300"/>}</button><span className="text-sm text-gray-600">{ex}</span></div>;})}</div>
-                    <div className="bg-yellow-50 border-l-4 border-yellow-400 px-3 py-2 rounded text-sm text-yellow-800"><strong>{t.checkpointLabel}</strong> {mod.cp}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-      })}
+            <ul className="space-y-2">
+              {ph.modules.map(mod=>{
+                const open=openMods[mod.id]??(nextMod&&nextMod.id===mod.id);
+                const isDone=!!prog.mod[mod.id];
+                return (
+                  <li key={mod.id} id={"mod-"+mod.id} className={"ldp-card scroll-mt-16 overflow-hidden "+(nextMod&&nextMod.id===mod.id?"border-orange-300":"")}>
+                    <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2.5">
+                      <button onClick={()=>tp("mod",mod.id)} aria-pressed={isDone} aria-label={t.markDone+": "+mod.title} title={t.markDone} className="p-1 flex-shrink-0">{isDone?<CheckCircle2 className="w-5 h-5 text-green-600"/>:<Circle className="w-5 h-5 text-gray-400"/>}</button>
+                      <button onClick={()=>setOpenMods(o=>({...o,[mod.id]:!open}))} aria-expanded={!!open} className="flex-1 min-w-0 flex items-center gap-2 text-left py-1">
+                        <span className="flex-1 min-w-0"><span className={"block font-semibold leading-snug "+(isDone?"text-gray-600":"text-gray-900")}>{t.moduleWord} {modNum(mod.id)}: {mod.title}</span><span className="block text-xs text-gray-500">{mod.weeks} {t.weeksWord}</span></span>
+                        <ChevronDown className={"w-4 h-4 text-gray-400 flex-shrink-0 transition-transform "+(open?"rotate-180":"")} aria-hidden="true"/>
+                      </button>
+                      <button onClick={()=>{setSm(mod.id);setSt("guide");setTab("study-guide");}} className="ldp-btn-outline hidden sm:inline-flex flex-shrink-0">{t.studyGuideBtn}</button>
+                    </div>
+                    {open&&(
+                      <div className="px-4 pb-4 sm:pl-14 border-t border-gray-100 pt-3 space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
+                          <div><h4 className="text-sm font-semibold text-gray-800 mb-1">{t.dailyTasks}</h4>{mod.dt.map((tk,i)=><p key={i} className="text-sm text-gray-600 pl-3 border-l-2 border-gray-200 mb-1">{tk}</p>)}</div>
+                          <div><h4 className="text-sm font-semibold text-gray-800 mb-1">{t.vocalTraining}</h4>{mod.ve.map((ex,i)=>{const eid=mod.id+"_v"+i;return <label key={i} className="flex items-start gap-2 mb-1 cursor-pointer"><button onClick={()=>tp("ve",eid)} aria-pressed={!!prog.ve[eid]} aria-label={t.markDone+": "+ex} className="mt-0.5">{prog.ve[eid]?<CheckCircle2 className="w-4 h-4 text-green-600"/>:<Circle className="w-4 h-4 text-gray-400"/>}</button><span className="text-sm text-gray-600">{ex}</span></label>;})}</div>
+                          <div className="md:col-span-2"><h4 className="text-sm font-semibold text-gray-800 mb-1">{t.readingsLabel}</h4>{mod.rd.map((r,i)=>{const tid=mod.id+"_r"+i;return <div key={i} className="flex items-start gap-2 mb-1">{r.x&&<button onClick={()=>tp("rt",tid)} aria-pressed={!!prog.rt[tid]} aria-label={t.markDone+": "+r.t} className="mt-0.5">{prog.rt[tid]?<CheckCircle2 className="w-4 h-4 text-green-600"/>:<Circle className="w-4 h-4 text-gray-400"/>}</button>}<span className="text-sm text-gray-600"><strong className="text-gray-800">{r.t}</strong>, {r.c}{r.x&&<span className="text-gray-500 ml-1 text-xs">{t.testTag}</span>}</span></div>;})}</div>
+                        </div>
+                        <p className="text-sm text-yellow-900 bg-yellow-50 rounded-lg px-3 py-2"><strong>{t.checkpointLabel}</strong> {mod.cp}</p>
+                        <button onClick={()=>{setSm(mod.id);setSt("guide");setTab("study-guide");}} className="ldp-btn-outline sm:hidden">{t.studyGuideBtn}</button>
+                      </div>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
+        ))}
+      </div>
     </div>
   ):null;
 
   // study guide
   const sgTabs=[["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
   const studyTab=tab==="study-guide"?(
-    <div className="space-y-4">
-      <div className="bg-white border rounded-xl p-4 shadow-sm">
-        <label className="block text-sm font-semibold text-gray-700 mb-2">{t.selectModule}</label>
-        <select value={sm} onChange={e=>{setSm(e.target.value);setSt("guide");}} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none bg-white">
-          <optgroup label={t.phase1}>{SM.filter(m=>m.ph===1).map(m=><option key={m.id} value={m.id}>{m.title} ({m.wk})</option>)}</optgroup>
-          <optgroup label={t.phase2}>{SM.filter(m=>m.ph===2).map(m=><option key={m.id} value={m.id}>{m.title} ({m.wk})</option>)}</optgroup>
-          <optgroup label={t.phase3}>{SM.filter(m=>m.ph===3).map(m=><option key={m.id} value={m.id}>{m.title} ({m.wk})</option>)}</optgroup>
-          <optgroup label={t.phase4}>{SM.filter(m=>m.ph===4).map(m=><option key={m.id} value={m.id}>{m.title} ({m.wk})</option>)}</optgroup>
-          <optgroup label={t.commGroup}>{CI.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</optgroup>
+    <div>
+      <PageHead title={t.nav.study} sub={t.pageSubs.study}/>
+      <div className="grid grid-cols-1 lg:grid-cols-[15rem_minmax(0,1fr)] gap-5 items-start">
+      <div className="lg:hidden">
+        <label htmlFor="sg-mod" className="ldp-label">{t.selectModule}</label>
+        <select id="sg-mod" value={sm} onChange={e=>{setSm(e.target.value);setSt("guide");}} className="ldp-input py-2 bg-white">
+          {[1,2,3,4].map(n=><optgroup key={n} label={phaseName(t,"p"+n)}>{SM.filter(m=>m.ph===n).map(m=><option key={m.id} value={m.id}>{m.title} ({m.wk})</option>)}</optgroup>)}
+          <optgroup label={t.commGroup.replace(/^[─\s]*/,"")}>{CI.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</optgroup>
         </select>
       </div>
-      <div className="rounded-xl overflow-hidden shadow-md">
-        <div style={{background:"linear-gradient(135deg,#1e2a44 0%,#2f5077 100%)"}} className="text-white p-5">
-          <div className="flex items-start justify-between flex-wrap gap-3">
-            <div><p className="font-mono text-[9px] uppercase tracking-[0.25em] text-orange-300 mb-1">{cur.wk}</p><h2 className="text-xl font-bold">{cur.title}</h2></div>
-            <div className="flex gap-2 flex-wrap">
-              {cur.doc&&<a href={cur.doc} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 border border-white/20 px-3 py-1.5 rounded-lg text-sm font-semibold"><FileText className="w-4 h-4"/>{t.openInDrive}</a>}
-              {cur.fld&&<a href={cur.fld} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 border border-white/20 px-3 py-1.5 rounded-lg text-sm font-semibold"><FolderOpen className="w-4 h-4"/>{t.folderBtn}</a>}
-            </div>
+      <nav aria-label={t.selectModule} className="hidden lg:block ldp-card p-3 sticky top-6 max-h-[calc(100vh-3rem)] overflow-y-auto space-y-4">
+        {[...[1,2,3,4].map(n=>[phaseName(t,"p"+n),SM.filter(m=>m.ph===n)]),[t.commGroup.replace(/^[─\s]*/,""),CI]].map(([label,mods])=>(
+          <div key={label}>
+            <p className="ldp-eyebrow px-2 mb-1">{label}</p>
+            <ul>{mods.map(m=>(
+              <li key={m.id}><button onClick={()=>{setSm(m.id);setSt("guide");}} aria-current={sm===m.id?"true":undefined} className={"w-full flex items-start gap-1.5 text-left px-2 py-1.5 rounded-lg text-sm leading-snug transition-colors "+(sm===m.id?"bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#E85D1F]":"text-gray-700 hover:bg-gray-100")}>
+                <span className="flex-1">{m.title}</span>{prog.mod[m.id]&&<CheckCircle2 className="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0" aria-label={t.route.done}/>}
+              </button></li>
+            ))}</ul>
           </div>
+        ))}
+      </nav>
+      <div className="min-w-0 space-y-4">
+      <div className="flex items-start justify-between flex-wrap gap-3">
+        <div className="min-w-0"><p className="text-sm text-gray-500">{cur.wk}</p><h3 className="text-2xl font-semibold font-serif text-gray-900 leading-snug">{cur.title}</h3></div>
+        <div className="flex gap-2 flex-wrap">
+          {cur.doc&&<a href={cur.doc} target="_blank" rel="noopener noreferrer" className="ldp-btn-outline"><FileText className="w-4 h-4" aria-hidden="true"/>{t.openInDrive}</a>}
+          {cur.fld&&<a href={cur.fld} target="_blank" rel="noopener noreferrer" className="ldp-btn-outline"><FolderOpen className="w-4 h-4" aria-hidden="true"/>{t.folderBtn}</a>}
         </div>
-        <Band/>
       </div>
-      <div className="flex bg-white border rounded-xl overflow-hidden shadow-sm">
-        {sgTabs.map(a=>{const Icon={guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={st===a[0]} className={"flex-1 inline-flex items-center justify-center gap-1.5 py-2.5 text-xs font-semibold border-b-2 transition-colors "+(st===a[0]?"border-orange-500 text-orange-700 bg-orange-50":"border-transparent text-gray-500 hover:bg-gray-50")}><Icon className="w-3.5 h-3.5 hidden sm:block"/>{a[1]}</button>;})}
+      <div className="ldp-subtabs">
+        {sgTabs.map(a=>{const Icon={guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={st===a[0]} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{a[1]}</button>;})}
       </div>
       {st==="guide"&&(
         <div className="space-y-3">
           <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-gray-50 border-b px-5 py-3 flex items-center justify-between">
-              <div className="flex items-center gap-2"><FileText className="w-4 h-4 text-blue-600"/><span className="text-sm font-semibold text-gray-700">{t.rgTitle}</span><span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">{t.live}</span></div>
+              <div className="flex items-center gap-2"><FileText className="w-4 h-4 text-blue-600"/><span className="text-sm font-semibold text-gray-700">{t.rgTitle}</span></div>
               {cur.doc&&<a href={cur.doc} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline flex items-center gap-1">{t.editInDrive}<ExternalLink className="w-3 h-3"/></a>}
             </div>
-            <div className="p-6 max-h-72 overflow-y-auto space-y-1">
+            <div className="p-6 space-y-1 max-w-3xl">
               {(()=>{
                 const content=DDC[cur.id];
                 if(!content){ return <div><p className="text-sm text-gray-500 italic mb-3">{t.driveOnly}</p>{cur.doc&&<a href={cur.doc} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 bg-blue-50 hover:bg-blue-100 text-blue-700 px-4 py-2 rounded-lg text-sm font-semibold"><FileText className="w-4 h-4"/>{t.openRG}</a>}</div>; }
-                const lines=content.split("\n");
-                return lines.map((line,i)=>{
-                  const um=line.match(/https?:\/\/[^\s]+/);
-                  if(um){ const url=um[0]; const before=line.slice(0,line.indexOf(url)); return <div key={i} className="flex items-start gap-1 flex-wrap">{before&&<span className="text-gray-600 text-sm whitespace-pre">{before}</span>}<a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline text-sm break-all flex items-center gap-0.5">{url}<ExternalLink className="w-3 h-3 flex-shrink-0"/></a></div>; }
-                  if(/^(MODULE|CURATED|WEEKLY|CHECKPOINT|STEP \d|VOCAL T|MASTER|PHASE \d|MY WHY|STAKEHOLDER|SENIOR|CRISIS|REPRESENT|FREE ART|HOW TO)/.test(line)&&line.trim()){ return <p key={i} className="font-bold text-purple-700 text-sm mt-3 mb-1 border-b border-purple-100 pb-1">{line}</p>; }
-                  if(/^\d+\./.test(line)&&line.trim()){ return <p key={i} className="font-bold text-gray-800 text-sm mt-2 mb-0.5">{line}</p>; }
-                  if(line.startsWith("•")){ return <p key={i} className="text-sm text-gray-700 pl-3 py-0.5">{line}</p>; }
-                  if(line.startsWith("□")){ return <p key={i} className="text-sm text-gray-600 pl-3 py-0.5 font-mono">{line}</p>; }
-                  if(!line.trim()){ return <div key={i} className="h-1"/>; }
-                  return <p key={i} className="text-sm text-gray-700 py-0.5">{line}</p>;
+                const lines=content.split("\n").slice(2);
+                const sentence=x=>x.toLowerCase().replace(/^./,c=>c.toUpperCase()).replace(/\b(unfpa|un|ted|hbr|ccl|ceo|ep|my why|sbi)\b/gi,m=>m.toUpperCase());
+                const out=[];
+                lines.forEach((line,i)=>{
+                  const l=line.trim();
+                  if(!l) return;
+                  if(/^https?:\/\//.test(l)) return; // handled with the name on the line above
+                  const nx=(lines[i+1]||"").trim();
+                  const url=/^https?:\/\//.test(nx)?nx:null;
+                  if(/^\d+\.\s/.test(l)){ out.push(<h4 key={i} className="text-sm font-semibold text-gray-900 mt-4 mb-1">{sentence(l.replace(/^\d+\.\s*/,""))}</h4>); return; }
+                  if(/^[A-Z][A-Z0-9 &–\-:'/]{3,}(\s*\([^)]*\))?$/.test(l)||/^(CHECKPOINT|WEEKLY|STEP \d)/.test(l)){ out.push(<h4 key={i} className="text-sm font-semibold text-gray-900 mt-4 mb-1">{sentence(l)}</h4>); return; }
+                  const txt=l.replace(/^[•□]\s*/,"");
+                  const bullet=/^[•□]/.test(l);
+                  const body=url?<a href={url} target="_blank" rel="noopener noreferrer" className="font-medium text-blue-700 hover:underline inline-flex items-start gap-1">{txt}<ExternalLink className="w-3 h-3 flex-shrink-0 mt-1" aria-hidden="true"/></a>:txt;
+                  out.push(<p key={i} className={"text-sm text-gray-700 py-0.5 "+(bullet?"pl-3 border-l-2 border-gray-200 my-1":"")}>{body}</p>);
                 });
+                return out;
               })()}
             </div>
           </div>
@@ -828,60 +980,20 @@ export default function App() {
             <div className="bg-white border rounded-xl p-4 shadow-sm">
               <h4 className="text-sm font-bold text-gray-700 mb-3 flex items-center gap-2"><Link className="w-4 h-4 text-purple-500"/>{t.quickAccessAll}</h4>
               <div className="space-y-2">
-                {cur.vids&&cur.vids.map((v,i)=>(
-                  <a key={"v"+i} href={v.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-red-50 hover:bg-red-100 rounded-lg transition-colors group">
-                    <div className="w-8 h-8 rounded-full bg-red-200 flex items-center justify-center flex-shrink-0"><Play className="w-4 h-4 text-red-700"/></div>
-                    <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-gray-800 truncate">{v.t}</p><p className="text-xs text-gray-500">{v.d}</p></div>
-                    <Tg tag={v.g}/>
-                  </a>
-                ))}
-                {cur.arts&&cur.arts.map((a,i)=>(
-                  <a key={"a"+i} href={a.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors group">
-                    <div className="w-8 h-8 rounded-full bg-blue-200 flex items-center justify-center flex-shrink-0">{a.s==="PDF"?<FileText className="w-4 h-4 text-amber-700"/>:<Link className="w-4 h-4 text-blue-700"/>}</div>
-                    <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-gray-800 truncate">{a.t}</p></div>
-                    <Tg tag={a.s}/>
-                  </a>
-                ))}
-                {cur.doc&&(
-                  <a href={cur.doc} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-green-200 flex items-center justify-center flex-shrink-0"><FileText className="w-4 h-4 text-green-700"/></div>
-                    <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-gray-800">{t.fullResourceGuide}</p><p className="text-xs text-gray-500">{t.driveEditable}</p></div>
-                    <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full font-semibold">Drive</span>
-                  </a>
-                )}
-                {cur.fld&&(
-                  <a href={cur.fld} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 p-2.5 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-purple-200 flex items-center justify-center flex-shrink-0"><FolderOpen className="w-4 h-4 text-purple-700"/></div>
-                    <div className="flex-1 min-w-0"><p className="text-sm font-semibold text-gray-800">{t.moduleFolder}</p><p className="text-xs text-gray-500">{t.allFilesModule}</p></div>
-                    <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full font-semibold">{lang==="fr"?"Dossier":"Folder"}</span>
-                  </a>
-                )}
+                {cur.vids&&cur.vids.map((v,i)=><ResLink key={"v"+i} href={v.u} icon={Play} title={v.t} meta={v.d} tag={v.g}/>)}
+                {cur.arts&&cur.arts.map((a,i)=><ResLink key={"a"+i} href={a.u} icon={a.s==="PDF"?FileText:Link} title={a.t} tag={a.s}/>)}
+                {cur.doc&&<ResLink href={cur.doc} icon={FileText} title={t.fullResourceGuide} meta={t.driveEditable}/>}
+                {cur.fld&&<ResLink href={cur.fld} icon={FolderOpen} title={t.moduleFolder} meta={t.allFilesModule}/>}
               </div>
             </div>
           )}
         </div>
       )}
       {st==="videos"&&cur.vids&&cur.vids.length>0&&(
-        <div className="space-y-2">
-          {cur.vids.map((v,i)=>(
-            <a key={i} href={v.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white border rounded-xl p-4 hover:shadow-md hover:border-red-200 transition-all group">
-              <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0 group-hover:bg-red-200"><Play className="w-5 h-5 text-red-600"/></div>
-              <div className="flex-1 min-w-0"><p className="font-semibold text-gray-800 text-sm">{v.t}</p><p className="text-xs text-gray-400">{v.d}</p></div>
-              <div className="flex items-center gap-2 flex-shrink-0"><Tg tag={v.g}/><ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-red-400"/></div>
-            </a>
-          ))}
-        </div>
+        <div className="space-y-2">{cur.vids.map((v,i)=><ResLink key={i} href={v.u} icon={Play} title={v.t} meta={v.d} tag={v.g}/>)}</div>
       )}
       {st==="articles"&&cur.arts&&cur.arts.length>0&&(
-        <div className="space-y-2">
-          {cur.arts.map((a,i)=>(
-            <a key={i} href={a.u} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-white border rounded-xl p-4 hover:shadow-md hover:border-blue-200 transition-all group">
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">{a.s==="PDF"?<FileText className="w-5 h-5 text-amber-600"/>:<Link className="w-5 h-5 text-blue-600"/>}</div>
-              <div className="flex-1 min-w-0"><p className="font-semibold text-gray-800 text-sm">{a.t}</p></div>
-              <div className="flex items-center gap-2 flex-shrink-0"><Tg tag={a.s}/><ExternalLink className="w-4 h-4 text-gray-300 group-hover:text-blue-400"/></div>
-            </a>
-          ))}
-        </div>
+        <div className="space-y-2">{cur.arts.map((a,i)=><ResLink key={i} href={a.u} icon={a.s==="PDF"?FileText:Link} title={a.t} tag={a.s}/>)}</div>
       )}
       {st==="readings"&&cur.reads&&cur.reads.length>0&&(
         <div className="bg-white border rounded-xl p-5 shadow-sm space-y-3">
@@ -909,25 +1021,36 @@ export default function App() {
           )}
         </div>
       )}
+      </div>
+      </div>
     </div>
   ):null;
 
   // resources
   const resTab=tab==="resources"?(
-    <div className="space-y-4">
-      <Competencies t={t} selected={cp} onSelect={setCp}/>
-      <CompetencyDetail key={cp} t={t} lang={lang} index={cp}/>
-      <div className="bg-white border rounded-xl p-5 shadow-sm"><h3 className="font-bold text-lg mb-3 flex items-center gap-2"><Mic className="w-5 h-5 text-orange-500"/>{t.vocalTitle}</h3><p className="text-sm text-gray-600 mb-3">{t.vocalDesc}</p><a href="https://drive.google.com/drive/folders/1w0UbxFFcqsKa6EeYf_J7Pp485OtF7fTT" target="_blank" rel="noopener noreferrer" className="text-sm text-blue-600 hover:underline flex items-center gap-1"><FolderOpen className="w-4 h-4"/>{t.dailyExercisesFolder}</a></div>
-      <div className="bg-white border rounded-xl p-5 shadow-sm"><h3 className="font-bold text-lg mb-3 flex items-center gap-2"><Users className="w-5 h-5 text-blue-500"/>{t.practiceTitle}</h3><ul className="space-y-1.5 text-sm text-gray-600">{t.practiceItems.map((tx,i)=><li key={i}>• {tx}</li>)}</ul></div>
-      <div className="bg-red-50 border border-red-100 rounded-xl p-5"><h3 className="font-bold text-lg mb-3 text-red-900">{t.pitfallsTitle}</h3><div className="space-y-2 text-sm">{t.pitfallItems.map((a,i)=><div key={i}><strong className="text-red-700">{t.pitfallWord}</strong> {a[0]} — <strong>{t.solutionWord}</strong> {a[1]}</div>)}</div></div>
+    <div>
+      <PageHead title={t.nav.resources} sub={t.pageSubs.resources}/>
+      <div className="grid grid-cols-1 lg:grid-cols-[20rem_minmax(0,1fr)] gap-4 items-start">
+        <div className="lg:sticky lg:top-6"><Competencies t={t} selected={cp} onSelect={i=>{setCp(i);if(window.innerWidth<1024)setTimeout(()=>{const el=document.getElementById("comp-detail");if(el)el.scrollIntoView({block:"start"});},60);}}/></div>
+        <div id="comp-detail" className="scroll-mt-16 min-w-0"><CompetencyDetail key={cp} t={t} lang={lang} index={cp}/></div>
+      </div>
+      <Library t={t} lang={lang}/>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 items-start">
+        <section className="ldp-card p-5"><h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2"><Mic className="w-4 h-4 text-orange-600" aria-hidden="true"/>{t.vocalTitle}</h3><p className="text-sm text-gray-600 mb-3">{t.vocalDesc}</p><a href="https://drive.google.com/drive/folders/1w0UbxFFcqsKa6EeYf_J7Pp485OtF7fTT" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-orange-700 hover:underline inline-flex items-center gap-1.5"><FolderOpen className="w-4 h-4" aria-hidden="true"/>{t.dailyExercisesFolder}</a></section>
+        <section className="ldp-card p-5"><h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2"><Users className="w-4 h-4 text-orange-600" aria-hidden="true"/>{t.practiceTitle}</h3><ul className="space-y-1.5 text-sm text-gray-600">{t.practiceItems.map((tx,i)=><li key={i} className="pl-3 border-l-2 border-gray-200">{tx}</li>)}</ul></section>
+        <section className="ldp-card p-5"><h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2"><Flag className="w-4 h-4 text-orange-600" aria-hidden="true"/>{t.pitfallsTitle}</h3><dl className="space-y-2 text-sm">{t.pitfallItems.map((a,i)=><div key={i}><dt className="font-semibold text-gray-800">{a[0]}</dt><dd className="text-gray-600">{a[1]}</dd></div>)}</dl></section>
+      </div>
     </div>
   ):null;
 
   // drive
   const driveTab=tab==="drive"?(
-    <div className="space-y-4">
-      <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg"><h3 className="font-bold text-blue-900 flex items-center gap-2"><FolderOpen className="w-4 h-4"/>{t.driveRepo}</h3><p className="text-blue-700 text-sm mt-0.5">{t.driveRepoDesc}</p></div>
-      <div className="flex justify-between items-center"><p className="text-sm text-gray-500 flex items-center gap-1.5"><Folder className="w-4 h-4 text-gray-400"/>{t.driveRoot}</p><a href="https://drive.google.com/drive/folders/1e3nvDC36AptxDysRtO0C5dYiTqSS-H87" target="_blank" rel="noopener noreferrer" className="text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-lg">{t.openRoot}</a></div>
+    <div>
+      <PageHead title={t.driveRepo} sub={t.driveRepoDesc}>
+        <a href="https://drive.google.com/drive/folders/1e3nvDC36AptxDysRtO0C5dYiTqSS-H87" target="_blank" rel="noopener noreferrer" className="ldp-btn"><FolderOpen className="w-4 h-4" aria-hidden="true"/>{t.openRoot}</a>
+      </PageHead>
+      <p role="note" className="text-sm text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">{t.driveAccess}</p>
+      <p className="text-sm text-gray-600 flex items-center gap-1.5 mb-2"><Folder className="w-4 h-4 text-gray-400" aria-hidden="true"/>{t.driveRoot}</p>
       <div className="border rounded-xl overflow-hidden bg-white shadow-sm">
         <div className="p-3">{DS.map(n=><DN key={n.id} node={n} depth={0} open={dop} setOpen={setDop} openLabel={t.openLink}/>)}</div>
         <div className="border-t bg-gray-50 px-4 py-2 text-xs text-gray-400">{t.driveFooter}</div>
@@ -967,7 +1090,7 @@ export default function App() {
       <div className="flex items-center gap-3"><button onClick={()=>{setUv("list");setUe("");}} className="text-sm text-blue-600 hover:underline">{t.back}</button><h2 className="text-lg font-bold text-gray-800">{uv==="edit"?t.editUser:t.createUser}</h2></div>
       <div className="bg-white border rounded-xl p-6 shadow-sm space-y-5">
         <div className="flex items-center gap-4">
-          <div className="relative">{uf.profilePicture?<img src={uf.profilePicture} alt="" className="w-20 h-20 rounded-full object-cover border-4 border-purple-100"/>:<div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-400 to-blue-400 flex items-center justify-center border-4 border-purple-100"><User className="w-10 h-10 text-white"/></div>}<label className="absolute bottom-0 right-0 bg-purple-600 text-white rounded-full p-1.5 cursor-pointer shadow"><Settings className="w-3.5 h-3.5"/><input type="file" accept="image/*" onChange={ui} className="hidden"/></label></div>
+          <div className="relative">{uf.profilePicture?<img src={uf.profilePicture} alt="" className="w-20 h-20 rounded-full object-cover border-4 border-purple-100"/>:<div className="w-20 h-20 rounded-full bg-blue-600 flex items-center justify-center border-4 border-purple-100"><User className="w-10 h-10 text-white"/></div>}<label className="absolute bottom-0 right-0 bg-purple-600 text-white rounded-full p-1.5 cursor-pointer shadow"><Settings className="w-3.5 h-3.5"/><input type="file" accept="image/*" onChange={ui} className="hidden"/></label></div>
           <p className="text-sm font-semibold text-gray-700">{t.profilePhoto}</p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -979,7 +1102,7 @@ export default function App() {
         </div>
         <div><label className="block text-sm font-semibold text-gray-700 mb-1">{t.fBio}</label><textarea value={uf.description||""} onChange={e=>{const v=e.target.value;setUf(f=>({...f,description:v}));}} rows="2" className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none resize-none"/></div>
         {ue&&<div className="bg-red-50 border border-red-200 rounded-lg px-4 py-2 text-red-700 text-sm">{ue}</div>}
-        <div className="flex gap-3"><button onClick={us} className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90"><Save className="w-4 h-4"/>{uv==="edit"?t.saveChanges:t.createUserBtn}</button><button onClick={()=>{setUv("list");setUe("");}} className="bg-gray-100 text-gray-700 px-6 py-2.5 rounded-lg font-semibold text-sm">{t.cancel}</button></div>
+        <div className="flex gap-3"><button onClick={us} className="ldp-btn"><Save className="w-4 h-4"/>{uv==="edit"?t.saveChanges:t.createUserBtn}</button><button onClick={()=>{setUv("list");setUe("");}} className="bg-gray-100 text-gray-700 px-6 py-2.5 rounded-lg font-semibold text-sm">{t.cancel}</button></div>
       </div>
     </div>
   ):null;
@@ -987,9 +1110,9 @@ export default function App() {
   // users – list
   const uList=(tab==="users"&&me.role==="admin"&&uv==="list")?(
     <div className="space-y-4">
-      <div className="flex items-center justify-between"><div><h2 className="text-xl font-bold text-gray-800">{t.userMgmt}</h2><p className="text-sm text-gray-500">{Object.keys(users).length} {t.usersWord}</p></div><button onClick={()=>{setUf(EF());setUe("");setUv("create");}} className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90"><Plus className="w-4 h-4"/>{t.addUser}</button></div>
-      <div className="flex gap-3 flex-wrap"><input value={uq} onChange={e=>setUq(e.target.value)} placeholder={t.searchPlaceholder} className="flex-1 min-w-48 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/><select value={ur} onChange={e=>setUr(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none bg-white"><option value="all">{t.allRoles}</option>{ROLES.map(r=><option key={r} value={r}>{t.roleNames[r]}</option>)}</select></div>
-      <div className="grid grid-cols-4 gap-3">{ROLES.map(r=>{const c=Object.values(users).filter(u=>u.role===r).length;return <div key={r} className={"rounded-lg p-3 text-center border "+(RC[r]||"")}><div className="font-mono text-2xl font-semibold">{c}</div><div className="text-xs">{c!==1?t.roleNamesPl[r]:t.roleNames[r]}</div></div>;})}</div>
+      <div className="flex flex-wrap items-end justify-between gap-3"><div><h2 className="text-3xl font-semibold text-gray-900 leading-tight">{t.userMgmt}</h2><p className="text-sm text-gray-600 mt-1">{Object.keys(users).length} {t.usersWord}</p></div><button onClick={()=>{setUf(EF());setUe("");setUv("create");}} className="ldp-btn"><Plus className="w-4 h-4"/>{t.addUser}</button></div>
+      <div className="flex gap-3 flex-wrap"><input value={uq} onChange={e=>setUq(e.target.value)} placeholder={t.searchPlaceholder} aria-label={t.searchPlaceholder} className="flex-1 min-w-48 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none"/><select aria-label={t.fRole} value={ur} onChange={e=>setUr(e.target.value)} className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 outline-none bg-white"><option value="all">{t.allRoles}</option>{ROLES.map(r=><option key={r} value={r}>{t.roleNames[r]}</option>)}</select></div>
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">{ROLES.map(r=>{const c=Object.values(users).filter(u=>u.role===r).length;return <div key={r} className={"rounded-lg p-3 text-center border "+(RC[r]||"")}><div className="font-mono text-2xl font-semibold">{c}</div><div className="text-xs">{c!==1?t.roleNamesPl[r]:t.roleNames[r]}</div></div>;})}</div>
       <div className="space-y-2">
         {fu.length===0&&<div className="text-center py-10 text-gray-400 text-sm">{t.noUsersMatch}</div>}
         {fu.map(u=>(
@@ -1000,9 +1123,9 @@ export default function App() {
               <p className="text-sm text-gray-500 truncate">@{u.username} · {u.email}</p>
             </div>
             <div className="flex gap-2 flex-shrink-0">
-              <button onClick={()=>{setUt(u.username);setUv("detail");}} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"><User className="w-4 h-4"/></button>
-              <button onClick={()=>{setUf({...u,password:""});setUt(u.username);setUv("edit");setUe("");}} className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg"><Edit2 className="w-4 h-4"/></button>
-              {u.username!==me.username&&<button onClick={()=>setDc(u.username)} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"><Trash2 className="w-4 h-4"/></button>}
+              <button onClick={()=>{setUt(u.username);setUv("detail");}} aria-label={t.view+": "+u.name} title={t.view} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg"><User className="w-4 h-4"/></button>
+              <button onClick={()=>{setUf({...u,password:""});setUt(u.username);setUv("edit");setUe("");}} aria-label={t.edit+": "+u.name} title={t.edit} className="p-2 text-gray-400 hover:text-purple-600 hover:bg-purple-50 rounded-lg"><Edit2 className="w-4 h-4"/></button>
+              {u.username!==me.username&&<button onClick={()=>setDc(u.username)} aria-label={t.del+": "+u.name} title={t.del} className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg"><Trash2 className="w-4 h-4"/></button>}
             </div>
           </div>
         ))}
@@ -1012,10 +1135,13 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:bg-white focus:text-gray-900 focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:text-sm focus:font-semibold">{t.skipToContent}</a>
       {modal}
+      {rail}
+      <div className="lg:pl-60">
       {topbar}
       {nav}
-      <div className="max-w-5xl mx-auto p-6">
+      <main id="main" tabIndex={-1} className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 outline-none">
         {mentorDash}
         {partDash}
         {currTab}
@@ -1034,6 +1160,7 @@ export default function App() {
         {uDetail}
         {uForm}
         {uList}
+      </main>
       </div>
     </div>
   );

@@ -71,7 +71,7 @@ export const COMPETENCIES = [
       { t: "Leading the virtual call – 3 tips to keep your team engaged", u: "https://www.leadforgood.co/resources/2020/03/20/2020-3-19-leading-the-virtual-team-call-7-radical-ways-keep-your-team-engaged", s: LFG },
       { t: "HBR: The Secrets of Great Teamwork", u: "https://hbr.org/2016/06/the-secrets-of-great-teamwork", s: "HBR" },
       { t: "HBR: High-Performing Teams Need Psychological Safety", u: "https://hbr.org/2017/08/high-performing-teams-need-psychological-safety-heres-how-to-create-it", s: "HBR" },
-      { t: "Google re:Work – Understand team effectiveness", u: "https://rework.withgoogle.com/guides/understanding-team-effectiveness/", s: "Google" }
+      { t: "Google re:Work – Understand team effectiveness", u: "https://rework.withgoogle.com/intl/en/guides/understand-team-effectiveness", s: "Google" }
     ],
     books: [
       { t: "Leadership Team Coaching", a: "Peter Hawkins", y: "4th ed., 2021" },
