@@ -312,11 +312,11 @@ pause "Press Enter once the limit is set"
 stage "Build the site with the proxy address"
 say "The site must be rebuilt so it knows the proxy address (it is read from .env"
 say "at build time; the address is public, the key is not)."
-if confirm "Build now and publish to GitHub Pages (npm run build && npx gh-pages -d dist)?"; then
-  npm run build && npx gh-pages -d dist
+if confirm "Build now and publish to GitHub Pages (npm run deploy)?"; then
+  npm run deploy
   say "Published. Open the live site, go to AI Coach and enter the access code."
 else
-  SKIPPED+=("Build and publish: npm run build && npx gh-pages -d dist")
+  SKIPPED+=("Build and publish: npm run deploy")
   note "Locally: restart the dev server so it picks up .env, then open the AI Coach tab."
 fi
 

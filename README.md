@@ -65,7 +65,7 @@ progress across devices:
 2. In the project's **SQL Editor**, run [`supabase/schema.sql`](supabase/schema.sql)
 3. Copy `.env.example` to `.env` and fill in the URL and anon key from
    **Settings → API**
-4. Rebuild and redeploy: `npm run build && npx gh-pages -d dist`
+4. Rebuild and redeploy: `npm run deploy`
 
 Without the env vars the app silently falls back to localStorage, and remote
 failures fall back to the local copy, so it works offline either way.
