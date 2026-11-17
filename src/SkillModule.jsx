@@ -3,7 +3,7 @@
 // copyable templates, quotes and checked resources. Stages ticked off are
 // stored with the participant's progress (category "sk").
 import { useState, useRef } from "react";
-import { CheckCircle2, Circle, Play, FileText, BookOpen, Wrench, Copy, Check } from "lucide-react";
+import { CheckCircle2, Circle, Play, FileText, BookOpen, Wrench, Copy, Check, Download } from "lucide-react";
 import { SKILLS } from "./skills.js";
 import MoneyTools from "./MoneyTools.jsx";
 
@@ -108,6 +108,25 @@ export default function SkillModule({ id, t, lang, done, onToggle, stage, onStag
       </div>
 
       {m.id === "money" && <MoneyTools k={t.pd.mt} lang={lang} />}
+
+      {m.downloads && (
+        <div className="ldp-card p-4 flex flex-wrap items-center gap-3 border-l-4 border-l-orange-500">
+          <FileText className="w-5 h-5 text-orange-600 flex-shrink-0" aria-hidden="true" />
+          <div className="flex-1 min-w-[12rem]">
+            <h4 className="text-sm font-bold text-gray-700">{k.toolkit}</h4>
+            <p className="text-xs text-gray-500">{k.toolkitSub}</p>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {/* The user's language first. */}
+            {[...m.downloads].sort((a, b) => (b.lang === lang) - (a.lang === lang)).map(d => (
+              <a key={d.file} href={import.meta.env.BASE_URL + d.file} download target="_blank" rel="noopener noreferrer" hrefLang={d.lang}
+                className={d.lang === lang ? "ldp-btn-accent" : "ldp-btn-outline"}>
+                <Download className="w-4 h-4" aria-hidden="true" />{L(d.label, lang)}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="ldp-card p-4 space-y-2">
         <h4 className="text-sm font-bold text-gray-700">{k.templates}</h4>

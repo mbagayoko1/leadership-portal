@@ -164,7 +164,11 @@ The **Personal Development** tab has nine views:
   with tips, phrases, copyable templates, quotes and resources
   ([`src/skills.js`](src/skills.js), [`src/skillsExtra.js`](src/skillsExtra.js),
   [`src/money.js`](src/money.js)). The money module adds savings-growth and
-  debt-payoff calculators and is general education, not personal advice.
+  debt-payoff calculators and is general education, not personal advice. Its
+  printable toolkit (all templates, quotes and resources, EN and FR) is built
+  from `src/money.js` into `public/downloads/` by `npm run pdf:money` (needs
+  Chrome); rebuild after editing the module, and `npm run check` reports a
+  missing file.
 
 Progress (weeks, speeches delivered, stages practised) is saved per user.
 Links were last checked on 17 November 2026 (`npm run check:links`); YouTube links via oEmbed.

@@ -8,6 +8,7 @@ import { SKILLS } from "../src/skills.js";
 import { MONEY } from "../src/money.js";
 import { SPEECHES } from "../src/speeches.js";
 import { LIBRARY } from "../src/library.js";
+import fs from "fs";
 
 const problems = [];
 const p = (...a) => problems.push(a.join(" "));
@@ -52,6 +53,7 @@ const skillModules = [...SKILLS, ...(SKILLS.some(s => s.id === MONEY.id) ? [] : 
 for (const s of skillModules) {
   for (const q of s.quotes) { if (!q.source && !q.by) p("skill quote without source", s.id); if (!q.fr) p("skill quote without FR", s.id); }
   for (const r of s.resources) if (!r.u && r.kind !== "book") p("skill resource without url", s.id, r.t);
+  for (const d of s.downloads || []) if (!fs.existsSync(new URL("../public/" + d.file, import.meta.url))) p("download missing (run npm run pdf:money)", s.id, d.file);
 }
 COMPETENCIES.forEach(c => { if (!c.overview.fr) p("competency without FR", c.id); });
 SPEECHES.forEach(s => { if (!s.text || !s.text.en || !s.text.fr) p("speech without EN/FR text", s.id); });

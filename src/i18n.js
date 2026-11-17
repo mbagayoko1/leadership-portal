@@ -164,6 +164,8 @@ export const STR = {
         note: "Simplified: interest is charged monthly at the yearly rate ÷ 12; fees and rate changes are ignored."
       },
       sk: {
+        toolkit: "Printable toolkit",
+        toolkitSub: "All templates, quotes and resources of this module in one PDF, to print and fill in by hand (6 pages, links clickable).",
         stages: "Stages",
         goal: "Goal",
         tips: "Tips",
@@ -518,6 +520,8 @@ export const STR = {
         note: "Simplifié : intérêts mensuels au taux annuel ÷ 12 ; frais et variations de taux non pris en compte."
       },
       sk: {
+        toolkit: "Boîte à outils à imprimer",
+        toolkitSub: "Tous les modèles, citations et ressources de ce module en un PDF, à imprimer et à remplir à la main (6 pages, liens cliquables).",
         stages: "Étapes",
         goal: "Objectif",
         tips: "Conseils",

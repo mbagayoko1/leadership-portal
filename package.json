@@ -11,6 +11,7 @@
     "check": "npm run check:data && npm run test:gemini && npm run test:voice",
     "check:data": "node scripts/check-data.mjs",
     "check:links": "node scripts/check-links.mjs",
+    "pdf:money": "node scripts/build-money-pdf.mjs",
     "test:gemini": "node test/gemini.test.mjs",
     "test:voice": "node test/voice.test.mjs"
   },
@@ -25,6 +26,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
+    "puppeteer-core": "^23.11.1",
     "tailwindcss": "^3.4.17",
     "vite": "^6.0.7"
   }

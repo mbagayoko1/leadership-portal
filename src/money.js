@@ -269,6 +269,12 @@ export const MONEY = {
       }
     }
   ],
+  // Printable toolkit (templates, quotes, resources) built from this file by
+  // npm run pdf:money into public/downloads/. Rebuild after editing.
+  downloads: [
+    { lang: "en", file: "downloads/money-toolkit-en.pdf", label: { en: "English (PDF)", fr: "Anglais (PDF)" } },
+    { lang: "fr", file: "downloads/money-toolkit-fr.pdf", label: { en: "French (PDF)", fr: "Français (PDF)" } }
+  ],
   templates: [
     {
       title: { en: "Monthly spending plan", fr: "Plan de dépenses mensuel" },
