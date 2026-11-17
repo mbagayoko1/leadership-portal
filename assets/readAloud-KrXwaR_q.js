@@ -1,0 +1,6 @@
+import{c as E,a as h}from"./index-CtZJjsa3.js";/**
+ * @license lucide-react v0.474.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */const v=[["rect",{width:"18",height:"18",x:"3",y:"3",rx:"2",key:"afitv7"}]],q=E("Square",v),x=c=>(c.match(/[^.!?…]+[.!?…]+["”»)']*\s*|[^.!?…]+$/g)||[c]).map(t=>t.trim()).filter(Boolean);function k(c){const t=typeof window<"u"&&"speechSynthesis"in window,[d,s]=h.useState(-1),o=h.useRef(0),r=()=>{o.current++,t&&window.speechSynthesis.cancel(),s(-1)};h.useEffect(()=>()=>{o.current++,t&&window.speechSynthesis.cancel()},[t]);function S(g){r();const m=++o.current,p=c==="fr"?"fr-FR":"en-GB",w=window.speechSynthesis.getVoices(),l=w.find(e=>e.lang===p)||w.find(e=>e.lang.slice(0,2)===c),i=[];g.forEach((e,f)=>x(e).forEach(u=>i.push([f,u])));const a=()=>o.current===m;i.forEach(([e,f],u)=>{const n=new SpeechSynthesisUtterance(f);n.lang=p,l&&(n.voice=l),n.rate=.95,n.onstart=()=>{a()&&s(e)},u===i.length-1&&(n.onend=()=>{a()&&s(-1)}),n.onerror=y=>{a()&&y.error!=="interrupted"&&y.error!=="canceled"&&r()},window.speechSynthesis.speak(n)}),s(0)}return{supported:t,para:d,playing:d>=0,play:S,stop:r}}export{q as S,k as u};
