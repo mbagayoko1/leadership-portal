@@ -5,12 +5,13 @@ import {
   Eye, EyeOff, Save, FolderOpen, ChevronRight, ChevronDown,
   Shield, Play, FileText, Link, ExternalLink, Sparkles,
   UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone, Lightbulb,
-  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder, Search
+  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder, Search, AudioLines
 } from "lucide-react";
 import { RC, ROLES, TC, EF, IU, CUR, SM, CI, DS, DDC, DEFAULT_GOALS } from "./data.js";
 import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON, moveUserData, deleteUserData } from "./storage.js";
 import { STR } from "./i18n.js";
 import { localizeCurriculum } from "./curriculumFr.js";
+import { DRILLS, VE_DRILL } from "./voice/drills.js";
 import { COMPETENCIES } from "./competencies.js";
 import { SPEAKERS, PD_PLAN } from "./development.js";
 import { LIBRARY } from "./library.js";
@@ -18,6 +19,7 @@ import { LIBRARY } from "./library.js";
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
 const SpeechLibrary = lazy(() => import("./SpeechLibrary.jsx"));
 const SkillModule = lazy(() => import("./SkillModule.jsx"));
+const VoiceStudio = lazy(() => import("./VoiceStudio.jsx"));
 const SpeechBuilder = lazy(() => import("./SpeechBuilder.jsx"));
 
 // ─── COMPONENTS ───────────────────────────────────────────────────────────────
@@ -208,9 +210,9 @@ function CompetencyDetail({ t, lang, index }) {
     </div>
   );
 }
-function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect, onCoach, onConnect, view, onView, speech, onSpeech, spDone, onSpToggle, skDone, onSkToggle, skStage, onSkStage }) {
+function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect, onCoach, onConnect, view, onView, speech, onSpeech, spDone, onSpToggle, skDone, onSkToggle, skStage, onSkStage, voiceDrill, onVoiceDrill }) {
   const p=t.pd;
-  const views=[["plan",p.viewPlan,Compass],["speeches",p.viewSpeeches,BookOpen],["builder",p.viewBuilder,PenLine],["data",p.viewData,BarChart3],["writing",p.viewWriting,FileText],["facilitation",p.viewFac,Users],["mc",p.viewMc,Mic],["money",p.viewMoney,Wallet]];
+  const views=[["plan",p.viewPlan,Compass],["speeches",p.viewSpeeches,BookOpen],["builder",p.viewBuilder,PenLine],["voice",p.viewVoice,AudioLines],["data",p.viewData,BarChart3],["writing",p.viewWriting,FileText],["facilitation",p.viewFac,Users],["mc",p.viewMc,Mic],["money",p.viewMoney,Wallet]];
   const sp=SPEAKERS[selected]||SPEAKERS[0];
   const nWeeks=PD_PLAN.filter(w=>done[w.id]).length;
   const nameOf=id=>(SPEAKERS.find(s=>s.id===id)||{}).name;
@@ -237,7 +239,11 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
           ))}
         </div>
       </div>
-      {view==="builder"?(
+      {view==="voice"?(
+        <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">…</div>}>
+          <VoiceStudio t={t} lang={lang} user={user} drill={voiceDrill} onDrill={onVoiceDrill}/>
+        </Suspense>
+      ):view==="builder"?(
         <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">…</div>}>
           <SpeechBuilder t={t} lang={lang} user={user} onCoach={onCoach} onConnect={onConnect}/>
         </Suspense>
@@ -433,12 +439,30 @@ export default function App() {
   const [cp,setCp]=useState(0);
   const [pdSel,setPdSel]=useState(0);
   const [pdView,setPdView]=useState("plan");
+  const [voiceDrill,setVoiceDrill]=useState("warmup");
+  // #voice and #voice/<drill> open the Voice studio (used by /voice-training).
+  // While the studio is open the hash follows the drill; leaving it clears the hash.
+  const voiceHash=useRef(typeof location!=="undefined"&&location.hash.startsWith("#voice"));
   const [spSel,setSpSel]=useState("s01");
   const [skStage,setSkStage]=useState({});
   // The coach stays mounted after its first visit so an open conversation
   // survives a trip to the module or resource it linked to.
   const [coachOpened,setCoachOpened]=useState(false);
   useEffect(()=>{ if(tab==="coach") setCoachOpened(true); },[tab]);
+  useEffect(()=>{
+    if(!li) return;
+    const apply=()=>{ const m=/^#voice(?:\/([\w-]+))?$/.exec(location.hash); if(!m) return; voiceHash.current=true; setTab("development"); setPdView("voice"); if(m[1]&&DRILLS.some(d=>d.id===m[1])) setVoiceDrill(m[1]); };
+    apply();
+    window.addEventListener("hashchange",apply);
+    return ()=>window.removeEventListener("hashchange",apply);
+  },[li]);
+  useEffect(()=>{
+    if(!li) return;
+    const onVoice=tab==="development"&&pdView==="voice";
+    if(voiceHash.current){ if(!onVoice) return; voiceHash.current=false; }
+    const want=onVoice?"#voice/"+voiceDrill:"";
+    if(location.hash!==want&&(onVoice||location.hash.startsWith("#voice"))) history.replaceState(null,"",location.pathname+location.search+want);
+  },[li,tab,pdView,voiceDrill]);
   // On narrow screens the tab bar scrolls sideways; keep the active tab visible.
   // A new section always starts at the top of the page.
   useEffect(()=>{ window.scrollTo(0,0); },[tab]);
@@ -895,7 +919,7 @@ export default function App() {
                       <div className="px-4 pb-4 sm:pl-14 border-t border-gray-100 pt-3 space-y-3">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
                           <div><h4 className="text-sm font-semibold text-gray-800 mb-1">{t.dailyTasks}</h4>{mod.dt.map((tk,i)=><p key={i} className="text-sm text-gray-600 pl-3 border-l-2 border-gray-200 mb-1">{tk}</p>)}</div>
-                          <div><h4 className="text-sm font-semibold text-gray-800 mb-1">{t.vocalTraining}</h4>{mod.ve.map((ex,i)=>{const eid=mod.id+"_v"+i;return <label key={i} className="flex items-start gap-2 mb-1 cursor-pointer"><button onClick={()=>tp("ve",eid)} aria-pressed={!!prog.ve[eid]} aria-label={t.markDone+": "+ex} className="mt-0.5">{prog.ve[eid]?<CheckCircle2 className="w-4 h-4 text-green-600"/>:<Circle className="w-4 h-4 text-gray-400"/>}</button><span className="text-sm text-gray-600">{ex}</span></label>;})}</div>
+                          <div><h4 className="text-sm font-semibold text-gray-800 mb-1">{t.vocalTraining}</h4>{mod.ve.map((ex,i)=>{const eid=mod.id+"_v"+i;return <label key={i} className="flex items-start gap-2 mb-1 cursor-pointer"><button onClick={()=>tp("ve",eid)} aria-pressed={!!prog.ve[eid]} aria-label={t.markDone+": "+ex} className="mt-0.5">{prog.ve[eid]?<CheckCircle2 className="w-4 h-4 text-green-600"/>:<Circle className="w-4 h-4 text-gray-400"/>}</button><span className="text-sm text-gray-600 flex-1">{ex}</span>{(VE_DRILL[mod.id]||[])[i]&&<button onClick={()=>{setVoiceDrill(VE_DRILL[mod.id][i]);setPdView("voice");setTab("development");}} className="text-xs text-orange-700 hover:underline font-semibold whitespace-nowrap flex items-center gap-1" aria-label={t.practiseVoice+": "+ex}><AudioLines className="w-3.5 h-3.5" aria-hidden="true"/>{t.practiseVoiceShort}</button>}</label>;})}</div>
                           <div className="md:col-span-2"><h4 className="text-sm font-semibold text-gray-800 mb-1">{t.readingsLabel}</h4>{mod.rd.map((r,i)=>{const tid=mod.id+"_r"+i;return <div key={i} className="flex items-start gap-2 mb-1">{r.x&&<button onClick={()=>tp("rt",tid)} aria-pressed={!!prog.rt[tid]} aria-label={t.markDone+": "+r.t} className="mt-0.5">{prog.rt[tid]?<CheckCircle2 className="w-4 h-4 text-green-600"/>:<Circle className="w-4 h-4 text-gray-400"/>}</button>}<span className="text-sm text-gray-600"><strong className="text-gray-800">{r.t}</strong>, {r.c}{r.x&&<span className="text-gray-500 ml-1 text-xs">{t.testTag}</span>}</span></div>;})}</div>
                         </div>
                         <p className="text-sm text-yellow-900 bg-yellow-50 rounded-lg px-3 py-2"><strong>{t.checkpointLabel}</strong> {mod.cp}</p>
@@ -1151,7 +1175,7 @@ export default function App() {
         {partDash}
         {currTab}
         {studyTab}
-        {tab==="development"&&<PersonalDevelopment t={t} lang={lang} user={me} onConnect={()=>{setTab("coach");window.scrollTo(0,0);}} done={prog.pd||{}} onToggle={id=>tp("pd",id)} selected={pdSel} onSelect={setPdSel} onCoach={()=>{setTab("coach");window.scrollTo(0,0);}} view={pdView} onView={setPdView} speech={spSel} onSpeech={setSpSel} spDone={prog.sp||{}} onSpToggle={id=>tp("sp",id)} skDone={prog.sk||{}} onSkToggle={id=>tp("sk",id)} skStage={skStage} onSkStage={setSkStage}/>}
+        {tab==="development"&&<PersonalDevelopment t={t} lang={lang} user={me} onConnect={()=>{setTab("coach");window.scrollTo(0,0);}} done={prog.pd||{}} onToggle={id=>tp("pd",id)} selected={pdSel} onSelect={setPdSel} onCoach={()=>{setTab("coach");window.scrollTo(0,0);}} view={pdView} onView={setPdView} speech={spSel} onSpeech={setSpSel} spDone={prog.sp||{}} onSpToggle={id=>tp("sp",id)} skDone={prog.sk||{}} onSkToggle={id=>tp("sk",id)} skStage={skStage} onSkStage={setSkStage} voiceDrill={voiceDrill} onVoiceDrill={setVoiceDrill}/>}
         {coachOpened&&(
           <div hidden={tab!=="coach"}>
             <Suspense fallback={<div className="ldp-card p-6 text-sm text-gray-500">{t.ai.loadingCoach}</div>}>

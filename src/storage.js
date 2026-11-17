@@ -50,7 +50,7 @@ export async function clearSession() {
 
 // Moves one account's per-user data to another username, without
 // overwriting anything the new account already has. Local data only.
-const USER_PREFIXES = ["prog_", "sessions_", "goals_", "notes_", "coach:", "coachplan:", "speechdrafts_"];
+const USER_PREFIXES = ["prog_", "sessions_", "goals_", "notes_", "coach:", "coachplan:", "speechdrafts_", "voice_"];
 
 export function moveUserData(from, to) {
   USER_PREFIXES.forEach(p => {

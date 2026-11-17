@@ -142,7 +142,7 @@ and it needs microphone permission. Reading aloud works in all modern browsers.
 
 ## Personal Development
 
-The **Personal Development** tab has eight views:
+The **Personal Development** tab has nine views:
 
 - **Plan and voices**: a four-week plan, plus speakers, coaches, researchers,
   African leaders and classic public-domain thinkers, each with key lessons,
@@ -155,6 +155,10 @@ The **Personal Development** tab has eight views:
   ([`src/library.js`](src/library.js)).
 - **Speech library**: 30 original speeches with quotes, analogies, techniques,
   delivery notes and read-aloud ([`src/speeches.js`](src/speeches.js)).
+- **Voice studio**: a guided 10-minute warm-up and six drills (pace, pauses,
+  articulation, projection, pitch variety, filler words). Each take is
+  recorded and analysed in the browser and scored against a target, with one
+  tip, playback and a history. See [Voice studio](#voice-studio) below.
 - **Data stories**, **Writing**, **Meeting facilitation**, **Master of
   ceremonies** and **Money & financial freedom**: stage-by-stage skill modules
   with tips, phrases, copyable templates, quotes and resources
@@ -164,6 +168,29 @@ The **Personal Development** tab has eight views:
 
 Progress (weeks, speeches delivered, stages practised) is saved per user.
 Links were last checked on 17 November 2026 (`npm run check:links`); YouTube links via oEmbed.
+
+## Voice studio
+
+[`src/VoiceStudio.jsx`](src/VoiceStudio.jsx) with the analysis in
+[`src/voice/analysis.js`](src/voice/analysis.js) (pure functions, tested in
+`test/voice.test.mjs` with synthetic signals) and the content, targets and tips
+in [`src/voice/drills.js`](src/voice/drills.js).
+
+- **What it measures:** pace (words per minute) and filler words from browser
+  speech recognition; pauses, volume steadiness and pitch range from the audio
+  itself; for tongue twisters, the share of words recognised. All are estimates.
+- **Privacy:** audio is recorded and analysed in the browser and kept in memory
+  for playback only. Only the scores and the date are saved (`voice_<username>`).
+  The AI Coach, when connected, can be asked for a tip; it receives the scores
+  and the transcript, never audio.
+- **Browsers:** recording works in current Chrome, Edge, Safari and Firefox.
+  Pace, fillers and word accuracy need speech recognition (Chrome or Edge).
+- **Links:** `#voice` or `#voice/<drill>` opens the studio after sign-in, and
+  each vocal exercise in the Curriculum tab links to its drill.
+- **From Claude Code:** `/voice-training [drill]` (defined in
+  [`.claude/commands/voice-training.md`](.claude/commands/voice-training.md))
+  starts the dev server if needed and opens the studio. It is not `/voice`
+  because Claude Code's built-in `/voice` toggles voice dictation.
 
 ## Stack & architecture
 

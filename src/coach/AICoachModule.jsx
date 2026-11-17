@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { createPortal } from "react-dom";
 import { aiComplete, aiStream, aiErrorKind, aiErrorDetail } from "./aiClient.js";
+import { getRecognitionCtor } from "../voice/speech.js";
 import { storeGet, storeSet, storeDelete, storeListKeys } from "../storage.js";
 import { COMPANION_INSTR, PORTAL_RULES, LIVE_LINK_RULE, stripNav, navTargets, speechMeta, speechNote, deliverySummary } from "./companion.js";
 
@@ -756,10 +757,6 @@ function jsonLanguageRule(lang) {
 
 const VoiceCtx = React.createContext({ on: false, stt: false, tts: false });
 
-function getRecognitionCtor() {
-  if (typeof window === "undefined") { return null; }
-  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-}
 
 function hasTTS() {
   return typeof window !== "undefined" && !!window.speechSynthesis && typeof window.SpeechSynthesisUtterance !== "undefined";

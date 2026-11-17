@@ -8,10 +8,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "npm run build && npx gh-pages --add -d dist",
-    "check": "npm run check:data && npm run test:gemini",
+    "check": "npm run check:data && npm run test:gemini && npm run test:voice",
     "check:data": "node scripts/check-data.mjs",
     "check:links": "node scripts/check-links.mjs",
-    "test:gemini": "node test/gemini.test.mjs"
+    "test:gemini": "node test/gemini.test.mjs",
+    "test:voice": "node test/voice.test.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.129.0",
