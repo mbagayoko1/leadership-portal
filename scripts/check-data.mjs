@@ -8,6 +8,9 @@ import { SKILLS } from "../src/skills.js";
 import { MONEY } from "../src/money.js";
 import { SPEECHES } from "../src/speeches.js";
 import { LIBRARY } from "../src/library.js";
+import GUIDES_EN from "../src/guides/en.js";
+import GUIDES_FR from "../src/guides/fr.js";
+import { GUIDE_IDS } from "../src/guides/ids.js";
 import fs from "fs";
 
 const problems = [];
@@ -58,6 +61,22 @@ for (const s of skillModules) {
 COMPETENCIES.forEach(c => { if (!c.overview.fr) p("competency without FR", c.id); });
 SPEECHES.forEach(s => { if (!s.text || !s.text.en || !s.text.fr) p("speech without EN/FR text", s.id); });
 LIBRARY.forEach(g => g.items.forEach(x => { if (!x.u || !x.d || !x.d.fr) p("library item incomplete", x.t); }));
+
+// Module guides: every listed module in both languages, with the same
+// number of outcomes, concepts, example changes, steps and reflections.
+for (const id of GUIDE_IDS) {
+  const e = GUIDES_EN[id], f = GUIDES_FR[id];
+  if (!e || !f) { p("module guide missing", id, !e ? "EN" : "FR"); continue; }
+  for (const g of [e, f]) {
+    if (!g.def || !g.template || !g.example || !g.example.scene || !g.example.first || !g.example.better) p("module guide incomplete", id);
+    for (const c of g.concepts) if (!c.n || !c.d || !c.why || !c.miss) p("guide concept incomplete", id, c.n || "?");
+    for (const s of g.steps) if (!s.do || !s.how || !s.time || !s.done) p("guide step incomplete", id, s.do || "?");
+  }
+  for (const k of ["outcomes", "concepts", "steps", "reflect"]) if (e[k].length !== f[k].length) p("guide", id, k, "EN/FR differ");
+  if (e.example.changes.length !== f.example.changes.length) p("guide", id, "example changes EN/FR differ");
+  e.concepts.forEach((c, i) => { if (!!c.src !== !!(f.concepts[i] && f.concepts[i].src)) p("guide", id, "concept", i + 1, "origin in one language only"); });
+}
+Object.keys(GUIDES_EN).filter(x => !GUIDE_IDS.includes(x)).forEach(x => p("module guide not listed in GUIDE_IDS", x));
 
 const quotes = SPEAKERS.reduce((n, s) => n + s.quotes.length, 0);
 console.log(`i18n ${en.length}/${fr.length} keys · ${SPEAKERS.length} voices · ${quotes} quotes · ${SPEECHES.length} speeches · ${LIBRARY.reduce((n, g) => n + g.items.length, 0)} library items`);

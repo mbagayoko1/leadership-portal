@@ -2,45 +2,14 @@
 // Personal Development tab: a stage stepper with tips and sample phrases,
 // copyable templates, quotes and checked resources. Stages ticked off are
 // stored with the participant's progress (category "sk").
-import { useState, useRef } from "react";
-import { CheckCircle2, Circle, Play, FileText, BookOpen, Wrench, Copy, Check, Download } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle2, Circle, Play, FileText, BookOpen, Wrench, Download } from "lucide-react";
+import CopyBlock from "./CopyBlock.jsx";
 import { SKILLS } from "./skills.js";
 import MoneyTools from "./MoneyTools.jsx";
 
 const L = (o, lang) => (o && (o[lang] || o.en)) || "";
 const KIND_ICON = { video: Play, article: FileText, tool: Wrench, book: BookOpen };
-
-// Copies a template. If the Clipboard API is blocked (some browsers and
-// managed devices), it selects the text and falls back to execCommand, so
-// the user can at least press Ctrl/Cmd+C on the selection.
-function CopyBlock({ title, text, k }) {
-  const [copied, setCopied] = useState(false);
-  const preRef = useRef(null);
-  const done = () => { setCopied(true); setTimeout(() => setCopied(false), 1800); };
-  async function copy() {
-    try { await navigator.clipboard.writeText(text); done(); return; } catch { /* fall through */ }
-    const range = document.createRange();
-    range.selectNodeContents(preRef.current);
-    const sel = window.getSelection();
-    sel.removeAllRanges(); sel.addRange(range);
-    try { if (document.execCommand("copy")) done(); } catch { /* the text stays selected */ }
-  }
-  return (
-    <details className="rounded-lg border border-gray-200 bg-white group">
-      <summary className="cursor-pointer px-3 py-2 text-sm font-semibold text-gray-800 flex items-center gap-2">
-        <FileText className="w-4 h-4 text-orange-500" />{title}
-      </summary>
-      <div className="px-3 pb-3">
-        <div className="flex justify-end mb-1">
-          <button onClick={copy} className="text-xs px-2 py-1 rounded border border-gray-200 text-gray-600 hover:bg-gray-50 flex items-center gap-1">
-            {copied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}{copied ? k.copied : k.copy}
-          </button>
-        </div>
-        <pre ref={preRef} className="text-xs leading-relaxed font-code whitespace-pre-wrap bg-gray-50 border border-gray-100 rounded p-3 text-gray-800 overflow-x-auto">{text}</pre>
-      </div>
-    </details>
-  );
-}
 
 export default function SkillModule({ id, t, lang, done, onToggle, stage, onStage, onCoach }) {
   const k = t.pd.sk;

@@ -39,8 +39,13 @@ New participants can self-register via **Request Access** on the sign-in screen.
   mentors get a coaching dashboard (participants, session log, goals, coaching notes)
 - **Curriculum** — 4 phases / 11 modules with daily tasks, readings, vocal training,
   and checkpoint tracking (click to mark complete)
-- **Study Guide** — per-module resource guides, TED/YouTube videos, HBR/CCL articles,
-  required readings, and reflection questions
+- **Study Guide** — a **Learn** tab for each module (definition and outcomes, key
+  concepts, a worked example, a step-by-step guide with a copyable template, and
+  a self-check), plus resource guides, TED/YouTube videos, HBR/CCL articles,
+  required readings and reflection questions. The guides live in
+  [`src/guides/`](src/guides) (EN and FR, loaded on demand) and follow the
+  template in [`prompts/module-guide.md`](prompts/module-guide.md);
+  `npm run check` compares the two languages. Steps ticked off are saved per user
 - **Resources** — vocal training routine, practice opportunities, common pitfalls
 - **Drive** — navigable mirror of the Google Drive folder tree with direct links
 - **Users** (admin only) — full CRUD with roles, search, filters, profile photos

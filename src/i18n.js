@@ -307,6 +307,8 @@ export const STR = {
     // study guide
     selectModule: "Select Module / Resource:",
     phase1: "── Phase 1: Foundation", phase2: "── Phase 2: Skill Building", phase3: "── Phase 3: Advanced Application", phase4: "── Phase 4: Mastery & Integration", commGroup: "── Communication",
+    sgLearn: "Learn",
+    mg: { what: "What this module is", outcomes: "By the end of the module, you can:", concepts: "Key concepts", why: "Why it matters", miss: "Common mistake", origin: "Origin", example: "Worked example", first: "First attempt", better: "Stronger version", changed: "What changed", steps: "Step by step", progress: "{n} of {total} steps done", mark: "Mark as done", undo: "Mark as not done", time: "Time", done: "Done when", template: "Template to copy", copy: "Copy", copied: "Copied", self: "Self-check", loading: "Loading the guide…", failed: "The guide could not load. Check your connection and reload the page." },
     sgGuide: "Resource Guide", sgVideos: "Videos", sgArticles: "Articles", sgReadings: "Readings", sgReflect: "Reflect",
     openInDrive: "Open in Drive ↗", folderBtn: "Folder ↗",
     rgTitle: "Resource Guide · Google Drive", live: "● Live", editInDrive: "Edit in Drive",
@@ -672,6 +674,8 @@ export const STR = {
     checkpointLabel: "Point d'étape :", studyGuideBtn: "Guide d'étude", testTag: "(test)",
     selectModule: "Sélectionnez un module / une ressource :",
     phase1: "── Phase 1 : Fondations", phase2: "── Phase 2 : Développement des compétences", phase3: "── Phase 3 : Application avancée", phase4: "── Phase 4 : Maîtrise et intégration", commGroup: "── Communication",
+    sgLearn: "Apprendre",
+    mg: { what: "Ce qu'est ce module", outcomes: "À la fin du module, vous saurez :", concepts: "Concepts clés", why: "Pourquoi c'est important", miss: "Erreur fréquente", origin: "Origine", example: "Exemple commenté", first: "Première version", better: "Version améliorée", changed: "Ce qui a changé", steps: "Étape par étape", progress: "{n} étape(s) sur {total} terminée(s)", mark: "Marquer comme fait", undo: "Marquer comme non fait", time: "Durée", done: "C'est fait quand", template: "Modèle à copier", copy: "Copier", copied: "Copié", self: "Auto-évaluation", loading: "Chargement du guide…", failed: "Le guide n'a pas pu se charger. Vérifiez votre connexion et rechargez la page." },
     sgGuide: "Guide de ressources", sgVideos: "Vidéos", sgArticles: "Articles", sgReadings: "Lectures", sgReflect: "Réflexion",
     openInDrive: "Ouvrir dans Drive ↗", folderBtn: "Dossier ↗",
     rgTitle: "Guide de ressources · Google Drive", live: "● En ligne", editInDrive: "Modifier dans Drive",

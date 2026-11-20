@@ -15,6 +15,7 @@ import { DRILLS, VE_DRILL } from "./voice/drills.js";
 import { COMPETENCIES } from "./competencies.js";
 import { SPEAKERS, PD_PLAN } from "./development.js";
 import { LIBRARY } from "./library.js";
+import ModuleGuide, { GUIDE_IDS } from "./ModuleGuide.jsx";
 
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
 const SpeechLibrary = lazy(() => import("./SpeechLibrary.jsx"));
@@ -461,7 +462,7 @@ export default function App() {
   const [tab,setTab]=useState("dashboard");
   const [prog,setProg]=useState({mod:{},rt:{},ve:{}});
   const [sm,setSm]=useState("m1");
-  const [st,setSt]=useState("guide");
+  const [st,setSt]=useState("learn");
   const [dop,setDop]=useState(()=>Object.fromEntries(DS.map(n=>[n.id,true])));
   const [uv,setUv]=useState("list");
   const [ut,setUt]=useState(null);
@@ -513,7 +514,7 @@ export default function App() {
   function coachNavigate(target){
     const [kind,id]=target.split(":");
     if(kind==="tab"){ const tabs={dashboard:"dashboard",curriculum:"curriculum",study:"study-guide",development:"development",resources:"resources",drive:"drive"}; if(tabs[id]) setTab(tabs[id]); }
-    else if(kind==="module"){ setSm(id); setSt("guide"); setTab("study-guide"); }
+    else if(kind==="module"){ setSm(id); setSt("learn"); setTab("study-guide"); }
     else if(kind==="competency"){ const i=COMPETENCIES.findIndex(c=>c.id===id); if(i>=0){ setCp(i); setTab("resources"); } }
     else if(kind==="speaker"){ const i=SPEAKERS.findIndex(s=>s.id===id); if(i>=0){ setPdSel(i); setPdView("plan"); setTab("development"); } }
     else if(kind==="skill"){ setPdView(id); setTab("development"); } // id already checked by the coach's navLabel
@@ -572,7 +573,7 @@ export default function App() {
   // to the next person who signs in on this browser.
   function logout(){setLi(false);setMe(null);setLf({username:"",password:""});setLe("");setTab("dashboard");setCoachOpened(false);clearSession();
     setProg({mod:{},rt:{},ve:{}});setMs([]);setMg(DEFAULT_GOALS);setMn({});
-    setSm("m1");setSt("guide");setCp(0);setPdSel(0);setPdView("plan");setSpSel("s01");setSkStage({});setOpenMods({});setMt("overview");setUv("list");setUt(null);}
+    setSm("m1");setSt("learn");setCp(0);setPdSel(0);setPdView("plan");setSpSel("s01");setSkStage({});setOpenMods({});setMt("overview");setUv("list");setUt(null);}
   function tp(cat,id){setProg(p=>{const c=p[cat]||{};return {...p,[cat]:{...c,[id]:!c[id]}};})}
   function pct(){let tt=0,d=0;Object.values(L.CUR).forEach(ph=>ph.modules.forEach(m=>{tt++;if(prog.mod[m.id])d++;}));return tt?Math.round(d/tt*100):0;}
   const pts=Object.values(users).filter(u=>u.role==="participant");
@@ -893,7 +894,7 @@ export default function App() {
               <ul className="space-y-1">{nextMod.dt.map((x,i)=><li key={i} className="text-sm text-gray-700 pl-3 border-l-2 border-gray-200">{x}</li>)}</ul>
               <p className="text-sm text-yellow-900 bg-yellow-50 rounded-lg px-3 py-2 mt-4"><strong>{t.checkpointLabel}</strong> {nextMod.cp}</p>
               <div className="flex flex-wrap gap-2 mt-4">
-                <button onClick={()=>{setSm(nextMod.id);setSt("guide");setTab("study-guide");}} className="ldp-btn-accent"><Book className="w-4 h-4" aria-hidden="true"/>{t.next.open}</button>
+                <button onClick={()=>{setSm(nextMod.id);setSt("learn");setTab("study-guide");}} className="ldp-btn-accent"><Book className="w-4 h-4" aria-hidden="true"/>{t.next.open}</button>
                 <button onClick={()=>tp("mod",nextMod.id)} className="ldp-btn-outline"><CheckCircle2 className="w-4 h-4" aria-hidden="true"/>{t.next.complete}</button>
               </div>
             </div>
@@ -962,7 +963,7 @@ export default function App() {
                         <span className="flex-1 min-w-0"><span className={"block font-semibold leading-snug "+(isDone?"text-gray-600":"text-gray-900")}>{t.moduleWord} {modNum(mod.id)}: {mod.title}</span><span className="block text-xs text-gray-500">{mod.weeks} {t.weeksWord}</span></span>
                         <ChevronDown className={"w-4 h-4 text-gray-400 flex-shrink-0 transition-transform "+(open?"rotate-180":"")} aria-hidden="true"/>
                       </button>
-                      <button onClick={()=>{setSm(mod.id);setSt("guide");setTab("study-guide");}} className="ldp-btn-outline hidden sm:inline-flex flex-shrink-0">{t.studyGuideBtn}</button>
+                      <button onClick={()=>{setSm(mod.id);setSt("learn");setTab("study-guide");}} className="ldp-btn-outline hidden sm:inline-flex flex-shrink-0">{t.studyGuideBtn}</button>
                     </div>
                     {open&&(
                       <div className="px-4 pb-4 sm:pl-14 border-t border-gray-100 pt-3 space-y-3">
@@ -972,7 +973,7 @@ export default function App() {
                           <div className="md:col-span-2"><h4 className="text-sm font-semibold text-gray-800 mb-1">{t.readingsLabel}</h4>{mod.rd.map((r,i)=>{const tid=mod.id+"_r"+i;return <div key={i} className="flex items-start gap-2 mb-1">{r.x&&<button onClick={()=>tp("rt",tid)} aria-pressed={!!prog.rt[tid]} aria-label={t.markDone+": "+r.t} className="mt-0.5">{prog.rt[tid]?<CheckCircle2 className="w-4 h-4 text-green-600"/>:<Circle className="w-4 h-4 text-gray-400"/>}</button>}<span className="text-sm text-gray-600"><strong className="text-gray-800">{r.t}</strong>, {r.c}{r.x&&<span className="text-gray-500 ml-1 text-xs">{t.testTag}</span>}</span></div>;})}</div>
                         </div>
                         <p className="text-sm text-yellow-900 bg-yellow-50 rounded-lg px-3 py-2"><strong>{t.checkpointLabel}</strong> {mod.cp}</p>
-                        <button onClick={()=>{setSm(mod.id);setSt("guide");setTab("study-guide");}} className="ldp-btn-outline sm:hidden">{t.studyGuideBtn}</button>
+                        <button onClick={()=>{setSm(mod.id);setSt("learn");setTab("study-guide");}} className="ldp-btn-outline sm:hidden">{t.studyGuideBtn}</button>
                       </div>
                     )}
                   </li>
@@ -986,14 +987,15 @@ export default function App() {
   ):null;
 
   // study guide
-  const sgTabs=[["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
+  const sgTabs=[["learn",t.sgLearn,GUIDE_IDS.includes(cur.id)],["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
+  const stE=sgTabs.some(a=>a[0]===st)?st:sgTabs[0][0];
   const studyTab=tab==="study-guide"?(
     <div>
       <PageHead title={t.nav.study} sub={t.pageSubs.study}/>
       <div className="grid grid-cols-1 lg:grid-cols-[15rem_minmax(0,1fr)] gap-5 items-start">
       <div className="lg:hidden">
         <label htmlFor="sg-mod" className="ldp-label">{t.selectModule}</label>
-        <select id="sg-mod" value={sm} onChange={e=>{setSm(e.target.value);setSt("guide");}} className="ldp-input py-2 bg-white">
+        <select id="sg-mod" value={sm} onChange={e=>{setSm(e.target.value);setSt("learn");}} className="ldp-input py-2 bg-white">
           {[1,2,3,4].map(n=><optgroup key={n} label={phaseName(t,"p"+n)}>{L.SM.filter(m=>m.ph===n).map(m=><option key={m.id} value={m.id}>{m.title} ({m.wk})</option>)}</optgroup>)}
           <optgroup label={t.commGroup.replace(/^[─\s]*/,"")}>{L.CI.map(m=><option key={m.id} value={m.id}>{m.title}</option>)}</optgroup>
         </select>
@@ -1003,7 +1005,7 @@ export default function App() {
           <div key={label}>
             <p className="ldp-eyebrow px-2 mb-1">{label}</p>
             <ul>{mods.map(m=>(
-              <li key={m.id}><button onClick={()=>{setSm(m.id);setSt("guide");}} aria-current={sm===m.id?"true":undefined} className={"w-full flex items-start gap-1.5 text-left px-2 py-1.5 rounded-lg text-sm leading-snug transition-colors "+(sm===m.id?"bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#C23668]":"text-gray-700 hover:bg-gray-100")}>
+              <li key={m.id}><button onClick={()=>{setSm(m.id);setSt("learn");}} aria-current={sm===m.id?"true":undefined} className={"w-full flex items-start gap-1.5 text-left px-2 py-1.5 rounded-lg text-sm leading-snug transition-colors "+(sm===m.id?"bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#C23668]":"text-gray-700 hover:bg-gray-100")}>
                 <span className="flex-1">{m.title}</span>{prog.mod[m.id]&&<CheckCircle2 className="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0" aria-label={t.route.done}/>}
               </button></li>
             ))}</ul>
@@ -1019,9 +1021,10 @@ export default function App() {
         </div>
       </div>
       <div className="ldp-subtabs">
-        {sgTabs.map(a=>{const Icon={guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={st===a[0]} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{a[1]}</button>;})}
+        {sgTabs.map(a=>{const Icon={learn:BookOpen,guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={stE===a[0]} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{a[1]}</button>;})}
       </div>
-      {st==="guide"&&(
+      {stE==="learn"&&<ModuleGuide id={cur.id} t={t} lang={lang} done={prog.mg||{}} onToggle={k=>tp("mg",k)}/>}
+      {stE==="guide"&&(
         <div className="space-y-3">
           <div className="bg-white border rounded-xl shadow-sm overflow-hidden">
             <div className="bg-gray-50 border-b px-5 py-3 flex items-center justify-between">
@@ -1067,13 +1070,13 @@ export default function App() {
           )}
         </div>
       )}
-      {st==="videos"&&cur.vids&&cur.vids.length>0&&(
+      {stE==="videos"&&cur.vids&&cur.vids.length>0&&(
         <div className="space-y-2">{cur.vids.map((v,i)=><ResLink key={i} href={v.u} icon={Play} title={v.t} meta={v.d} tag={v.g}/>)}</div>
       )}
-      {st==="articles"&&cur.arts&&cur.arts.length>0&&(
+      {stE==="articles"&&cur.arts&&cur.arts.length>0&&(
         <div className="space-y-2">{cur.arts.map((a,i)=><ResLink key={i} href={a.u} icon={a.s==="PDF"?FileText:Link} title={a.t} tag={a.s}/>)}</div>
       )}
-      {st==="readings"&&cur.reads&&cur.reads.length>0&&(
+      {stE==="readings"&&cur.reads&&cur.reads.length>0&&(
         <div className="bg-white border rounded-xl p-5 shadow-sm space-y-3">
           <h3 className="font-bold text-gray-800 flex items-center gap-2"><Book className="w-5 h-5 text-purple-500"/>{t.requiredReading}</h3>
           {cur.reads.map((r,i)=>{
@@ -1083,7 +1086,7 @@ export default function App() {
           <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm text-amber-800"><strong>{t.afterReading}</strong> {t.uploadNoteTo} <a href="https://drive.google.com/drive/folders/1BHIxUGoLj4vO22LeoguFbe1s-PM4A6E2" target="_blank" rel="noopener noreferrer" className="underline">{t.compNotes}</a></div>
         </div>
       )}
-      {st==="reflect"&&cur.refs&&cur.refs.length>0&&(
+      {stE==="reflect"&&cur.refs&&cur.refs.length>0&&(
         <div className="space-y-3">
           <div className="bg-white border rounded-xl p-5 shadow-sm space-y-4">
             <h3 className="font-bold text-gray-800 flex items-center gap-2"><Book className="w-5 h-5 text-purple-500"/>{t.reflectionQuestions}</h3>

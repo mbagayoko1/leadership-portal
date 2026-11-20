@@ -1,0 +1,512 @@
+// Guides des modules (français). Même structure et mêmes listes que en.js :
+// npm run check:data vérifie que chaque module a le même nombre d'éléments
+// dans les deux langues. Les titres d'ouvrages restent dans leur langue
+// d'origine. Les noms des exemples sont fictifs.
+
+const GUIDES = {
+  m1: {
+    def: "Ce module vous aide à vous voir comme les autres vous perçoivent, et à décider pour quoi vous voulez être reconnu·e. La connaissance de soi ouvre le programme, car toutes les compétences suivantes, de la présence à l'influence, reposent sur vos forces, vos angles morts et les valeurs qui guident votre leadership.",
+    outcomes: [
+      "Nommer vos trois valeurs de leadership et illustrer chacune par un exemple tiré de votre travail.",
+      "Comparer la façon dont vous vous voyez avec la façon dont vos collègues vous voient, grâce à un retour structuré.",
+      "Présenter en cinq minutes qui vous êtes, ce que vous défendez et ce que vous apportez."
+    ],
+    concepts: [
+      { n: "Connaissance de soi interne et externe", d: "La connaissance interne, c'est connaître ses valeurs, ses émotions et ses habitudes. La connaissance externe, c'est savoir comment les autres nous perçoivent.", why: "Beaucoup de professionnels compétents sont forts sur l'une et faibles sur l'autre : leur impact diffère alors de leur intention.", src: "Tasha Eurich, Insight (2017)", miss: "Croire que la réflexion personnelle suffit, sans jamais demander l'avis des autres." },
+      { n: "La fenêtre de Johari", d: "Une grille en quatre zones : ce que vous et les autres savez de vous, ce que seuls les autres voient (angle mort), ce que vous seul·e savez (zone cachée) et ce que personne ne sait encore.", why: "Elle montre que le retour des autres réduit l'angle mort et que le partage réduit la zone cachée.", src: "Joseph Luft et Harrington Ingham (1955)", miss: "L'utiliser comme un test de personnalité plutôt que comme une invitation à demander et à partager." },
+      { n: "Valeurs fondamentales", d: "Les quelques principes auxquels vous ne renoncez pas, même sous pression.", why: "Les valeurs rendent vos décisions prévisibles, et la prévisibilité crée la confiance dans une équipe.", miss: "En lister dix. Si tout est une valeur, plus rien n'oriente la décision." },
+      { n: "Situation, comportement, impact (SCI)", d: "Une façon de donner et de demander un retour : décrire la situation, le comportement observable et son impact.", why: "Elle transforme un commentaire vague comme « sois plus sûr de toi » en quelque chose d'actionnable.", src: "Center for Creative Leadership", miss: "Décrire le caractère de la personne plutôt que ce qu'elle a fait." },
+      { n: "Marque personnelle", d: "L'impression constante que les autres ont de ce que vous savez bien faire et de ce qu'on peut vous confier.", why: "Dans une grande organisation, les opportunités vont souvent à ceux dont les forces sont connues, pas seulement aux meilleurs.", miss: "La confondre avec l'autopromotion. Une marque crédible se construit par des comportements répétés, puis se formule." }
+    ],
+    example: {
+      scene: "Aminata, analyste en suivi et évaluation à Dakar, doit se présenter lors d'un atelier régional réunissant des partenaires de cinq pays. Elle dispose de deux minutes.",
+      first: "« Bonjour, je suis Aminata, je travaille en suivi et évaluation. Je suis là depuis six ans. Je fais beaucoup de choses : des rapports, des données, quelques formations. Contente d'être ici. »",
+      better: "« Bonjour, je suis Aminata. Depuis six ans, j'aide les équipes à transformer les données de terrain en décisions. L'an dernier, nos tableaux de bord de district ont réduit les délais de rapport de deux mois à deux semaines. Ce qui compte pour moi, ce sont des données qui arrivent jusqu'à ceux qui décident. Aujourd'hui, j'aimerais comprendre comment vos pays utilisent les données dans les discussions budgétaires. »",
+      changes: [
+        "Elle commence par ce qu'elle apporte aux autres, pas par son titre : c'est sa marque personnelle.",
+        "Un résultat concret remplace une liste de tâches, ce qui rend le propos crédible.",
+        "« Des données qui arrivent jusqu'à ceux qui décident » exprime une valeur en une phrase.",
+        "Elle termine par une question à la salle, qui montre sa curiosité et invite à l'échange."
+      ]
+    },
+    steps: [
+      { do: "Lister vos valeurs", how: "Écrivez dix valeurs, puis gardez-en trois en vous demandant : laquelle garderais-je si elle me coûtait quelque chose ?", time: "20 minutes", done: "Trois valeurs, chacune avec un exemple d'une ligne tiré de l'année écoulée." },
+      { do: "Demander un retour", how: "Envoyez une question à trois collègues : « Quelle est une chose que je fais qui aide l'équipe, et une chose qui me rendrait plus efficace ? » Demandez-leur d'utiliser situation, comportement, impact.", time: "15 minutes pour l'envoi", done: "Au moins deux réponses reçues." },
+      { do: "Remplir votre fenêtre de Johari", how: "Placez ce que vous saviez déjà dans la zone ouverte et ce qui vous a surpris dans l'angle mort.", time: "20 minutes", done: "Un angle mort à travailler, noté par écrit." },
+      { do: "Rédiger votre présentation", how: "Utilisez le modèle ci-dessous : ce que vous apportez, un résultat, une valeur, une question.", time: "30 minutes", done: "Un texte qui se lit à voix haute en moins de deux minutes." },
+      { do: "Enregistrer un exposé de cinq minutes", how: "Développez votre présentation en un exposé de cinq minutes et filmez-le avec votre téléphone. Regardez-le une fois sans le son, une fois avec.", time: "45 minutes", done: "Vous pouvez nommer deux choses à garder et une à changer." },
+      { do: "Partager et ajuster", how: "Montrez l'enregistrement à votre mentor ou à un·e collègue de confiance et demandez si c'est vous à votre meilleur.", time: "20 minutes", done: "Une version finale prête à être présentée." }
+    ],
+    template: "MA PRÉSENTATION\nCe que j'apporte : j'aide ____ à ____.\nUn résultat : l'an dernier, ____ (chiffre ou changement).\nCe que je défends : ce qui compte pour moi, c'est ____.\nCe que j'attends de cette salle : j'aimerais apprendre ____.\n\nMES TROIS VALEURS\n1. ____ — exemple : ____\n2. ____ — exemple : ____\n3. ____ — exemple : ____",
+    reflect: [
+      "Quel retour vous a le plus surpris·e, et que révèle-t-il de votre angle mort ?",
+      "Quand l'une de vos valeurs vous a-t-elle coûté quelque chose pour la dernière fois ? Qu'avez-vous choisi ?",
+      "Que voudriez-vous que vos collègues disent de vous quand vous n'êtes pas là ?"
+    ],
+    checkpoint: "L'exposé enregistré à l'étape 5 est le brouillon du jalon de la semaine 2 : une présentation de cinq minutes à votre meilleur niveau."
+  },
+
+  m2: {
+    def: "La présence de dirigeant·e, c'est l'impression que vous êtes prêt·e à assumer davantage de responsabilités : vous restez calme, vous parlez clairement et l'on peut vous confier des situations difficiles. Ce module la décompose en comportements que l'on peut pratiquer, pour qu'elle cesse d'être un mystère et devienne une compétence.",
+    outcomes: [
+      "Ouvrir toute intervention en réunion par votre message principal en une phrase.",
+      "Garder votre calme face à une contestation, grâce à une pause et une phrase de transition.",
+      "Évaluer votre propre présence à l'aide d'une grille simple et fixer un objectif de progrès."
+    ],
+    concepts: [
+      { n: "Gravité, communication, apparence", d: "Trois piliers de la présence de dirigeant : votre attitude sous pression, votre façon de parler et votre façon de vous présenter.", why: "La gravité pèse le plus. Une pensée claire sous pression compte davantage que le vernis.", src: "Sylvia Ann Hewlett, Executive Presence (2014)", miss: "Soigner l'apparence en négligeant le sang-froid." },
+      { n: "Chaleur et compétence", d: "Nous jugeons vite les autres sur deux questions : cette personne me veut-elle du bien, et peut-elle tenir ses engagements ?", why: "Un leader qui ne montre que sa compétence peut paraître froid. Montrer d'abord de la chaleur rend la compétence plus facile à accepter.", src: "Susan Fiske, Amy Cuddy et Peter Glick (2007)", miss: "Chercher à impressionner avant de créer le lien." },
+      { n: "L'essentiel d'abord", d: "Donner sa conclusion ou sa demande en premier, puis les détails.", why: "Les responsables écoutent pour trouver le message. S'il arrive à la fin, ils ont peut-être déjà décroché.", miss: "Raconter les faits dans l'ordre où ils se sont produits." },
+      { n: "Sang-froid", d: "Rester stable dans la voix, le corps et les mots face à une contestation ou une surprise.", why: "Le sang-froid est perçu comme de l'assurance et de la compétence.", miss: "Répondre immédiatement. Une pause de deux secondes paraît réfléchie, pas faible." },
+      { n: "La présence par l'écoute", d: "Accorder toute son attention, poser de bonnes questions et s'appuyer sur ce que disent les autres.", why: "Dans bien des contextes, la personne la plus respectée parle en dernier, et brièvement.", miss: "Croire qu'avoir de la présence, c'est parler le plus." }
+    ],
+    example: {
+      scene: "Lucía, chargée de programme à Bogotá, est interrogée par sa directrice, en réunion d'équipe, sur le report d'une formation. Un partenaire est présent.",
+      first: "« Eh bien, il y a eu beaucoup de problèmes. D'abord la salle, ensuite le consultant a eu des soucis de visa, et puis la liste des participants n'était pas prête, alors on s'est dit que c'était peut-être mieux d'attendre, et… »",
+      better: "(Pause.) « Nous l'avons déplacée au 14 mars pour que les bonnes personnes puissent y assister. La liste est confirmée et la salle réservée. Le seul risque est le visa du consultant ; je le saurai vendredi et j'ai une solution locale prête. »",
+      changes: [
+        "La pause lui laisse le temps d'organiser sa réponse et montre son calme.",
+        "La première phrase donne l'essentiel : la nouvelle date et la raison.",
+        "Elle nomme elle-même le risque restant, ce qui renforce la confiance devant le partenaire.",
+        "Elle termine par un plan : la directrice n'a pas besoin de relancer."
+      ]
+    },
+    steps: [
+      { do: "Vous évaluer", how: "Notez-vous de 1 à 5 sur le sang-froid, la clarté, la concision, l'écoute et l'apparence, avec la grille ci-dessous.", time: "15 minutes", done: "Cinq notes et votre point le plus faible entouré." },
+      { do: "Demander à un observateur", how: "Demandez à un·e collègue de vous noter avec la même grille après votre prochaine réunion.", time: "5 minutes pour demander", done: "Vous pouvez comparer ses notes aux vôtres." },
+      { do: "Pratiquer l'essentiel d'abord", how: "Avant chaque réunion de la semaine, écrivez votre message principal en une phrase et dites-le en premier.", time: "5 minutes par réunion", done: "Trois réunions ouvertes par votre message." },
+      { do: "Pratiquer la pause", how: "Quand on vous pose une question, inspirez, marquez deux secondes, puis répondez. Demandez à un·e collègue de noter si vous vous êtes précipité·e.", time: "Pendant les réunions", done: "Une pause avant au moins cinq réponses." },
+      { do: "Préparer une question difficile", how: "Écrivez la question la plus dure qu'on pourrait vous poser sur votre travail et une réponse en trois phrases : message, raison, prochaine étape.", time: "20 minutes", done: "Vous pouvez y répondre à voix haute sans notes." },
+      { do: "Présenter et vous réévaluer", how: "Faites un court point à votre équipe et notez-vous à nouveau avec la grille.", time: "30 minutes", done: "Votre note la plus basse a progressé d'au moins un point." }
+    ],
+    template: "GRILLE DE PRÉSENCE (1 = rarement, 5 = toujours)\nSang-froid — je reste calme face à la contestation : __\nClarté — mon message tient en une phrase : __\nConcision — je m'arrête une fois le message passé : __\nÉcoute — je m'appuie sur ce que disent les autres : __\nApparence — ma tenue convient au contexte : __\n\nMON MESSAGE EN UNE PHRASE POUR LA PROCHAINE RÉUNION\n____",
+    reflect: [
+      "Pensez à une personne dont vous admirez la présence. Quels comportements précis créent cette impression ?",
+      "Dans quelles situations perdez-vous votre sang-froid, et que se passe-t-il juste avant ?",
+      "Que changerait le fait de parler moins, mais plus clairement, en réunion ?"
+    ],
+    checkpoint: "Utilisez la grille lors de votre présentation à l'équipe pour le jalon de la semaine 4, puis comparez votre note à celle d'un observateur."
+  },
+
+  m3: {
+    def: "La communication stratégique consiste à construire un message pour qu'un public précis le comprenne, le retienne et agisse. Ce module vous apprend à structurer vos idées en partant de la conclusion, à transformer des données en messages et à les rendre mémorables.",
+    outcomes: [
+      "Structurer une note ou une présentation avec le message principal en premier et trois arguments.",
+      "Transformer un tableau de données en un message clair assorti d'une action recommandée.",
+      "Adapter le même contenu à deux publics différents."
+    ],
+    concepts: [
+      { n: "Le principe de la pyramide", d: "Commencer par la réponse, puis regrouper les arguments en dessous, chacun appuyé par des preuves.", why: "Un lecteur pressé saisit le message même s'il s'arrête au premier paragraphe.", src: "Barbara Minto, The Pyramid Principle", miss: "Construire jusqu'à la conclusion comme dans un article universitaire." },
+      { n: "Situation, complication, question, réponse", d: "Une ouverture courte qui pose le contexte, nomme le problème, soulève la question et donne votre réponse.", why: "Elle montre pourquoi votre message compte avant d'entrer dans le détail.", src: "Barbara Minto", miss: "Passer l'essentiel du temps sur la situation." },
+      { n: "Le public d'abord", d: "Avant d'écrire, demandez-vous : pour qui, que sait-il déjà, à quoi tient-il, et que voulez-vous qu'il fasse ?", why: "Les mêmes faits appellent un message différent pour un ministre, un bailleur et un responsable communautaire.", miss: "Écrire une seule version pour tout le monde." },
+      { n: "Des données au « et alors ? »", d: "Chaque graphique ou chiffre doit s'accompagner de la conclusion qu'il soutient et de ce qu'il faut faire.", why: "Les données ne parlent pas d'elles-mêmes. Le public retient des messages, pas des tableaux.", miss: "Montrer tous les chiffres disponibles." },
+      { n: "Des messages qui collent", d: "On retient un message simple, inattendu, concret, crédible, émouvant et raconté comme une histoire.", why: "Un message mémorable continue de circuler après la réunion.", src: "Chip Heath et Dan Heath, Made to Stick (2007)", miss: "Un langage abstrait comme « renforcer les capacités », sans image concrète." }
+    ],
+    example: {
+      scene: "Priya, spécialiste des données à Dacca, doit présenter de nouveaux résultats d'enquête à l'équipe de planification du ministère de la Santé. Elle a dix minutes et vingt diapositives.",
+      first: "Elle commence par la méthodologie, puis montre quatorze graphiques dans l'ordre du questionnaire. Sa recommandation figure sur la dernière diapositive, qu'elle atteint quand le temps est écoulé.",
+      better: "Elle commence : « Dans trois districts du nord, une femme sur quatre qui souhaite éviter une grossesse n'a pas accès à la contraception moderne. Combler cet écart dans le prochain budget coûterait moins que soigner les complications qu'il entraîne. Je vais vous donner trois raisons et une option. » Elle montre trois graphiques dont chaque titre énonce le message, et consacre les quatre dernières minutes à l'option et aux questions.",
+      changes: [
+        "La réponse et la recommandation viennent en premier, selon le principe de la pyramide.",
+        "Vingt diapositives deviennent trois, chacune avec un titre-message au lieu d'un titre-thème.",
+        "« Une femme sur quatre » est concret et plus facile à retenir qu'un tableau de pourcentages.",
+        "La méthodologie passe en annexe, disponible si quelqu'un la demande."
+      ]
+    },
+    steps: [
+      { do: "Définir le public et l'action", how: "Écrivez une phrase : « Après cela, [public] va [action]. »", time: "10 minutes", done: "La phrase nomme une personne ou un groupe et un verbe." },
+      { do: "Écrire le message principal", how: "Formulez votre réponse en moins de 25 mots. Lisez-la à voix haute. Si elle demande une explication, réécrivez-la.", time: "15 minutes", done: "Un·e collègue peut la répéter après une seule écoute." },
+      { do: "Construire la pyramide", how: "Ajoutez trois arguments sous le message, chacun avec sa preuve la plus forte.", time: "30 minutes", done: "Un plan d'une page avec le modèle ci-dessous." },
+      { do: "Réécrire les titres des graphiques", how: "Remplacez les titres-thèmes (« Utilisation de la contraception par région ») par des titres-messages (« L'utilisation est la plus faible au nord »).", time: "20 minutes", done: "Chaque titre de graphique énonce une conclusion." },
+      { do: "Ajouter une image concrète", how: "Trouvez une histoire, une comparaison ou un chiffre qui rend le message réel pour ce public.", time: "15 minutes", done: "Votre ouverture contient quelque chose que l'on peut se représenter." },
+      { do: "Tester avec un·e collègue", how: "Présentez en cinq minutes, puis demandez : « Que retiendras-tu ? Que ferais-tu ensuite ? »", time: "20 minutes", done: "Sa réponse correspond à votre message principal." }
+    ],
+    template: "PYRAMIDE DU MESSAGE\nPublic : ____\nAprès cela, il va : ____\n\nMessage principal (moins de 25 mots) :\n____\n\nArgument 1 : ____ | preuve : ____\nArgument 2 : ____ | preuve : ____\nArgument 3 : ____ | preuve : ____\n\nImage concrète ou histoire : ____\nLa demande : ____",
+    reflect: [
+      "Pensez à votre dernière présentation. Quelqu'un pourrait-il répéter votre message une semaine plus tard ?",
+      "Avec quel public avez-vous le plus de mal à communiquer, et à quoi tient-il le plus ?",
+      "Où, dans votre travail, montrez-vous des données sans dire ce qu'elles signifient ?"
+    ],
+    checkpoint: "Construisez la présentation fondée sur les données de la semaine 7 avec la pyramide du message, et testez-la d'abord avec un·e collègue."
+  },
+
+  m4: {
+    def: "Influencer sans autorité, c'est faire avancer les choses avec des personnes qui ne dépendent pas de vous : pairs, partenaires, autres équipes, responsables. Ce module vous montre comment comprendre ce que les autres valorisent, bâtir la confiance et former des alliances pour que l'on choisisse de travailler avec vous.",
+    outcomes: [
+      "Cartographier les parties prenantes d'un objectif selon leur influence et leur intérêt.",
+      "Formuler une demande en fonction de ce que l'autre partie valorise.",
+      "Conduire une réunion entre équipes jusqu'à une action convenue, sans escalade hiérarchique."
+    ],
+    concepts: [
+      { n: "Les monnaies d'échange", d: "On coopère quand on reçoit en retour quelque chose qui a de la valeur : information, reconnaissance, soutien, ressources ou sentiment de contribuer à la mission.", why: "Si vous connaissez la monnaie de quelqu'un, vous pouvez offrir de la valeur avant de demander.", src: "Allan Cohen et David Bradford, Influence Without Authority (1990)", miss: "Supposer que tout le monde valorise ce que vous valorisez." },
+      { n: "Cartographie des parties prenantes", d: "Placer les personnes sur une grille selon leur pouvoir sur votre objectif et leur intérêt, puis décider comment impliquer chaque groupe.", why: "Elle montre où investir votre temps, qui est limité.", src: "Aubrey Mendelow (1991)", miss: "N'impliquer que ceux qui sont déjà d'accord avec vous." },
+      { n: "La réciprocité", d: "Nous ressentons le besoin de rendre l'aide reçue.", why: "Aider tôt crée une bonne volonté sur laquelle vous pourrez compter plus tard.", src: "Robert Cialdini, Influence (1984)", miss: "N'aider que lorsqu'on a besoin de quelque chose ; cela se remarque." },
+      { n: "L'équation de la confiance", d: "La confiance grandit avec la crédibilité, la fiabilité et la proximité, et diminue quand on vous soupçonne de servir vos propres intérêts.", why: "Sans pouvoir hiérarchique, la confiance est votre principale source d'influence.", src: "David Maister, Charles Green et Robert Galford, The Trusted Advisor (2000)", miss: "Miser sur l'expertise en négligeant la fiabilité sur les petites promesses." },
+      { n: "Les coalitions", d: "Un petit groupe d'alliés qui soutiennent une idée avant qu'elle soit proposée largement.", why: "Une proposition portée par plusieurs voix respectées est difficile à écarter.", miss: "Présenter une idée nouvelle pour la première fois en grande réunion." }
+    ],
+    example: {
+      scene: "Fatou, analyste de programme à Bamako, a besoin que les équipes finances et approvisionnement décalent d'une semaine une échéance de rapport trimestriel, afin d'y intégrer les données de terrain. Aucune des deux équipes ne dépend d'elle.",
+      first: "Elle écrit aux deux responsables : « L'échéance actuelle ne convient pas aux programmes. Merci de la décaler d'une semaine à partir du prochain trimestre. » Les finances répondent que la date est fixée par le siège.",
+      better: "Elle rencontre d'abord la responsable des finances pour comprendre ce qui rend l'échéance difficile pour son équipe, et apprend qu'elle souffre aussi des corrections tardives. Elle propose : « Si les données de terrain arrivent en une seule fois, vous aurez moins de corrections ensuite. Pourrions-nous tester un décalage d'une semaine sur un trimestre et compter les corrections ? » Le responsable de l'approvisionnement, qui subit les mêmes corrections, accepte de cosigner. Ensemble, ils présentent une proposition commune.",
+      changes: [
+        "Elle s'est intéressée aux problèmes de l'autre équipe avant de faire sa demande.",
+        "La demande est formulée dans la monnaie des finances : moins de corrections.",
+        "Un essai sur un trimestre rend le « oui » moins risqué.",
+        "Elle a formé une coalition avec l'approvisionnement avant la proposition officielle."
+      ]
+    },
+    steps: [
+      { do: "Définir l'objectif", how: "Écrivez le changement précis dont vous avez besoin et pour quand.", time: "10 minutes", done: "Une phrase avec un résultat et une date." },
+      { do: "Cartographier les parties prenantes", how: "Listez toutes les personnes concernées et placez-les sur la grille influence/intérêt ci-dessous.", time: "30 minutes", done: "Chaque personne est dans un quadrant avec une approche : gérer de près, satisfaire, informer ou surveiller." },
+      { do: "Trouver leur monnaie", how: "Pour les trois personnes clés, notez ce qui compte pour elles. En cas de doute, demandez-le lors d'un court échange.", time: "Un échange par personne", done: "Une monnaie à côté de chaque nom." },
+      { do: "Reformuler votre demande", how: "Réécrivez votre demande pour qu'elle commence par ce que l'autre partie y gagne.", time: "15 minutes", done: "La première phrase mentionne leur bénéfice." },
+      { do: "Former une coalition", how: "Présentez l'idée en tête-à-tête à deux alliés avant toute réunion de groupe, et intégrez leurs suggestions.", time: "Deux courts entretiens", done: "Deux personnes prêtes à soutenir l'idée." },
+      { do: "Conduire la réunion", how: "Ouvrez sur le problème commun, présentez la proposition, invitez les objections et terminez avec un responsable et une date pour chaque action.", time: "45 minutes", done: "Un accord écrit sur au moins une action." }
+    ],
+    template: "PLAN D'INFLUENCE\nObjectif et date : ____\n\nPartie prenante | Influence (F/f) | Intérêt (F/f) | Sa monnaie | Mon approche\n____ | __ | __ | ____ | ____\n____ | __ | __ | ____ | ____\n____ | __ | __ | ____ | ____\n\nMa demande, formulée pour eux :\n« Pour que vous ____, pourrions-nous ____ ? »\n\nAlliés à informer d'abord : ____, ____",
+    reflect: [
+      "Qui vous a aidé·e récemment sans y être obligé·e ? Que lui avez-vous apporté en retour ?",
+      "Quelle partie prenante évitez-vous, et que pourriez-vous lui offrir qui ait de la valeur pour elle ?",
+      "Quand avez-vous eu recours à l'escalade alors que l'influence aurait pu suffire ?"
+    ],
+    checkpoint: "Préparez la réunion de l'équipe spéciale régionale de la semaine 10 avec votre plan d'influence, puis demandez un retour à 360°."
+  },
+
+  m5: {
+    def: "La maîtrise de la prise de parole, c'est la capacité de tenir une salle, de transmettre un message clair et de pousser à l'action, que vous parliez cinq ou quarante minutes. Ce module couvre la structure, l'ouverture et la conclusion, les histoires, l'expression orale et la gestion du trac.",
+    outcomes: [
+      "Structurer un discours autour d'un seul message à l'aide d'une séquence éprouvée.",
+      "Ouvrir par une accroche et conclure par un appel à l'action clair.",
+      "Prononcer un discours de 15 minutes avec une seule fiche de notes, ou aucune."
+    ],
+    concepts: [
+      { n: "Un seul message", d: "Un discours doit laisser au public une seule idée qu'il peut répéter.", why: "Le public oublie l'essentiel d'un discours en quelques jours. Une idée claire survit.", miss: "Dire tout ce que l'on sait sur le sujet." },
+      { n: "La séquence motivée", d: "Cinq étapes : capter l'attention, montrer un besoin, présenter la solution, aider le public à visualiser le résultat, l'appeler à agir.", why: "Elle fait passer l'auditoire de l'intérêt à l'action, ce qui convient au plaidoyer.", src: "Alan H. Monroe", miss: "Sauter l'étape de visualisation, celle où le public ressent le résultat." },
+      { n: "La règle de trois", d: "Regrouper idées, exemples ou formules par trois.", why: "Trois éléments donnent un sentiment de complétude et se retiennent facilement.", miss: "Forcer quatre ou cinq points dans une structure faite pour trois." },
+      { n: "Des histoires qui servent le propos", d: "Une courte histoire avec une personne, un défi et un changement, clairement reliée à votre message.", why: "Les histoires rendent les sujets abstraits humains et mémorables.", miss: "Une histoire émouvante qui ne mène pas à la demande." },
+      { n: "Transformer le trac en enthousiasme", d: "Se dire « je suis enthousiaste » plutôt que « je suis calme » avant de parler.", why: "Une étude a montré que les personnes qui requalifiaient leur anxiété en enthousiasme réussissaient mieux que celles qui cherchaient à se calmer.", src: "Alison Wood Brooks (2014)", miss: "Vouloir supprimer tout trac ; un peu d'énergie aide." }
+    ],
+    example: {
+      scene: "Jean-Baptiste, coordinateur d'un programme jeunesse à Kinshasa, dispose de 15 minutes lors d'un forum international de la jeunesse pour plaider en faveur de l'investissement dans les compétences des jeunes.",
+      first: "« Merci aux organisateurs. Aujourd'hui, je vais parler de la jeunesse. On compte plus d'un milliard de jeunes de 15 à 24 ans. Les défis sont nombreux : chômage, éducation, santé. Notre programme intervient dans de nombreux domaines… » Il lit ses diapositives pendant 15 minutes.",
+      better: "Il commence : « Grace a 19 ans. Elle a terminé l'école première de sa classe, et depuis deux ans elle n'a pas de travail. » Il nomme le besoin avec un seul chiffre, présente trois solutions éprouvées, décrit Grace trois ans plus tard avec une compétence et un revenu, et conclut : « Avant de partir aujourd'hui, engagez-vous à offrir un stage dans votre organisation. Écrivez-le sur la carte posée sur votre chaise. »",
+      changes: [
+        "L'histoire d'une personne remplace une affirmation générale sur « la jeunesse ».",
+        "Le discours suit la séquence motivée : attention, besoin, solution, visualisation, action.",
+        "Les trois solutions suivent la règle de trois.",
+        "La conclusion demande une action précise et immédiate."
+      ]
+    },
+    steps: [
+      { do: "Écrire votre message unique", how: "Complétez : « Je veux que ce public croie que ____ et qu'il ____. »", time: "15 minutes", done: "Une phrase de moins de 25 mots." },
+      { do: "Bâtir le plan avec la séquence", how: "Remplissez les cinq étapes du modèle ci-dessous, une ou deux lignes chacune.", time: "30 minutes", done: "Chaque étape a un contenu." },
+      { do: "Trouver votre histoire", how: "Choisissez une histoire réelle (anonymisée) ou composite avec une personne, un défi et un changement.", time: "20 minutes", done: "Vous pouvez la raconter en moins de 90 secondes." },
+      { do: "Tout faire tenir sur une fiche", how: "Répétez jusqu'à ce que vos notes tiennent sur une fiche : première phrase, trois mots clés, dernière phrase.", time: "Trois répétitions", done: "Vous prononcez le discours avec la seule fiche." },
+      { do: "Répéter devant la caméra", how: "Filmez une répétition complète. Vérifiez le débit, les pauses et le regard. Utilisez le Studio vocal pour le débit.", time: "40 minutes", done: "Votre débit se situe entre 130 et 160 mots par minute." },
+      { do: "Préparer votre trac", how: "Avant de parler, respirez lentement pendant une minute et dites-vous « J'ai hâte de partager cela ».", time: "2 minutes", done: "Vous commencez par une pause et un regard, pas par une excuse." }
+    ],
+    template: "PLAN DU DISCOURS\nMessage unique : ____\n\n1. Attention (histoire ou question) : ____\n2. Besoin (un chiffre ou un fait) : ____\n3. Solution (trois points) : ____ / ____ / ____\n4. Visualisation (le monde s'ils agissent) : ____\n5. Action (demande précise, aujourd'hui) : ____\n\nPremière phrase : ____\nDernière phrase : ____",
+    reflect: [
+      "Quel orateur vous a poussé·e à agir, et qu'a-t-il fait dans la première minute ?",
+      "Quelle histoire tirée de votre travail montre le mieux pourquoi il compte ?",
+      "Que faites-vous aujourd'hui de votre trac, et qu'essaierez-vous la prochaine fois ?"
+    ],
+    checkpoint: "Votre plan de discours est la trame du discours de 15 minutes de la semaine 14 lors d'un événement régional."
+  },
+
+  m6: {
+    def: "L'engagement avec la haute direction, c'est travailler efficacement avec des personnes situées plusieurs niveaux au-dessus de vous : les informer, gagner leur confiance et obtenir des décisions. Ce module vous aide à préparer des notes prêtes pour la décision, à comprendre les priorités des dirigeants et à assurer le suivi pour qu'ils reviennent vers vous.",
+    outcomes: [
+      "Rédiger une note d'une page qui énonce la décision attendue dès la première ligne.",
+      "Préparer un entretien de dix minutes avec un·e dirigeant·e autour de ses priorités.",
+      "Envoyer dans les 48 heures un suivi des actions convenues."
+    ],
+    concepts: [
+      { n: "Prêt pour la décision", d: "Une note ou une réunion qui donne au dirigeant ce qu'il lui faut pour trancher : la question, les options, une recommandation et les risques.", why: "Les dirigeants apprécient ceux qui leur font gagner du temps.", miss: "Apporter des problèmes sans options." },
+      { n: "Son agenda d'abord", d: "Relier votre sujet à ce dont le dirigeant est déjà responsable.", why: "On prête attention à ce qui aide à atteindre ses propres objectifs.", miss: "Expliquer pourquoi le sujet compte pour vous." },
+      { n: "L'essentiel d'abord", d: "Énoncer la décision attendue dès la première phrase, puis le raisonnement.", why: "Le temps des dirigeants est souvent écourté. Le plus important doit venir en premier.", miss: "Le contexte avant la demande." },
+      { n: "Gérer sa hiérarchie", d: "Travailler délibérément avec son responsable et la direction : comprendre leur style, les tenir informés et éviter les surprises.", why: "Un dirigeant jamais surpris par une mauvaise nouvelle fait confiance à qui l'a prévenu tôt.", miss: "Cacher un problème jusqu'à ce qu'il soit résolu." },
+      { n: "Le suivi", d: "Confirmer par écrit ce qui a été convenu et livrer à temps.", why: "La fiabilité sur les petits engagements ouvre la voie à de plus grandes responsabilités.", miss: "Quitter la réunion sans responsables ni dates." }
+    ],
+    example: {
+      scene: "Omar, spécialiste technique à Amman, obtient dix minutes avec la directrice pays pour demander un budget pour un nouveau système de données.",
+      first: "Il commence par l'historique des problèmes de données sur cinq ans, détaille les options techniques et, à la neuvième minute, demande 80 000 dollars. La directrice dit qu'elle doit réfléchir et part à une autre réunion.",
+      better: "Il commence : « Je vous demande d'approuver 80 000 dollars pour un système de données qui nous permettra de rendre compte aux bailleurs en quelques jours au lieu de plusieurs semaines, ce qui sert votre objectif de rapports plus rapides cette année. » Il présente deux options sur une page, en recommande une, nomme le principal risque et la parade, puis demande : « Pouvez-vous approuver aujourd'hui, ou de quoi auriez-vous besoin pour décider d'ici vendredi ? » L'après-midi même, il envoie un résumé de trois lignes.",
+      changes: [
+        "La décision et le montant figurent dans la première phrase.",
+        "La demande est reliée à la priorité de la directrice.",
+        "Deux options et une recommandation rendent la note prête pour la décision.",
+        "Un suivi écrit le jour même confirme la prochaine étape."
+      ]
+    },
+    steps: [
+      { do: "Étudier ses priorités", how: "Lisez les discours, plans ou messages récents du dirigeant. Notez ses trois priorités.", time: "30 minutes", done: "Trois priorités écrites." },
+      { do: "Rédiger la note d'une page", how: "Utilisez le modèle ci-dessous : décision attendue, pourquoi maintenant, options, recommandation, risques.", time: "45 minutes", done: "La note tient sur une page et la décision est en ligne 1." },
+      { do: "Préparer les questions", how: "Listez les trois questions les plus difficiles et une réponse en deux phrases pour chacune.", time: "20 minutes", done: "Vous pouvez répondre à chacune à voix haute." },
+      { do: "Répéter les dix minutes", how: "Répétez l'entretien en cinq minutes, en gardant cinq minutes pour la discussion.", time: "20 minutes", done: "Votre ouverture dure moins de 60 secondes." },
+      { do: "Tenir l'entretien", how: "Ouvrez sur la décision, écoutez plus que vous ne parlez et confirmez les prochaines étapes avant de partir.", time: "10 minutes", done: "Vous repartez avec une décision ou une date pour la prendre." },
+      { do: "Faire le suivi sous 48 heures", how: "Envoyez un résumé : ce qui a été convenu, qui fait quoi, pour quand.", time: "10 minutes", done: "Message envoyé dans les deux jours." }
+    ],
+    template: "NOTE D'UNE PAGE\nDécision attendue : ____ (d'ici le : ____)\nPourquoi c'est important pour vous : ____ (lien avec sa priorité)\nContexte (trois lignes au plus) : ____\nOption A : ____ | coût | bénéfice | risque\nOption B : ____ | coût | bénéfice | risque\nRecommandation : ____\nPrincipal risque et parade : ____\nProchaine étape si approuvé : ____",
+    reflect: [
+      "Qu'est-ce qui inquiète le plus vos dirigeants cette année ?",
+      "Quand avez-vous apporté pour la dernière fois un problème à un dirigeant sans recommandation ?",
+      "Quelle relation avec la direction aiderait le plus votre travail, et comment pourriez-vous y apporter de la valeur ?"
+    ],
+    checkpoint: "Préparez chacune des trois rencontres avec des dirigeants de la semaine 17 avec une note d'une page, et consignez vos enseignements dans votre journal."
+  },
+
+  m7: {
+    def: "La communication de crise, c'est la façon de parler et d'agir quand quelque chose tourne mal soudainement : un incident, une accusation publique, un problème de sécurité ou l'échec d'un programme. L'adaptabilité, c'est diriger quand les plans ne correspondent plus à la réalité. Ce module vous prépare à communiquer vite, honnêtement et calmement.",
+    outcomes: [
+      "Rédiger une déclaration d'attente dans l'heure qui suit un incident.",
+      "Appliquer les principes de la communication de crise à un scénario réaliste.",
+      "Animer un retour d'expérience qui transforme une crise en leçons."
+    ],
+    concepts: [
+      { n: "Principes de communication de crise", d: "Être le premier, être exact, être crédible, exprimer de l'empathie, inciter à l'action et faire preuve de respect.", why: "Dans les premières heures, la confiance se gagne ou se perd plus vite que les faits ne se rassemblent.", src: "Centers for Disease Control and Prevention (États-Unis), Crisis and Emergency Risk Communication (CERC)", miss: "Attendre d'avoir tous les faits avant de dire quoi que ce soit." },
+      { n: "Déclaration d'attente", d: "Une première déclaration courte qui reconnaît la situation, exprime l'inquiétude, dit ce que vous faites et quand vous ferez le point.", why: "Elle occupe le silence avant les rumeurs.", miss: "Spéculer sur les causes ou les responsabilités." },
+      { n: "Défis techniques et défis adaptatifs", d: "Les problèmes techniques ont des solutions connues. Les défis adaptatifs exigent que les gens changent de valeurs, d'habitudes ou de convictions.", why: "Les crises mêlent souvent les deux. Traiter un défi adaptatif comme un problème technique l'aggrave.", src: "Ronald Heifetz, Leadership Without Easy Answers (1994)", miss: "Annoncer une solution rapide à un problème qui exige que les gens changent." },
+      { n: "Volatilité, incertitude, complexité, ambiguïté (VICA)", d: "Une description des environnements où le changement est rapide et imprévisible.", why: "Dans ces contextes, des cycles de planification courts et des principes clairs valent mieux que des plans détaillés à long terme.", src: "US Army War College (fin des années 1980)", miss: "Utiliser le terme comme une excuse plutôt que comme une raison de s'adapter." },
+      { n: "Retour d'expérience", d: "Une discussion courte et sans recherche de coupable : ce qui devait se passer, ce qui s'est passé, pourquoi, et ce que nous ferons autrement.", why: "Elle transforme une crise en apprentissage et rétablit la confiance dans l'équipe.", src: "Armée des États-Unis (after-action review)", miss: "En faire la recherche d'un coupable." }
+    ],
+    example: {
+      scene: "Ana, responsable de la communication à Manille, apprend à 9 heures qu'une vidéo diffusée sur les réseaux sociaux affirme à tort que les cliniques de son organisation distribuent des médicaments périmés. Les journalistes appellent.",
+      first: "Le bureau ne dit rien pendant qu'il enquête. Le soir, la vidéo a été partagée des milliers de fois, et une radio annonce que l'organisation « a refusé de commenter ».",
+      better: "À 10 h 30, elle publie une déclaration d'attente : « Nous avons connaissance d'une vidéo concernant les médicaments de nos cliniques partenaires. La sécurité de chaque patient est notre priorité. Nous vérifions aujourd'hui les stocks de tous les établissements avec le ministère de la Santé et publierons les résultats d'ici 18 heures. » À 18 heures, elle partage les résultats de l'inspection, remercie les soignants et explique comment les patients peuvent vérifier les dates de péremption.",
+      changes: [
+        "Parler dans les 90 minutes applique le principe « être le premier ».",
+        "La déclaration exprime empathie et action sans spéculer.",
+        "Une heure précise pour le point suivant rend l'organisation crédible.",
+        "Le dernier message donne au public une action utile."
+      ]
+    },
+    steps: [
+      { do: "Lister les crises probables", how: "Avec votre équipe, listez cinq événements qui pourraient toucher votre travail et notez leur probabilité et leur impact.", time: "30 minutes", done: "Les deux risques principaux choisis." },
+      { do: "Rédiger des déclarations d'attente", how: "Écrivez une déclaration pour chaque risque principal avec le modèle ci-dessous.", time: "30 minutes", done: "Deux déclarations de moins de 80 mots." },
+      { do: "Répartir les rôles", how: "Décidez qui valide les déclarations, qui parle aux médias et qui informe les partenaires et le personnel.", time: "20 minutes", done: "Une liste de contacts que tout le monde possède." },
+      { do: "S'entraîner sous pression", how: "Demandez à un·e collègue de jouer un journaliste et de poser des questions hostiles pendant cinq minutes.", time: "20 minutes", done: "Vous êtes resté·e sur vos trois messages clés." },
+      { do: "Mener un exercice de crise", how: "Simulez une crise avec votre équipe, y compris une déclaration d'attente chronométrée.", time: "Une heure", done: "Déclaration rédigée en moins de 60 minutes." },
+      { do: "Tenir un retour d'expérience", how: "Posez les quatre questions et notez trois changements à apporter.", time: "30 minutes", done: "Trois changements, chacun avec un responsable." }
+    ],
+    template: "DÉCLARATION D'ATTENTE\nNous avons connaissance de ____ (ce qui s'est passé, faits uniquement).\nNotre première préoccupation est ____ (personnes concernées).\nEn ce moment, nous ____ (actions).\nNous ferons le point d'ici ____ (heure).\nContact : ____\n\nRETOUR D'EXPÉRIENCE\nQue devait-il se passer ? ____\nQue s'est-il réellement passé ? ____\nPourquoi cet écart ? ____\nQue ferons-nous autrement ? ____",
+    reflect: [
+      "Comment avez-vous réagi lors de la dernière crise que vous avez vécue, et que changeriez-vous ?",
+      "Quelle crise vous inquiète le plus dans votre domaine, et y êtes-vous préparé·e ?",
+      "Quand avez-vous traité un problème humain comme un problème technique ?"
+    ],
+    checkpoint: "Apportez vos déclarations d'attente et votre liste de rôles à la simulation de crise de la semaine 20 devant le jury."
+  },
+
+  m8: {
+    def: "Le leadership visionnaire, c'est la capacité de décrire un avenir meilleur si clairement que d'autres veulent contribuer à le construire. Ce module vous aide à trouver le sens de votre travail, à l'exprimer en une vision courte et à en faire un récit qui mobilise.",
+    outcomes: [
+      "Rédiger en un paragraphe votre vision personnelle de leadership.",
+      "Raconter un récit public qui relie votre histoire, celle de votre équipe et l'urgence d'agir maintenant.",
+      "Relier votre vision à des premières étapes concrètes."
+    ],
+    concepts: [
+      { n: "Commencer par le pourquoi", d: "Expliquer pourquoi vous faites quelque chose avant ce que vous faites et comment.", why: "On s'engage pour un sens davantage que pour des activités.", src: "Simon Sinek, Start with Why (2009)", miss: "Un « pourquoi » trop général pour guider les choix, comme « faire la différence »." },
+      { n: "La vision", d: "Une image vivante et précise de l'avenir que vous voulez créer, généralement à cinq ou dix ans.", why: "Une image partagée aide chacun à prendre des décisions cohérentes sans qu'on le lui dise.", miss: "Écrire une liste d'activités au lieu d'une image des résultats." },
+      { n: "Le récit public", d: "Une histoire en trois parties : l'histoire de soi (pourquoi cela vous tient à cœur), l'histoire du nous (ce que nous partageons) et l'histoire du maintenant (pourquoi agir aujourd'hui).", why: "Il relie la motivation personnelle à l'action collective.", src: "Marshall Ganz", miss: "Ne raconter que sa propre histoire sans y inviter les autres." },
+      { n: "Conduire le changement", d: "Un modèle en huit étapes, qui commence par créer un sentiment d'urgence et une coalition et se termine par l'ancrage du changement dans la culture.", why: "Une vision sans plan pour embarquer les gens reste un discours.", src: "John Kotter, Leading Change (1996)", miss: "Annoncer la vision et supposer que le changement suivra." },
+      { n: "Optimisme et réalisme", d: "Croire qu'un avenir meilleur est possible tout en nommant honnêtement les obstacles.", why: "On suit les leaders à la fois porteurs d'espoir et crédibles.", miss: "Ignorer les difficultés, ce qui rend la vision naïve." }
+    ],
+    example: {
+      scene: "Sophie, cheffe d'équipe à Yaoundé, doit partager sa vision de leadership avec une nouvelle équipe.",
+      first: "« Ma vision est de renforcer nos capacités, d'améliorer la coordination et d'atteindre nos résultats conformément au plan stratégique. »",
+      better: "« Quand j'avais douze ans, ma tante est morte en accouchant dans un village à deux heures du centre de santé le plus proche. C'est pour cela que je suis ici. Chacun de vous a aussi ses raisons. La mienne, c'est un avenir où aucune femme de cette région ne meurt en donnant la vie. Dans cinq ans, je veux que chaque district que nous appuyons ait une sage-femme à moins d'une heure de chaque village. Cette année, cela veut dire trois districts, et cela commence par le plan que nous allons construire ensemble ce mois-ci. »",
+      changes: [
+        "Une histoire personnelle (histoire de soi) explique pourquoi cela lui tient à cœur.",
+        "Elle invite les raisons de l'équipe (histoire du nous).",
+        "La vision est une image précise, pas une liste d'activités.",
+        "Elle relie la vision à l'objectif de l'année et à une étape immédiate (histoire du maintenant)."
+      ]
+    },
+    steps: [
+      { do: "Trouver votre pourquoi", how: "Écrivez sur un moment qui vous a fait tenir à ce travail. Demandez-vous : qu'ai-je vu, et qu'ai-je décidé ?", time: "30 minutes", done: "Une histoire d'une demi-page." },
+      { do: "Imaginer l'avenir", how: "Décrivez ce qui sera différent dans cinq à dix ans si votre travail réussit : qui, où, quels changements.", time: "30 minutes", done: "Un paragraphe que quelqu'un pourrait dessiner." },
+      { do: "Nommer les obstacles", how: "Listez honnêtement les deux plus grands obstacles et une façon de répondre à chacun.", time: "15 minutes", done: "Obstacles et réponses écrits." },
+      { do: "Construire votre récit", how: "Utilisez le modèle : soi, nous, maintenant. Moins de trois minutes à l'oral.", time: "40 minutes", done: "Un texte chronométré à moins de trois minutes." },
+      { do: "Relier aux premières étapes", how: "Nommez trois actions pour les 90 prochains jours qui rapprochent de la vision.", time: "20 minutes", done: "Trois actions datées." },
+      { do: "Partager et affiner", how: "Racontez votre récit à deux collègues et demandez ce qui les a touchés et ce qui était flou.", time: "30 minutes", done: "Une version révisée." }
+    ],
+    template: "MON MANIFESTE DE LEADERSHIP\nHistoire de soi (pourquoi j'y tiens) : ____\nHistoire du nous (ce que nous partageons) : ____\nHistoire du maintenant (pourquoi aujourd'hui) : ____\n\nMa vision à cinq ou dix ans : ____\nDeux obstacles et notre réponse : ____ / ____\nTrois étapes dans les 90 prochains jours :\n1. ____ (d'ici le ____)\n2. ____ (d'ici le ____)\n3. ____ (d'ici le ____)",
+    reflect: [
+      "Quel moment vous a d'abord fait tenir à ce travail ?",
+      "Votre équipe décrirait-elle le même avenir que vous ?",
+      "Que faites-vous ce mois-ci qui vous rapproche de votre vision ?"
+    ],
+    checkpoint: "Votre modèle de manifeste est le brouillon du Manifeste de leadership présenté à la cohorte en semaine 22."
+  },
+
+  m9: {
+    def: "S'orienter dans l'organisation, c'est comprendre comment votre organisation et le système plus large fonctionnent réellement : qui décide, comment circulent l'argent et les plans, et quelles règles non écrites façonnent les comportements. Ce module vous aide à lire la culture, à cartographier les réseaux et à planifier votre parcours dans le système.",
+    outcomes: [
+      "Décrire la culture de votre organisation à trois niveaux.",
+      "Cartographier les réseaux formels et informels autour d'une décision.",
+      "Rédiger une feuille de route personnelle pour maîtriser le système dans lequel vous travaillez."
+    ],
+    concepts: [
+      { n: "Les trois niveaux de la culture", d: "Les artefacts (ce que l'on voit), les valeurs affichées (ce que l'on dit) et les hypothèses fondamentales (ce qui va de soi).", why: "Les efforts de changement échouent quand ils touchent les artefacts mais pas les hypothèses.", src: "Edgar Schein, Organizational Culture and Leadership", miss: "Prendre la déclaration de valeurs pour une description du fonctionnement réel." },
+      { n: "Structure formelle et informelle", d: "L'organigramme montre qui rend compte à qui. Les réseaux informels montrent qui l'on consulte et à qui l'on fait confiance.", why: "Les décisions passent souvent par des canaux informels avant d'être formalisées.", miss: "Ne passer que par les voies officielles et être surpris des résultats." },
+      { n: "Cycles de planification et de budget", d: "Le calendrier annuel où l'on fixe les priorités, décide des budgets et approuve les plans.", why: "Une proposition qui arrive après la clôture du cycle attend un an.", miss: "Apporter de bonnes idées au mauvais moment." },
+      { n: "Mandat et gouvernance", d: "Ce que votre organisation est autorisée à faire, qui la supervise et comment elle se situe par rapport aux gouvernements et aux partenaires.", why: "Connaître le mandat aide à formuler des propositions qui s'y inscrivent et à éviter celles qui seront bloquées.", miss: "Proposer un travail utile mais hors mandat." },
+      { n: "Sens politique", d: "Comprendre les intérêts, les relations et le pouvoir sans devenir cynique.", why: "Les leaders efficaces composent avec la politique interne pour obtenir de bons résultats.", miss: "Éviter toute politique, ce qui laisse le terrain aux autres." }
+    ],
+    example: {
+      scene: "Hiroshi, chargé technique à Bangkok, a une proposition bien conçue pour un nouveau programme jeunesse. Elle a été rejetée deux fois sans raison claire.",
+      first: "Il soumet une version révisée au comité d'examen officiel en octobre, avec davantage de données. Elle est de nouveau rejetée parce que « les fonds sont engagés ».",
+      better: "Il cartographie la décision. Il apprend que les priorités se fixent en pratique lors d'une retraite de planification en juin, que l'avis de la directrice adjointe pèse lourd et que le comité attache de l'importance à l'alignement sur la stratégie jeunesse du gouvernement. En mai, il partage une note conceptuelle de deux pages avec la directrice adjointe, la relie à la stratégie du gouvernement et lui demande conseil. L'idée entre comme priorité à la retraite de juin, et la soumission d'octobre est approuvée.",
+      changes: [
+        "Il a appris le cycle de planification et est arrivé avant les décisions.",
+        "Il a utilisé le réseau informel : le conseil de la directrice adjointe avant le processus officiel.",
+        "Il a formulé la proposition en fonction du mandat et des priorités des partenaires.",
+        "Demander un conseil plutôt qu'une approbation lui a valu une alliée."
+      ]
+    },
+    steps: [
+      { do: "Décrire la culture", how: "Écrivez trois lignes par niveau : ce que l'on voit, ce que l'on dit, ce que l'on suppose.", time: "30 minutes", done: "Une hypothèse qui surprendrait un nouvel arrivant." },
+      { do: "Cartographier une décision", how: "Choisissez une décision récente et retracez qui a été consulté, formellement et informellement, et quand.", time: "30 minutes", done: "Un schéma montrant au moins une influence informelle." },
+      { do: "Apprendre le calendrier", how: "Repérez quand ont lieu les plans, les budgets et les revues, et notez-les.", time: "20 minutes", done: "Un calendrier annuel avec les dates clés." },
+      { do: "Lire le mandat", how: "Lisez le mandat de votre organisation et son plan stratégique actuel. Notez trois priorités que votre travail sert.", time: "Une heure", done: "Trois liens entre votre travail et le plan." },
+      { do: "Parler à un guide", how: "Demandez à un·e collègue respecté·e et expérimenté·e : « Qu'aurais-tu aimé savoir sur la façon dont les choses fonctionnent ici ? »", time: "30 minutes", done: "Trois enseignements notés." },
+      { do: "Rédiger votre feuille de route", how: "Utilisez le modèle pour planifier ce que vous devez apprendre, avec qui créer des liens et quels moments préparer.", time: "45 minutes", done: "Une feuille de route d'une page." }
+    ],
+    template: "FEUILLE DE ROUTE DANS LE SYSTÈME\nCulture — ce que l'on voit : ____ / ce que l'on dit : ____ / ce que l'on suppose : ____\nDates clés de l'année : planification ____ | budget ____ | revue ____\nPriorités du mandat que mon travail sert : ____\nPersonnes dont l'avis façonne les décisions : ____\nCe que je dois apprendre ensuite : ____\nRelations à construire (et ce que j'y apporte) : ____\nMoments à préparer : ____",
+    reflect: [
+      "Quelle règle non écrite avez-vous apprise à vos dépens ?",
+      "De qui les décideurs de votre organisation sollicitent-ils l'avis avant de trancher ?",
+      "Laquelle de vos idées est arrivée au mauvais moment du cycle ?"
+    ],
+    checkpoint: "Votre feuille de route sert de base à celle que vous présentez à votre mentor en semaine 26."
+  },
+
+  m10: {
+    def: "Se préparer au niveau de représentant·e, c'est se préparer à diriger un bureau et à représenter son organisation auprès des gouvernements, des partenaires et du public. Ce module couvre le rôle, les entretiens par compétences, les messages clés pour les publics externes et la négociation.",
+    outcomes: [
+      "Décrire les principales responsabilités d'un·e représentant·e pays ou chef·fe de bureau.",
+      "Répondre à des questions d'entretien par compétences avec des exemples structurés.",
+      "Transmettre trois messages clés et y revenir sous pression."
+    ],
+    concepts: [
+      { n: "Les rôles du représentant", d: "Un·e chef·fe de bureau dirige l'équipe, représente l'organisation, plaide auprès du gouvernement, gère partenaires et ressources, et répond des résultats.", why: "Le poste est surtout externe et politique, pas technique.", miss: "Ne se préparer qu'à démontrer son expertise technique." },
+      { n: "Entretiens par compétences", d: "Des entretiens qui demandent des exemples réels de comportements passés pour prédire la performance future.", why: "Les jurys de sélection pour les postes de direction jugent sur des preuves, pas sur des intentions.", miss: "Répondre par ce que vous feriez plutôt que par ce que vous avez fait." },
+      { n: "Situation, tâche, action, résultat", d: "Une structure pour les exemples d'entretien : le contexte, votre responsabilité, ce que vous avez fait et ce qui a changé.", why: "Elle garde les réponses précises et centrées sur votre contribution.", miss: "Consacrer l'essentiel de la réponse à la situation et trop peu à vos actions." },
+      { n: "Messages clés et transitions", d: "Trois points courts que tout public doit retenir, et des formules pour y revenir à partir de questions difficiles.", why: "Un représentant s'adresse à des ministres, des médias et des partenaires qui peuvent avoir d'autres agendas.", miss: "Répondre à chaque question sur son propre terrain et perdre son message." },
+      { n: "Négociation raisonnée", d: "Séparer les personnes du problème, se concentrer sur les intérêts plutôt que sur les positions et chercher des options qui servent les deux parties.", why: "Un représentant négocie en permanence avec les gouvernements et les partenaires.", src: "Roger Fisher et William Ury, Getting to Yes (1981)", miss: "Défendre une position sans comprendre ce dont l'autre partie a besoin." }
+    ],
+    example: {
+      scene: "Elena, représentante adjointe à Tbilissi, se voit demander lors d'un entretien blanc : « Parlez-nous d'une fois où vous avez géré une relation difficile avec un partenaire gouvernemental. »",
+      first: "« Les relations avec le gouvernement sont très importantes. Je crois toujours au respect et au dialogue. En général, j'essaie de comprendre leurs besoins et de trouver un terrain d'entente, et je pense que c'est la clé de bons partenariats. »",
+      better: "« En 2024, le ministère a suspendu un programme conjoint après un désaccord sur la propriété des données (situation). En tant qu'adjointe, j'étais chargée de rétablir le partenariat en trois mois (tâche). J'ai rencontré le secrétaire général pour comprendre ses préoccupations, proposé un accord de partage des données donnant au ministère la copropriété, et mis en place une revue conjointe mensuelle (action). Le programme a repris en sept semaines, et c'est désormais le ministère qui présente les données (résultat). »",
+      changes: [
+        "Un exemple réel remplace des principes généraux.",
+        "La structure rend l'histoire facile à suivre.",
+        "L'essentiel de la réponse décrit ses propres actions.",
+        "Le résultat est concret et mesurable."
+      ]
+    },
+    steps: [
+      { do: "Étudier le rôle", how: "Lisez une description de poste de chef·fe de bureau et listez les compétences demandées.", time: "30 minutes", done: "Six compétences listées." },
+      { do: "Constituer une banque d'exemples", how: "Rédigez un exemple par compétence avec le modèle ci-dessous.", time: "Deux heures", done: "Six exemples, chacun de moins de deux minutes à l'oral." },
+      { do: "Rédiger les messages clés", how: "Écrivez trois messages sur le travail de votre bureau destinés à un ministre, de moins de 20 mots chacun.", time: "30 minutes", done: "Trois messages que vous pouvez dire de mémoire." },
+      { do: "Pratiquer les transitions", how: "Demandez à un·e collègue de poser des questions hors sujet ou hostiles ; répondez brièvement et revenez à votre message : « Ce qui compte le plus ici, c'est… »", time: "20 minutes", done: "Vous êtes revenu·e à un message clé à chaque fois." },
+      { do: "Préparer une négociation", how: "Pour une négociation réelle, listez les positions des deux parties, les intérêts derrière elles et trois options possibles.", time: "30 minutes", done: "Au moins une option qui sert les deux parties." },
+      { do: "Passer un entretien blanc", how: "Demandez à votre mentor ou à deux collègues de vous interroger pendant 30 minutes et de noter chaque réponse.", time: "Une heure", done: "Un retour sur vos deux réponses les plus faibles." }
+    ],
+    template: "EXEMPLE D'ENTRETIEN (un par compétence)\nCompétence : ____\nSituation (quand, où, quel enjeu) : ____\nTâche (ma responsabilité) : ____\nAction (ce que j'ai fait — dire « je ») : ____\nRésultat (ce qui a changé, chiffré si possible) : ____\nCe que j'en ai appris : ____\n\nMES TROIS MESSAGES CLÉS\n1. ____\n2. ____\n3. ____\nFormule de transition : « ____ »",
+    reflect: [
+      "Quelle partie du rôle de représentant vous semble la plus naturelle, et laquelle la moins ?",
+      "Pour quelle compétence vos exemples sont-ils les plus faibles ?",
+      "Quand avez-vous perdu votre message lors d'une conversation difficile pour la dernière fois ?"
+    ],
+    checkpoint: "Utilisez votre banque d'exemples et vos messages clés lors de l'entretien blanc de représentant de la semaine 30."
+  },
+
+  m11: {
+    def: "L'héritage et l'impact durable, c'est ce qui continue après votre départ : les personnes que vous avez fait grandir, les systèmes que vous laissez et la culture que vous avez façonnée. Ce dernier module vous aide à accompagner les autres, à préparer votre succession et à écrire votre philosophie de leadership.",
+    outcomes: [
+      "Mener une conversation de coaching à l'aide d'un modèle simple.",
+      "Rédiger un plan de passation qui fait vivre le travail clé sans vous.",
+      "Rédiger et présenter en une page votre philosophie de leadership."
+    ],
+    concepts: [
+      { n: "Le coaching avec le modèle GROW", d: "Une conversation en quatre temps : objectif, réalité, options et voie à suivre.", why: "Le coaching développe la capacité des autres à résoudre les problèmes, ce qui démultiplie votre impact.", src: "John Whitmore, Coaching for Performance (1992)", miss: "Donner des conseils au lieu de poser des questions." },
+      { n: "La succession", d: "Préparer d'autres personnes à reprendre vos responsabilités.", why: "Un travail qui dépend d'une seule personne s'arrête quand elle part.", miss: "Voir la succession comme une menace plutôt que comme un signe de bon leadership." },
+      { n: "Le transfert de connaissances", d: "Consigner et partager ce que vous savez : contacts, processus, leçons et contexte.", why: "Une grande partie du savoir-faire n'est jamais écrite et se perd à chaque passation.", miss: "Laisser une note de passation écrite la dernière semaine." },
+      { n: "Ancrer le changement dans la culture", d: "Faire des nouvelles façons de travailler une partie des normes, des routines et de la reconnaissance au quotidien.", why: "Un changement non ancré s'efface quand son porteur s'en va.", src: "John Kotter, Leading Change (1996)", miss: "Supposer qu'un projet réussi continuera tout seul." },
+      { n: "Philosophie de leadership", d: "Une courte déclaration de vos convictions sur le leadership, de ce que l'on peut attendre de vous et de ce que vous attendez des autres.", why: "La partager vous rend prévisible et donne à votre équipe une référence pour vous en tenir responsable.", miss: "Écrire des idéaux que vous ne pratiquez pas." }
+    ],
+    example: {
+      scene: "Sione, responsable d'unité à Suva, change de poste dans six mois. La revue mensuelle des données de son unité est son initiative, et il anime lui-même chaque séance.",
+      first: "Pendant sa dernière semaine, il rédige une note de deux pages décrivant la revue et l'envoie à son équipe. Trois mois après son départ, les revues ont cessé.",
+      better: "Six mois avant son départ, il demande à deux membres de l'équipe de coanimer la revue, les accompagne après chaque séance avec le modèle GROW, puis leur confie l'entière responsabilité les deux derniers mois, en se contentant d'observer. La revue est inscrite au plan de travail de l'unité et dans les objectifs de l'équipe. Elle se poursuit après son départ, et l'une des animatrices la présente lors d'une réunion régionale.",
+      changes: [
+        "Il a commencé la succession tôt, pas la dernière semaine.",
+        "Le coaching après de vraies séances a développé les capacités des autres.",
+        "L'inscription au plan de travail et aux objectifs a ancré la revue dans les routines.",
+        "La pratique lui a survécu : c'est la mesure de l'héritage."
+      ]
+    },
+    steps: [
+      { do: "Lister ce qui doit continuer", how: "Écrivez les cinq choses que vous faites qui s'arrêteraient ou souffriraient si vous partiez demain.", time: "20 minutes", done: "Cinq éléments." },
+      { do: "Nommer des successeurs", how: "Pour chaque élément, nommez qui pourrait le reprendre avec un accompagnement.", time: "15 minutes", done: "Un nom à côté de chaque élément." },
+      { do: "Accompagner une personne", how: "Menez une conversation GROW de 30 minutes avec un successeur. Posez plus de questions que vous ne donnez de réponses.", time: "30 minutes", done: "La personne repart avec sa propre prochaine étape." },
+      { do: "Consigner les connaissances", how: "Pour l'élément le plus important, notez les contacts, les étapes, les pièges et les raisons des décisions clés.", time: "Une heure", done: "Quelqu'un d'autre pourrait le faire à partir de vos notes." },
+      { do: "Rédiger votre philosophie", how: "Utilisez le modèle ci-dessous. Une page au plus, et confrontez chaque ligne à votre comportement.", time: "Une heure", done: "Chaque ligne a un exemple où vous l'appliquez." },
+      { do: "La partager", how: "Partagez votre philosophie avec votre équipe et demandez : « Est-ce ainsi que je dirige ? Où suis-je en deçà ? »", time: "30 minutes", done: "Un changement que vous ferez à partir de leurs réponses." }
+    ],
+    template: "MA PHILOSOPHIE DE LEADERSHIP\nPour moi, diriger, c'est ____.\nCe que vous pouvez attendre de moi : ____\nCe que j'attends de vous : ____\nComment je prends les décisions : ____\nComment je gère les erreurs (les miennes et les vôtres) : ____\nCe que je veux laisser derrière moi : ____\n\nQUESTIONS DE COACHING GROW\nObjectif : que veux-tu atteindre ?\nRéalité : que se passe-t-il aujourd'hui ? Qu'as-tu déjà essayé ?\nOptions : que pourrais-tu faire ? Quoi d'autre ?\nVoie à suivre : que vas-tu faire, et pour quand ?",
+    reflect: [
+      "Qui vous a le plus fait grandir dans votre carrière, et qu'a-t-il ou elle fait ?",
+      "Si vous partiez le mois prochain, qu'est-ce qui s'arrêterait ?",
+      "Que voulez-vous que l'on dise de ce que vous avez laissé ?"
+    ],
+    checkpoint: "Votre philosophie de leadership est le cœur du projet final de la semaine 34, Ma philosophie de leadership."
+  },
+
+  vocal: {
+    def: "L'entraînement vocal développe une voix qui porte, reste stable sous pression et retient l'attention. Ce module continu couvre la respiration, la résonance, l'articulation, le débit, les pauses et la mélodie, grâce à une courte routine quotidienne à pratiquer en parallèle de tous les autres modules.",
+    outcomes: [
+      "Réaliser de mémoire un échauffement vocal de dix minutes.",
+      "Parler à un débit de 130 à 160 mots par minute, avec des pauses délibérées.",
+      "Varier la hauteur et le volume pour souligner les mots clés."
+    ],
+    concepts: [
+      { n: "Le soutien du souffle", d: "Respirer bas, dans l'abdomen, et contrôler l'expiration en parlant.", why: "Un souffle soutenu donne une voix plus pleine et plus stable, et aide à maîtriser le trac.", miss: "Une respiration haute et thoracique, qui rend la voix mince et tremblante." },
+      { n: "La résonance", d: "La façon dont la voix s'amplifie dans la poitrine, la bouche et le visage.", why: "Une voix résonante porte dans une salle sans crier.", miss: "Forcer le volume depuis la gorge, ce qui fatigue la voix." },
+      { n: "L'articulation", d: "Le modelage net des consonnes et des voyelles avec les lèvres, la langue et la mâchoire.", why: "Une parole claire est plus facile à suivre, surtout pour un public qui écoute dans sa deuxième ou troisième langue.", miss: "Avaler la fin des mots en parlant vite." },
+      { n: "Débit et pauses", d: "La vitesse de la parole et les silences entre les idées.", why: "Les pauses laissent au public le temps d'assimiler et vous donnent l'air maître de vous.", miss: "Remplir chaque silence par « euh » ou « donc »." },
+      { n: "La variété mélodique", d: "Faire monter et descendre la voix pour exprimer le sens et l'émotion.", why: "Une voix monocorde perd l'attention, même quand le contenu est fort.", miss: "Terminer les affirmations sur une note montante, comme une question." }
+    ],
+    example: {
+      scene: "Daniel, chargé des finances à Londres, apprend après une présentation qu'il était difficile à suivre. L'enregistrement montre qu'il parlait à 190 mots par minute, sans pauses et d'un ton plat.",
+      first: "« Doncnotreexécutionbudgétaireestà62pourcentcequiestendessousdelacibledoncilfaudraaccélérerauderniertrimestreeteuh… » (rapide, plat, sans pauses)",
+      better: "« Notre exécution budgétaire est à 62 pour cent. (pause) C'est en dessous de la cible. (pause) Au dernier trimestre, nous nous concentrerons donc sur trois points. » Il appuie sur « 62 » et « trois », baisse la voix en fin de phrase et respire à chaque pause.",
+      changes: [
+        "Les pauses découpent le message en unités que le public peut assimiler.",
+        "Ralentir à environ 140 mots par minute a rendu chaque chiffre clair.",
+        "L'accent sur les mots clés guide l'attention.",
+        "Une voix qui descend en fin de phrase sonne assurée et conclusive."
+      ]
+    },
+    steps: [
+      { do: "Mesurer votre point de départ", how: "Ouvrez le Studio vocal et enregistrez l'exercice de débit. Notez vos mots par minute et le nombre de mots de remplissage.", time: "10 minutes", done: "Chiffres de départ enregistrés." },
+      { do: "Apprendre l'échauffement", how: "Suivez l'échauffement guidé de dix minutes du Studio vocal : détente de la mâchoire, respiration, vibrations des lèvres, sirènes, articulation, projection.", time: "10 minutes par jour", done: "Vous le faites sans le guide." },
+      { do: "Travailler le soutien du souffle", how: "Allongez-vous avec un livre sur le ventre. Inspirez pour que le livre monte, puis comptez à voix haute jusqu'à 20 sur une seule expiration.", time: "5 minutes par jour", done: "Vous atteignez 20 sans effort." },
+      { do: "Annoter un texte", how: "Prenez un paragraphe de votre prochaine présentation. Marquez les pauses (/), les mots accentués (soulignés) et la descente de la voix en fin de phrase.", time: "15 minutes", done: "Un texte annoté." },
+      { do: "Travailler débit et pauses", how: "Lisez le texte annoté dans le Studio vocal jusqu'à un débit de 130 à 160 mots par minute.", time: "15 minutes", done: "Deux prises dans la cible." },
+      { do: "Suivre vos progrès", how: "Refaites l'exercice de départ chaque semaine et comparez vos chiffres.", time: "10 minutes par semaine", done: "Une tendance sur quatre semaines." }
+    ],
+    template: "ROUTINE VOCALE QUOTIDIENNE (10 minutes)\n1. Détente de la mâchoire et de la nuque — 1 min\n2. Respiration basse, compter jusqu'à 20 sur une expiration — 2 min\n3. Vibrations des lèvres et sirènes, du grave à l'aigu — 2 min\n4. Virelangues, lentement puis vite — 2 min\n5. Lire un paragraphe en projetant vers le mur du fond — 2 min\n6. Une phrase dite de cinq façons (variété mélodique) — 1 min\n\nPOINT HEBDOMADAIRE\nDébit : ___ mots/min (cible 130–160)\nMots de remplissage par minute : ___\nPauses : ___",
+    reflect: [
+      "Comment votre voix change-t-elle quand vous avez le trac ?",
+      "Quelle voix d'orateur trouvez-vous la plus agréable à écouter, et pourquoi ?",
+      "Qu'est-ce qui vous a surpris·e dans votre enregistrement de départ ?"
+    ],
+    checkpoint: "Pratiquez la routine chaque jour ; vos chiffres hebdomadaires dans le Studio vocal montrent vos progrès sur l'ensemble des modules."
+  }
+};
+
+export default GUIDES;
