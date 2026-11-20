@@ -1,0 +1,1 @@
+import c from"./englishVideos-DYes_f7P.js";import e from"./frenchVideos-C9scM5TF.js";import{J as r,K as E,L as O}from"./index-CPfZLUnk.js";const m=Object.fromEntries([...Object.values(c),...Object.values(e)].flat().map(t=>[t.id,t.t])),o={eng:E,fra:r},I=Object.keys(o),f=(t,a)=>((o[t]||[])[a]||[]).map(s=>({t:m[s],u:O(s)}));export{I as L,f as c};
