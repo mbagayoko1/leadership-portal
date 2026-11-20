@@ -16,6 +16,7 @@ import { COMPETENCIES } from "./competencies.js";
 import { SPEAKERS, PD_PLAN } from "./development.js";
 import { LIBRARY } from "./library.js";
 import ModuleGuide, { GUIDE_IDS } from "./ModuleGuide.jsx";
+import Glossary from "./Glossary.jsx";
 
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
 const SpeechLibrary = lazy(() => import("./SpeechLibrary.jsx"));
@@ -1116,6 +1117,7 @@ export default function App() {
         <div id="comp-detail" className="scroll-mt-16 min-w-0"><CompetencyDetail key={cp} t={t} lang={lang} index={cp}/></div>
       </div>
       <Library t={t} lang={lang}/>
+      <Glossary t={t} lang={lang} modules={[...L.SM,...L.CI]} onOpen={id=>{setSm(id);setSt("learn");setTab("study-guide");let n=0;const go=()=>{const el=document.getElementById("mg-vocab");if(el)el.scrollIntoView({block:"start"});else if(n++<20)setTimeout(go,100);};setTimeout(go,100);}}/>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4 items-start">
         <section className="ldp-card p-5"><h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2"><Mic className="w-4 h-4 text-orange-600" aria-hidden="true"/>{t.vocalTitle}</h3><p className="text-sm text-gray-600 mb-3">{t.vocalDesc}</p><a href="https://drive.google.com/drive/folders/1w0UbxFFcqsKa6EeYf_J7Pp485OtF7fTT" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-orange-700 hover:underline inline-flex items-center gap-1.5"><FolderOpen className="w-4 h-4" aria-hidden="true"/>{t.dailyExercisesFolder}</a></section>
         <section className="ldp-card p-5"><h3 className="font-semibold text-gray-800 mb-2 flex items-center gap-2"><Users className="w-4 h-4 text-orange-600" aria-hidden="true"/>{t.practiceTitle}</h3><ul className="space-y-1.5 text-sm text-gray-600">{t.practiceItems.map((tx,i)=><li key={i} className="pl-3 border-l-2 border-gray-200">{tx}</li>)}</ul></section>

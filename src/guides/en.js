@@ -7,6 +7,7 @@
 // A concept's `src` is set only when the origin is certain.
 
 import MORE from "./examples-en.js";
+import VOCAB from "./vocab-en.js";
 
 const GUIDES = {
   m1: {
@@ -528,5 +529,7 @@ const GUIDES = {
 
 // Four more worked examples per module, kept in a separate file.
 for (const [id, list] of Object.entries(MORE)) GUIDES[id].examples.push(...list);
+// Eight vocabulary terms per module, kept in a separate file.
+for (const [id, list] of Object.entries(VOCAB)) GUIDES[id].vocab = list;
 
 export default GUIDES;

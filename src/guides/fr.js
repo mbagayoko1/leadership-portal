@@ -4,6 +4,7 @@
 // d'origine. Les noms des exemples sont fictifs.
 
 import MORE from "./examples-fr.js";
+import VOCAB from "./vocab-fr.js";
 
 const GUIDES = {
   m1: {
@@ -525,5 +526,7 @@ const GUIDES = {
 
 // Four more worked examples per module, kept in a separate file.
 for (const [id, list] of Object.entries(MORE)) GUIDES[id].examples.push(...list);
+// Eight vocabulary terms per module, kept in a separate file.
+for (const [id, list] of Object.entries(VOCAB)) GUIDES[id].vocab = list;
 
 export default GUIDES;

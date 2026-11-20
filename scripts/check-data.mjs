@@ -11,6 +11,8 @@ import { LIBRARY } from "../src/library.js";
 import GUIDES_EN from "../src/guides/en.js";
 import GUIDES_FR from "../src/guides/fr.js";
 import { GUIDE_IDS } from "../src/guides/ids.js";
+import VOCAB_EN from "../src/guides/vocab-en.js";
+import VOCAB_FR from "../src/guides/vocab-fr.js";
 import fs from "fs";
 
 const problems = [];
@@ -80,6 +82,19 @@ for (const id of GUIDE_IDS) {
   else e.examples.forEach((x, i) => { if (x.changes.length !== f.examples[i].changes.length) p("guide", id, "example", i + 1, "changes EN/FR differ"); });
   e.concepts.forEach((c, i) => { if (!!c.src !== !!(f.concepts[i] && f.concepts[i].src)) p("guide", id, "concept", i + 1, "origin in one language only"); });
 }
+// Vocabulary: eight complete terms per module in both languages, with the
+// term in **bold** in its example.
+for (const id of GUIDE_IDS) {
+  const e = VOCAB_EN[id] || [], f = VOCAB_FR[id] || [];
+  if (e.length !== 8 || f.length !== 8) p("vocabulary", id, "should have 8 terms in EN and FR, has", e.length, "/", f.length);
+  for (const v of [...e, ...f]) {
+    if (!v.w || !v.d || !v.ex) p("vocabulary entry incomplete", id, v.w || "?");
+    else if (!/\*\*.+?\*\*/.test(v.ex)) p("vocabulary example without **term**", id, v.w);
+  }
+}
+const vocabTerms = Object.values(VOCAB_EN).flat().map(v => v.w.toLowerCase());
+vocabTerms.filter((x, i) => vocabTerms.indexOf(x) !== i).forEach(x => p("duplicate vocabulary term", x));
+
 Object.keys(GUIDES_EN).filter(x => !GUIDE_IDS.includes(x)).forEach(x => p("module guide not listed in GUIDE_IDS", x));
 
 const quotes = SPEAKERS.reduce((n, s) => n + s.quotes.length, 0);

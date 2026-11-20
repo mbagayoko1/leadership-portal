@@ -1,6 +1,6 @@
 // The "Learn" view of a module in the Study Guide: definition and outcomes,
-// key concepts, five worked examples, a step-by-step guide with a copyable
-// template, and a self-check. Content lives in src/guides/{en,fr}.js and is
+// key concepts, vocabulary, five worked examples, a step-by-step guide with a
+// copyable template, and a self-check. Content lives in src/guides/{en,fr}.js and is
 // loaded on first use, so it stays out of the main bundle. Steps ticked off
 // are saved with the participant's progress (category "mg", key "m3:2").
 import { useState, useEffect } from "react";
@@ -13,9 +13,14 @@ export { GUIDE_IDS };
 const loaders = { en: () => import("./guides/en.js"), fr: () => import("./guides/fr.js") };
 const cache = {};
 
-function Section({ title, children }) {
+// Renders **term** as bold; used for the term inside vocabulary examples.
+export function Bolded({ text }) {
+  return text.split(/\*\*(.+?)\*\*/g).map((part, i) => i % 2 ? <strong key={i} className="font-semibold text-gray-900">{part}</strong> : part);
+}
+
+function Section({ title, id, children }) {
   return (
-    <section className="ldp-card p-5 sm:p-6">
+    <section id={id} className="ldp-card p-5 sm:p-6 scroll-mt-20">
       <h4 className="font-serif text-lg font-semibold text-gray-900 mb-3">{title}</h4>
       {children}
     </section>
@@ -63,14 +68,31 @@ export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
               <dt className="font-semibold text-gray-900">{c.n}</dt>
               <dd className="mt-1 space-y-1.5 text-sm leading-relaxed">
                 <p className="text-gray-800">{c.d}</p>
-                <p className="text-gray-600"><span className="font-semibold text-gray-700">{k.why}: </span>{c.why}</p>
-                <p className="text-gray-600"><span className="font-semibold text-orange-700">{k.miss}: </span>{c.miss}</p>
-                {c.src && <p className="text-xs text-gray-500">{k.origin}: {c.src}</p>}
+                <p className="text-gray-600"><span className="font-semibold text-gray-700">{k.why}{k.c}</span>{c.why}</p>
+                <p className="text-gray-600"><span className="font-semibold text-orange-700">{k.miss}{k.c}</span>{c.miss}</p>
+                {c.src && <p className="text-xs text-gray-500">{k.origin}{k.c}{c.src}</p>}
               </dd>
             </div>
           ))}
         </dl>
       </Section>
+
+      {g.vocab && (
+        <Section title={k.vocab} id="mg-vocab">
+          <dl className="grid md:grid-cols-2 gap-x-6 gap-y-4">
+            {g.vocab.map((v, i) => (
+              <div key={i}>
+                <dt className="font-semibold text-gray-900">{v.w}</dt>
+                <dd className="mt-0.5 space-y-1 text-sm leading-relaxed">
+                  <p className="text-gray-800">{v.d}</p>
+                  <p className="text-gray-600 border-l-2 border-orange-200 pl-2.5"><span className="sr-only">{k.vocabEx}{k.c}</span><Bolded text={v.ex} /></p>
+                  {v.warn && <p className="text-xs text-gray-500"><span className="font-semibold">{k.warn}{k.c}</span>{v.warn}</p>}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Section>
+      )}
 
       <Section title={k.examples.replace("{n}", g.examples.length)}>
         <div role="group" aria-label={k.examples.replace("{n}", g.examples.length)} className="flex flex-wrap gap-2 mb-4">
@@ -111,7 +133,7 @@ export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
                 <div className="min-w-0">
                   <p className={"font-semibold " + (on ? "text-gray-500 line-through decoration-gray-300" : "text-gray-900")}><span className="font-mono text-gray-400 mr-1.5">{i + 1}.</span>{s.do}</p>
                   <p className="text-sm leading-relaxed text-gray-700 mt-0.5">{s.how}</p>
-                  <p className="text-xs text-gray-500 mt-1"><span className="font-semibold">{k.time}:</span> {s.time}<span className="mx-2 text-gray-300" aria-hidden="true">|</span><span className="font-semibold">{k.done}:</span> {s.done}</p>
+                  <p className="text-xs text-gray-500 mt-1"><span className="font-semibold">{k.time}{k.c}</span>{s.time}<span className="mx-2 text-gray-300" aria-hidden="true">|</span><span className="font-semibold">{k.done}{k.c}</span>{s.done}</p>
                 </div>
               </li>
             );
