@@ -5,7 +5,7 @@
 
 import MORE from "./examples-fr.js";
 import VOCAB from "./vocab-fr.js";
-import { conceptLinks } from "./engLinks.js";
+import { conceptLinks, LINKED_MODULES } from "./conceptLinks.js";
 
 const GUIDES = {
   m1: {
@@ -524,7 +524,7 @@ const GUIDES = {
     checkpoint: "Pratiquez la routine chaque jour ; vos chiffres hebdomadaires dans le Studio vocal montrent vos progrès sur l'ensemble des modules."
   },
   eng: {
-    def: "Perfectionner son anglais vous aide à parler et à écrire un anglais professionnel clair, juste et naturel, pour qu'on retienne vos idées plutôt que vos erreurs. Ce module continu couvre les sons, l'accent tonique, le rythme, la correction grammaticale, le vocabulaire professionnel et les expressions naturelles, avec des vidéos d'entraînement d'Accurate English (YouTube). L'objectif est d'être compris facilement et de paraître sûr de vous. Vous gardez votre accent.",
+    def: "Perfectionnez votre anglais vous aide à parler et à écrire un anglais professionnel clair, juste et naturel, pour qu'on retienne vos idées plutôt que vos erreurs. Ce module continu couvre les sons, l'accent tonique, le rythme, la correction grammaticale, le vocabulaire professionnel et les expressions naturelles, avec des vidéos d'entraînement d'Accurate English (YouTube). L'objectif est d'être compris facilement et de paraître sûr de vous. Vous gardez votre accent.",
     outcomes: [
       "Présenter un point de situation de deux minutes en anglais, avec un accent tonique clair et un rythme naturel et lié.",
       "Repérer et corriger vos trois erreurs de grammaire les plus fréquentes dans vos courriels et rapports en anglais.",
@@ -565,6 +565,49 @@ const GUIDES = {
       "Quelles expressions employées par des collègues respectés pourriez-vous adopter, et quelles expressions idiomatiques risquent de dérouter un public international ?"
     ],
     checkpoint: "Enregistrez un point de situation de deux minutes au début, puis après huit semaines, et nommez trois progrès précis."
+  },
+  fra: {
+    def: "Perfectionnez votre français vous aide à parler et à écrire un français professionnel précis, correct et adapté à la situation : courriels à un ministère, notes, réunions et présentations. Le module couvre le registre, les faux amis, les connecteurs logiques, le subjonctif, la prononciation et les codes de la correspondance professionnelle, avec des vidéos de sept chaînes de français de niveau avancé. L'objectif est d'être compris facilement et pris au sérieux, quel que soit votre accent.",
+    outcomes: [
+      "Rédiger un courriel ou une note en français avec la bonne formule d'appel, le bon registre et la bonne formule de politesse.",
+      "Structurer un point de situation de deux minutes en français avec des connecteurs logiques clairs.",
+      "Éviter les faux amis et les erreurs de subjonctif qui nuisent le plus à la crédibilité."
+    ],
+    concepts: [
+      { n: "Le registre : courant, soutenu et familier", d: "Le français distingue la langue courante, la langue soutenue et la langue familière. Les notes, les courriels aux autorités et les réunions officielles demandent le registre soutenu.", why: "Dans de nombreuses administrations francophones, un ton familier passe pour un manque de respect, même quand le fond est bon.", miss: "Employer « super », « OK » ou « on » dans une note à un ministère, ou tutoyer un interlocuteur de haut niveau qui ne vous y a pas invité." },
+      { n: "Les faux amis", d: "Des mots qui ressemblent à des mots anglais mais n'ont pas le même sens : actuellement (en ce moment), éventuellement (peut-être), assister à (être présent à), une formation (un stage, un cours).", why: "Un seul faux ami peut changer un engagement : « nous allons éventuellement financer » signifie que nous financerons peut-être, pas que nous financerons finalement.", miss: "Supposer qu'un mot qui semble familier a le même sens qu'en anglais." },
+      { n: "Les connecteurs logiques", d: "Les mots qui montrent le lien entre les idées : cause (car, en effet), opposition (en revanche, toutefois), conséquence (par conséquent, donc) et ajout (en outre, de plus).", why: "Le lecteur francophone attend une argumentation explicite ; les connecteurs rendent une note facile à suivre et convaincante.", miss: "Relier toutes les idées par « et » ou « mais », ou employer « en effet » au sens de « en fait » : « en effet » confirme ou explique ce qui précède." },
+      { n: "Le subjonctif et la concordance des temps", d: "Le subjonctif suit les expressions de nécessité, de souhait et de doute et certaines conjonctions : il faut que, souhaiter que, bien que, pour que, avant que. « Après que » se construit avec l'indicatif.", why: "Les erreurs de subjonctif sont parmi les premières que remarque un lecteur dans un écrit soutenu.", miss: "« Il faut que nous allons » au lieu de « il faut que nous allions », ou « après qu'il soit parti » au lieu de « après qu'il est parti »." },
+      { n: "Les liaisons et le rythme", d: "Le français regroupe les mots en groupes rythmiques accentués sur leur dernière syllabe. À l'intérieur d'un groupe, les liaisons relient les mots (les‿enfants), et les voyelles nasales an, on et in doivent rester distinctes.", why: "Des liaisons et des voyelles nasales correctes vous rendent plus facile à suivre, surtout avec des chiffres, des noms et des dates.", miss: "Accentuer la première syllabe des mots comme en anglais, ou faire la liaison après « et »." },
+      { n: "La correspondance professionnelle", d: "Les lettres et courriels professionnels suivent des codes : une formule d'appel (Madame, Monsieur), des tournures consacrées (je me permets de…, je vous remercie de…) et une formule de politesse adaptée à la relation.", why: "Ces codes montrent le respect et la compétence avant même que le lecteur arrive à votre demande.", miss: "Terminer un courriel formel par « À plus » ou sans formule de politesse, ou écrire « Cher Paul » à un responsable que vous n'avez jamais rencontré." }
+    ],
+    examples: [{
+      t: "Un courriel à un ministère",
+      scene: "James, chargé de programme à Dakar, de langue maternelle anglaise, doit obtenir un rendez-vous avec une directrice du ministère de la Santé. Son français est fluide, mais son premier courriel reste sans réponse.",
+      first: "« Bonjour, je voudrais demander une réunion avec vous la semaine prochaine pour parler du projet. Merci de me répondre vite. James »",
+      better: "« Madame la Directrice, Je me permets de solliciter un entretien la semaine prochaine afin de vous présenter l'état d'avancement du projet. Je me tiens à votre disposition pour convenir d'un créneau. Je vous prie d'agréer, Madame la Directrice, l'expression de ma haute considération. James Miller, chargé de programme »",
+      changes: [
+        "La formule d'appel reprend le titre de la destinataire, « Madame la Directrice », au lieu d'un « Bonjour » familier.",
+        "« Je me permets de solliciter un entretien » relève du registre soutenu attendu pour une demande à une haute responsable.",
+        "« Je me tiens à votre disposition » remplace « Merci de me répondre vite », qui sonne comme une pression.",
+        "La formule de politesse reprend le titre et marque le respect ; la signature précise sa fonction."
+      ]
+    }],
+    steps: [
+      { do: "Enregistrer un point de départ", how: "Enregistrez un point de situation de deux minutes en français sur un vrai sujet de travail. Écoutez-le une fois et notez trois choses qui vous rendent plus difficile à suivre ou moins soutenu que prévu.", time: "15 minutes", done: "Un enregistrement sauvegardé et trois notes." },
+      { do: "Choisir un axe pour la semaine", how: "Suivez le parcours de huit semaines de l'onglet Vidéos, ou choisissez vous-même un domaine : registre, faux amis, connecteurs, subjonctif, liaisons ou correspondance.", time: "5 minutes", done: "Un axe écrit en haut de votre carnet d'entraînement." },
+      { do: "Regarder et noter la règle", how: "Regardez une vidéo du thème correspondant, ou l'une de celles proposées sous « S'entraîner avec ». Écrivez la règle avec vos mots, avec deux exemples tirés de votre travail, et vérifiez les mots nouveaux dans la Banque de mots.", time: "10 minutes", done: "Une règle et deux exemples dans votre carnet." },
+      { do: "Pratiquer le shadowing", how: "Écoutez un court passage, mettez en pause et répétez-le à voix haute avec le même rythme, les mêmes liaisons et la même intonation. Dites ensuite trois de vos propres phrases de travail de la même façon.", time: "10 minutes par jour", done: "Vous dites le passage avec fluidité sans mettre la vidéo en pause." },
+      { do: "L'utiliser au travail", how: "Mettez votre axe en pratique dans un vrai courriel, une réunion ou un appel cette semaine. Avant d'envoyer un courriel important en français, vérifiez la formule d'appel, le registre et la formule de politesse.", time: "Pendant la semaine", done: "Une utilisation réelle notée dans votre carnet." },
+      { do: "Réenregistrer et comparer", how: "Réenregistrez le même point de situation et comparez. Demandez à un collègue francophone quelle version sonne le plus professionnel.", time: "15 minutes par semaine", done: "Un progrès noté et l'axe de la semaine suivante choisi." }
+    ],
+    template: "CARNET D'ENTRAÎNEMENT\nSemaine | Axe | Vidéo | Utilisation au travail | Progrès\n1       |     |       |                        |\n2       |     |       |                        |\n3       |     |       |                        |\n4       |     |       |                        |\n\nMES TROIS FAUTES LES PLUS FRÉQUENTES\n1. J'écris : ________  Correct : ________\n2. J'écris : ________  Correct : ________\n3. J'écris : ________  Correct : ________\n\nCINQ FORMULES QUE J'ADOPTE\n1. ________ 2. ________ 3. ________ 4. ________ 5. ________",
+    reflect: [
+      "Dans quelles situations votre français vous semble-t-il moins soutenu ou moins précis que vous le souhaiteriez ?",
+      "Quels faux amis ou quelles erreurs de grammaire reviennent le plus souvent dans vos courriels en français ?",
+      "Quelles expressions employées par des collègues francophones respectés pourriez-vous adopter ?"
+    ],
+    checkpoint: "Enregistrez un point de situation de deux minutes en français au début, puis après huit semaines, et nommez trois progrès précis."
   }
 };
 
@@ -573,7 +616,7 @@ for (const [id, list] of Object.entries(MORE)) GUIDES[id].examples.push(...list)
 // Eight vocabulary terms per module, kept in a separate file.
 for (const [id, list] of Object.entries(VOCAB)) GUIDES[id].vocab = list;
 
-// Polish Your English: each concept links to specific videos in the themed library.
-GUIDES.eng.concepts.forEach((c, i) => { c.pw = conceptLinks(i); });
+// Language modules: each concept links to specific videos in the themed library.
+for (const id of LINKED_MODULES) GUIDES[id].concepts.forEach((c, i) => { c.pw = conceptLinks(id, i); });
 
 export default GUIDES;

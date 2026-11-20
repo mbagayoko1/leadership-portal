@@ -616,6 +616,56 @@ const MORE = {
         "She keeps idioms for informal chats with colleagues who share them."
       ]
     }
+  ],
+  fra: [
+    {
+      t: "False friends in a meeting",
+      scene: "Sarah, a coordinator in Geneva whose first language is English, updates partners on an evaluation. Her French is fluent, but the partners leave thinking the evaluation might not happen.",
+      first: "« Actuellement, nous allons éventuellement réaliser l'évaluation en mars. Je vais assister le comité demain. »",
+      better: "« En fait, nous réaliserons l'évaluation en mars. Je vais assister au comité demain. »",
+      changes: [
+        "« Actuellement » means currently; to say \"actually\", she uses « en fait ».",
+        "« Éventuellement » means possibly; since the evaluation is certain, she drops it (« à terme » would mean \"eventually\").",
+        "« Assister le comité » means to help it; to attend, French says « assister au comité ».",
+        "« Réaliser » is correct here: in French it means to carry out (to realise is « se rendre compte »)."
+      ]
+    },
+    {
+      t: "Structuring a progress update",
+      scene: "Ingrid, a project manager in Montréal whose first language is Swedish, gives a progress update to the steering committee. Her sentences are correct, but the committee cannot tell what she is asking for.",
+      first: "« Le projet marche bien. Et les écoles sont contentes. Mais il y a des retards. Et le budget est serré. Et on a besoin de plus de temps. »",
+      better: "« Dans l'ensemble, le projet progresse bien : les écoles partenaires en sont satisfaites. Toutefois, deux chantiers accusent du retard et le budget reste serré. Par conséquent, nous proposons de prolonger la phase pilote de trois mois. »",
+      changes: [
+        "« Dans l'ensemble » frames the overall assessment before the details.",
+        "« Toutefois » marks the contrast and « par conséquent » leads to the request, instead of a chain of « et ».",
+        "« Progresse », « satisfaites » and « accusent du retard » raise the register from « marche » and « contentes ».",
+        "« Nous » replaces « on », which is too informal for a steering committee."
+      ]
+    },
+    {
+      t: "The subjunctive in a note",
+      scene: "Mei, a monitoring officer in Abidjan whose first language is Mandarin, drafts a note to her director. A colleague points out three verb errors before it goes out.",
+      first: "« Il faut que nous envoyons le rapport avant que le comité valide le budget, bien que les données ne sont pas complètes. Après que le comité ait validé, nous informerons les partenaires. »",
+      better: "« Il faut que nous envoyions le rapport avant que le comité ne valide le budget, bien que les données ne soient pas complètes. Après que le comité aura validé, nous informerons les partenaires. »",
+      changes: [
+        "« Il faut que » takes the subjunctive: « que nous envoyions ».",
+        "« Bien que » also takes the subjunctive: « ne soient pas ».",
+        "« Avant que » takes the subjunctive; the « ne » that may follow it is optional and formal, not a negation.",
+        "« Après que » takes the indicative: « après que le comité aura validé », not « ait validé »."
+      ]
+    },
+    {
+      t: "Liaisons and figures on a call",
+      scene: "Karim, a programme specialist in Beirut whose first language is Arabic, presents targets on a call with partners in Brussels. They ask him to repeat the figures twice.",
+      first: "« Nous / avons / un / an / pour atteindre / deux cents / écoles. » (each word separated, no liaisons, flat rhythm)",
+      better: "« Nous‿avons un‿an | pour atteindre | deux cents‿écoles. » (liaisons made, a slight stress on the last syllable of each group: avons, an, atteindre, écoles)",
+      changes: [
+        "Liaisons after « nous » and « un » are obligatory: « nou-z-avons », « un-n-an ».",
+        "« Deux cents écoles » takes a liaison in z, which makes the figure easier to hear.",
+        "Grouping words into short rhythmic units, stressed at the end, gives listeners time to note the figures.",
+        "Keeping the nasal vowels distinct (« an », « on ») avoids confusion between words such as « an » and « on »."
+      ]
+    }
   ]
 };
 

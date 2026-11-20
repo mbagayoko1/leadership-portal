@@ -12,6 +12,7 @@
     "check:data": "node scripts/check-data.mjs",
     "check:links": "node scripts/check-links.mjs",
     "pull:english": "node scripts/pull-accurate-english.mjs",
+    "pull:french": "node scripts/pull-french.mjs",
     "pdf:money": "node scripts/build-money-pdf.mjs",
     "test:gemini": "node test/gemini.test.mjs",
     "test:voice": "node test/voice.test.mjs"

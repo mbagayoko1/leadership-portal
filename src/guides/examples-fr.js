@@ -615,6 +615,56 @@ const MORE = {
         "Elle garde les expressions idiomatiques pour les échanges informels avec des collègues qui les partagent."
       ]
     }
+  ],
+  fra: [
+    {
+      t: "Des faux amis en réunion",
+      scene: "Sarah, coordinatrice à Genève, de langue maternelle anglaise, fait le point sur une évaluation avec des partenaires. Son français est fluide, mais les partenaires repartent en pensant que l'évaluation n'aura peut-être pas lieu.",
+      first: "« Actuellement, nous allons éventuellement réaliser l'évaluation en mars. Je vais assister le comité demain. »",
+      better: "« En fait, nous réaliserons l'évaluation en mars. Je vais assister au comité demain. »",
+      changes: [
+        "« Actuellement » signifie « en ce moment » ; pour dire « actually », elle emploie « en fait ».",
+        "« Éventuellement » signifie « peut-être » ; l'évaluation étant certaine, elle le supprime (« à terme » traduirait « eventually »).",
+        "« Assister le comité » signifie l'aider ; pour dire « être présent », on dit « assister au comité ».",
+        "« Réaliser » est correct ici : il signifie « mener à bien » (« to realise » se dit « se rendre compte »)."
+      ]
+    },
+    {
+      t: "Structurer un point d'avancement",
+      scene: "Ingrid, cheffe de projet à Montréal, de langue maternelle suédoise, présente l'avancement au comité de pilotage. Ses phrases sont correctes, mais le comité ne comprend pas ce qu'elle demande.",
+      first: "« Le projet marche bien. Et les écoles sont contentes. Mais il y a des retards. Et le budget est serré. Et on a besoin de plus de temps. »",
+      better: "« Dans l'ensemble, le projet progresse bien : les écoles partenaires en sont satisfaites. Toutefois, deux chantiers accusent du retard et le budget reste serré. Par conséquent, nous proposons de prolonger la phase pilote de trois mois. »",
+      changes: [
+        "« Dans l'ensemble » pose le bilan général avant les détails.",
+        "« Toutefois » marque l'opposition et « par conséquent » amène la demande, au lieu d'une suite de « et ».",
+        "« Progresse », « satisfaites » et « accusent du retard » élèvent le registre par rapport à « marche » et « contentes ».",
+        "« Nous » remplace « on », trop familier devant un comité de pilotage."
+      ]
+    },
+    {
+      t: "Le subjonctif dans une note",
+      scene: "Mei, chargée de suivi à Abidjan, de langue maternelle chinoise, rédige une note pour sa directrice. Une collègue relève trois erreurs de verbes avant l'envoi.",
+      first: "« Il faut que nous envoyons le rapport avant que le comité valide le budget, bien que les données ne sont pas complètes. Après que le comité ait validé, nous informerons les partenaires. »",
+      better: "« Il faut que nous envoyions le rapport avant que le comité ne valide le budget, bien que les données ne soient pas complètes. Après que le comité aura validé, nous informerons les partenaires. »",
+      changes: [
+        "« Il faut que » se construit avec le subjonctif : « que nous envoyions ».",
+        "« Bien que » appelle aussi le subjonctif : « ne soient pas ».",
+        "« Avant que » appelle le subjonctif ; le « ne » qui peut le suivre est facultatif et soutenu, ce n'est pas une négation.",
+        "« Après que » se construit avec l'indicatif : « après que le comité aura validé », et non « ait validé »."
+      ]
+    },
+    {
+      t: "Liaisons et chiffres au téléphone",
+      scene: "Karim, spécialiste de programme à Beyrouth, de langue maternelle arabe, présente des objectifs lors d'un appel avec des partenaires à Bruxelles. On lui demande deux fois de répéter les chiffres.",
+      first: "« Nous / avons / un / an / pour atteindre / deux cents / écoles. » (chaque mot détaché, sans liaison, rythme plat)",
+      better: "« Nous‿avons un‿an | pour atteindre | deux cents‿écoles. » (liaisons faites, léger accent sur la dernière syllabe de chaque groupe : avons, an, atteindre, écoles)",
+      changes: [
+        "Les liaisons après « nous » et « un » sont obligatoires : « nou-z-avons », « un-n-an ».",
+        "« Deux cents écoles » se lie en z, ce qui rend le chiffre plus audible.",
+        "Regrouper les mots en courts groupes rythmiques, accentués à la fin, laisse aux auditeurs le temps de noter les chiffres.",
+        "Distinguer les voyelles nasales (« an », « on ») évite de confondre des mots comme « an » et « on »."
+      ]
+    }
   ]
 };
 

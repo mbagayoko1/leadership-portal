@@ -5,6 +5,7 @@
 // labels around them are translated.
 import { CUR, SM, CI } from "./data.js";
 const ENG = CI.find(m => m.id === "eng");
+const FRA = CI.find(m => m.id === "fra");
 
 export const FR_TITLES = {
   m1: "Connaissance de soi et image personnelle",
@@ -19,7 +20,8 @@ export const FR_TITLES = {
   m10: "Préparation au niveau de Représentant",
   m11: "Héritage et impact durable",
   vocal: "Entraînement vocal",
-  eng: "Perfectionner son anglais",
+  eng: "Perfectionnez votre anglais",
+  fra: "Perfectionnez votre français",
   reading: "Lectures et guides d'étude"
 };
 
@@ -101,6 +103,12 @@ const GUIDE = {
     refs: ["Quand vous demande-t-on de répéter, et qu'est-ce qui, selon vous, en est la cause ?", "Quelles sont les trois erreurs les plus fréquentes dans vos courriels, et comment les repérerez-vous avant l'envoi ?", "Enregistrez-vous avant et après une semaine d'entraînement. Qu'est-ce qui a changé ?"],
     vids: ENG.vids.map(v => ({ ...v, d: v.d.replace(/videos$/, "vidéos") })),
     arts: ENG.arts.map(a => ({ ...a, t: "Accurate English – toutes les playlists (YouTube)" }))
+  },
+  fra: {
+    cp: "Enregistrez un point de situation de deux minutes en français au début, puis après huit semaines, et nommez trois progrès précis.",
+    refs: ["Dans quelles situations votre français vous semble-t-il moins soutenu ou moins précis que vous le souhaiteriez ?", "Quels faux amis ou quelles erreurs de grammaire reviennent le plus souvent dans vos courriels en français ?", "Enregistrez-vous avant et après une semaine d'entraînement. Qu'est-ce qui a changé ?"],
+    vids: FRA.vids.map(v => ({ ...v, d: "Chaîne YouTube" })),
+    reads: ["Mamadou et Bineta sont devenus grands – André Davesne (manuel de lecture classique des écoles d'Afrique de l'Ouest)", "Le Petit Prince – Antoine de Saint-Exupéry", "Exercices de style – Raymond Queneau (une même histoire racontée en 99 styles et registres)", "Le Bon Usage – Maurice Grevisse (ouvrage de référence en grammaire)", "Bescherelle : La conjugaison pour tous (ouvrage de référence en conjugaison)"]
   },
   reading: { cp: "Déposez vos notes de compréhension dans le Drive après chaque livre terminé.", refs: ["Après chaque livre, expliquez les 3 concepts principaux en 60 secondes.", "Quel lien avec votre travail et votre contexte ?", "Quelle est l'idée la plus marquante de ce mois-ci ?"] }
 };

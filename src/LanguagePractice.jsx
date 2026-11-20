@@ -1,8 +1,7 @@
-// Practice games for the "Polish Your English" module, built from the word
-// bank (src/guides/wordbank.js) and the "which sentence is correct?" items
-// (src/guides/englishQuiz.js):
+// Practice games of a language module (see languagePacks.js), built from its
+// word bank and its "which sentence is correct?" items:
 //  - Quiz: ten mixed questions (meaning → word, fill the gap, stressed
-//    syllable, correct sentence), run by the shared QuizRunner.
+//    syllable, correct sentence, who said it), run by the shared QuizRunner.
 //  - Word matching: match six words to their meanings, round after round.
 // Both can use every group or one group. Nothing is saved; it is practice.
 import { useState, useEffect, useMemo } from "react";
@@ -25,26 +24,28 @@ function stressOptions(say) {
   return { correct, opts: shuffle([correct, ...others]) };
 }
 
-function buildQuiz(groups, spot, gk, li, k) {
+function buildQuiz(groups, spot, gk, li, k, target) {
   const chosen = groups.filter(g => !gk || g.k === gk);
   const entries = chosen.flatMap(g => g.e.map(e => ({ ...e, g: g.k })));
   const all = groups.flatMap(g => g.e.map(e => ({ ...e, g: g.k })));
   const same = e => entries.filter(x => x.g === e.g);
   const single = list => list.map(x => bolds(x.ex)).filter(x => x.length === 1).map(x => x[0]);
-  const about = e => ({ explain: e.w + ": " + e.d[li] + (e.tip ? " " + e.tip[li] : ""), link: e.v && watchUrl(e.v), review: { title: e.w, text: e.d[li], lang: "en" } });
-  const byType = { meaning: [], gap: [], stress: [], spot: [] };
+  const about = e => ({ explain: e.w + ": " + e.d[li] + (e.tip ? " " + e.tip[li] : ""), link: e.v && watchUrl(e.v), review: { title: e.w, text: e.d[li], lang: target } });
+  const byType = { meaning: [], gap: [], stress: [], spot: [], who: [] };
+  const authors = all.filter(x => x.by).map(x => x.by);
   for (const e of entries) {
-    byType.meaning.push({ label: k.meaningQ, prompt: e.d[li], answer: e.w, opts: options(e.w, same(e).map(x => x.w), all.map(x => x.w)), optsLang: "en", ...about(e) });
+    byType.meaning.push({ label: k.meaningQ, prompt: e.d[li], answer: e.w, opts: options(e.w, same(e).map(x => x.w), all.map(x => x.w)), optsLang: target, ...about(e) });
     const b = bolds(e.ex);
-    if (b.length === 1) byType.gap.push({ label: k.gapQ, prompt: blank(e.ex), promptLang: "en", hint: e.d[li], answer: b[0], opts: options(b[0], single(same(e)), single(all)), optsLang: "en", ...about(e) });
+    if (b.length === 1) byType.gap.push({ label: k.gapQ, prompt: blank(e.ex), promptLang: target, hint: e.d[li], answer: b[0], opts: options(b[0], single(same(e)), single(all)), optsLang: target, ...about(e) });
+    if (e.by) byType.who.push({ label: k.whoQ, prompt: e.w, promptLang: target, answer: e.by, opts: options(e.by, authors), wide: true, ...about(e), explain: e.by + ". " + e.d[li] });
     const st = e.say && stressOptions(e.say);
     if (st) byType.stress.push({ label: k.stressQ, prompt: fill(k.stressAsk, { w: e.w }), answer: st.correct, opts: st.opts, ...about(e) });
   }
-  for (const it of spot) if (!gk || it.g === gk) byType.spot.push({ label: k.spotQ, answer: it.ok, opts: shuffle([it.ok, it.bad]), optsLang: "en", wide: true, explain: it.why[li], review: { title: it.ok, text: it.why[li], lang: "en" } });
+  for (const it of spot) if (!gk || it.g === gk) byType.spot.push({ label: k.spotQ, answer: it.ok, opts: shuffle([it.ok, it.bad]), optsLang: target, wide: true, explain: it.why[li], review: { title: it.ok, text: it.why[li], lang: target } });
   return mix(byType);
 }
 
-function Matching({ k, li, groups, gk, onBack }) {
+function Matching({ k, li, groups, gk, onBack, target }) {
   const deal = () => {
     const pool = groups.filter(g => !gk || g.k === gk).flatMap(g => g.e.map(e => ({ id: g.k + ":" + e.w, w: e.w, d: e.d[li] })));
     const pick = shuffle(pool).slice(0, PAIRS);
@@ -88,7 +89,7 @@ function Matching({ k, li, groups, gk, onBack }) {
         <div className="grid md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-4">
           <div role="group" aria-label={k.wordsCol} className="flex flex-wrap md:flex-col gap-2 content-start">
             {round.words.map(p => (
-              <button key={p.id} onClick={() => choose("w", p.id)} disabled={!!found[p.id]} aria-pressed={!!(sel && sel.side === "w" && sel.id === p.id)} lang="en"
+              <button key={p.id} onClick={() => choose("w", p.id)} disabled={!!found[p.id]} aria-pressed={!!(sel && sel.side === "w" && sel.id === p.id)} lang={target}
                 className={"rounded-lg border-2 px-3 py-2 text-sm font-semibold text-left transition-colors " + tone("w", p.id)}>{p.w}</button>
             ))}
           </div>
@@ -104,8 +105,8 @@ function Matching({ k, li, groups, gk, onBack }) {
   );
 }
 
-export default function EnglishPractice({ t, lang }) {
-  const k = t.eng;
+export default function LanguagePractice({ t, lang, pack }) {
+  const k = t.lp;
   const li = lang === "fr" ? 1 : 0;
   const [data, setData] = useState(null);
   const [gk, setGk] = useState("");
@@ -113,12 +114,13 @@ export default function EnglishPractice({ t, lang }) {
   const [round, setRound] = useState(0);
   useEffect(() => {
     let live = true;
-    Promise.all([import("./guides/wordbank.js"), import("./guides/englishQuiz.js")])
+    setData(null);
+    Promise.all([pack.bank(), pack.spot()])
       .then(([b, s]) => { if (live) setData({ groups: b.default, spot: s.default }); }).catch(() => {});
     return () => { live = false; };
-  }, []);
-  // A round is built in one language; switching language returns to the menu.
-  useEffect(() => { setMode("menu"); }, [li]);
+  }, [pack]);
+  // A round is built in one language for one module; switching either returns to the menu.
+  useEffect(() => { setMode("menu"); setGk(""); }, [li, pack]);
   const groupName = useMemo(() => data ? Object.fromEntries(data.groups.map(g => [g.k, g.t[li]])) : {}, [data, li]);
   if (!data) return <p className="text-sm text-gray-500" role="status">{t.mg.loading}</p>;
 
@@ -153,8 +155,8 @@ export default function EnglishPractice({ t, lang }) {
           </div>
         </>
       )}
-      {mode === "quiz" && <QuizRunner key={round} k={quizLabels} t={t} build={() => buildQuiz(data.groups, data.spot, gk, li, k)} onBack={() => setMode("menu")} />}
-      {mode === "match" && <Matching key={round} k={k} li={li} groups={data.groups} gk={gk} onBack={() => setMode("menu")} />}
+      {mode === "quiz" && <QuizRunner key={round} k={quizLabels} t={t} build={() => buildQuiz(data.groups, data.spot, gk, li, k, pack.target)} onBack={() => setMode("menu")} />}
+      {mode === "match" && <Matching key={round} k={k} li={li} groups={data.groups} gk={gk} target={pack.target} onBack={() => setMode("menu")} />}
     </div>
   );
 }

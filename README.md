@@ -64,6 +64,15 @@ New participants can self-register via **Request Access** on the sign-in screen.
   writes [`src/englishVideos.js`](src/englishVideos.js); themes and the path are in
   [`src/englishLibrary.js`](src/englishLibrary.js), the word bank in
   [`src/guides/wordbank.js`](src/guides/wordbank.js));
+  **Polish Your French** (*Perfectionnez votre français*,
+  [`prompts/polish-french.md`](prompts/polish-french.md)) works the same way: a
+  guide on register, false friends, connectors, the subjunctive, liaisons and
+  professional correspondence; a word bank of about 150 entries (including
+  meetings and facilitation, advanced words, proverbs and verified quotations);
+  practice games; and a library of advanced-level lessons from seven French
+  channels ([`src/frenchSources.js`](src/frenchSources.js), refreshed with
+  `npm run pull:french`). The language modules share their screens through
+  [`src/languagePacks.js`](src/languagePacks.js);
   `npm run check` compares the two languages. Named origins, definitions and
   real-world figures were checked against primary sources; see
   [`docs/source-check.md`](docs/source-check.md). Steps ticked off are saved per user

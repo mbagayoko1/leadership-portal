@@ -8,7 +8,7 @@
 
 import MORE from "./examples-en.js";
 import VOCAB from "./vocab-en.js";
-import { conceptLinks } from "./engLinks.js";
+import { conceptLinks, LINKED_MODULES } from "./conceptLinks.js";
 
 const GUIDES = {
   m1: {
@@ -568,6 +568,49 @@ const GUIDES = {
       "Which expressions do respected colleagues use that you could adopt, and which idioms might confuse an international audience?"
     ],
     checkpoint: "Record a two-minute work briefing at the start and again after eight weeks, and name three specific improvements."
+  },
+  fra: {
+    def: "Polish Your French helps you speak and write professional French that is precise, correct and suited to the situation: emails to a ministry, notes, meetings and presentations. It covers register, false friends, logical connectors, the subjunctive, pronunciation and the conventions of professional correspondence, with videos from seven advanced-level French channels. The goal is to be understood easily and taken seriously, whatever your accent.",
+    outcomes: [
+      "Write a formal email or note in French with the right opening, register and closing formula.",
+      "Structure a two-minute briefing in French with clear logical connectors.",
+      "Avoid the false friends and subjunctive errors that most often undermine credibility."
+    ],
+    concepts: [
+      { n: "Register: everyday, formal and informal", d: "French separates everyday language (courant), formal language (soutenu) and informal language (familier). Notes, emails to authorities and official meetings call for the formal register.", why: "In many French-speaking administrations, an informal tone reads as a lack of respect, even when the content is good.", miss: "Using informal words such as « super », « OK » or « on » in a note to a ministry, or « tu » with a senior counterpart who has not invited it." },
+      { n: "False friends (faux amis)", d: "Words that look like English words but mean something else: actuellement (currently), éventuellement (possibly), assister à (to attend), une formation (a training course).", why: "One false friend can change a commitment: « nous allons éventuellement financer » means we might fund, not that we will in the end.", miss: "Assuming that a word which looks familiar means the same thing in French." },
+      { n: "Logical connectors", d: "Words that show how ideas relate: cause (car, en effet), contrast (en revanche, toutefois), consequence (par conséquent, donc) and addition (en outre, de plus).", why: "French readers expect an explicit line of argument; connectors make a note easy to follow and convincing.", miss: "Linking every idea with « et » or « mais », or using « en effet » to mean \"in fact\": it confirms or explains what was just said." },
+      { n: "The subjunctive and tense agreement", d: "The subjunctive follows expressions of necessity, wish and doubt and some conjunctions: il faut que, souhaiter que, bien que, pour que, avant que. « Après que » takes the indicative.", why: "Subjunctive errors are among the first things readers notice in formal French.", miss: "« Il faut que nous allons » instead of « il faut que nous allions », or « après qu'il soit parti » instead of « après qu'il est parti »." },
+      { n: "Liaisons and rhythm", d: "French groups words into rhythmic units stressed on their last syllable. Within a group, liaisons join words (les‿enfants), and the nasal vowels an, on and in must stay distinct.", why: "Correct liaisons and nasal vowels make you easier to follow, especially with figures, names and dates.", miss: "Stressing the first syllable of words as in English, or making a liaison after « et »." },
+      { n: "Professional correspondence", d: "French professional letters and emails follow conventions: a formal opening (Madame, Monsieur), set phrases (je me permets de…, je vous remercie de…) and a closing formula suited to the relationship.", why: "These conventions show respect and competence before the reader even reaches your request.", miss: "Ending a formal email with « À plus » or with no closing formula, or translating \"Dear Paul\" as « Cher Paul » to an official you have never met." }
+    ],
+    examples: [{
+      t: "An email to a ministry",
+      scene: "James, a programme officer in Dakar whose first language is English, needs a meeting with a director at the Ministry of Health. His French is fluent, but his first email gets no reply.",
+      first: "« Bonjour, je voudrais demander une réunion avec vous la semaine prochaine pour parler du projet. Merci de me répondre vite. James »",
+      better: "« Madame la Directrice, Je me permets de solliciter un entretien la semaine prochaine afin de vous présenter l'état d'avancement du projet. Je me tiens à votre disposition pour convenir d'un créneau. Je vous prie d'agréer, Madame la Directrice, l'expression de ma haute considération. James Miller, chargé de programme »",
+      changes: [
+        "The opening uses the recipient's title, « Madame la Directrice », instead of a casual « Bonjour ».",
+        "« Je me permets de solliciter un entretien » is the formal register expected for a request to a senior official.",
+        "« Je me tiens à votre disposition » replaces « Merci de me répondre vite », which reads as pressure.",
+        "The closing formula repeats the title and shows respect; the signature gives his function."
+      ]
+    }],
+    steps: [
+      { do: "Record a baseline", how: "Record a two-minute briefing in French on a real work topic. Listen once and note three things that make you harder to follow or less formal than you intended.", time: "15 minutes", done: "A saved recording and three notes." },
+      { do: "Choose one focus for the week", how: "Follow the eight-week path in the Videos tab, or choose one area yourself: register, false friends, connectors, the subjunctive, liaisons or correspondence.", time: "5 minutes", done: "One focus written at the top of your practice log." },
+      { do: "Watch and note the rule", how: "Watch one video from the matching theme, or one listed under \"Practise with\". Write the rule in your own words with two examples from your work, and check new words in the Word bank.", time: "10 minutes", done: "A rule and two examples in your log." },
+      { do: "Shadow", how: "Play a short passage, pause, and repeat it aloud with the same rhythm, liaisons and intonation. Then say three of your own work sentences the same way.", time: "10 minutes daily", done: "You can say the passage smoothly without pausing the video." },
+      { do: "Use it at work", how: "Use your focus in one real email, meeting or call this week. Before sending an important email in French, check its opening, register and closing formula.", time: "During the week", done: "One real use noted in your log." },
+      { do: "Re-record and compare", how: "Record the same briefing again and compare. Ask a French-speaking colleague which version sounds more professional.", time: "15 minutes weekly", done: "One improvement noted and next week's focus chosen." }
+    ],
+    template: "CARNET D'ENTRAÎNEMENT / PRACTICE LOG\nSemaine | Axe | Vidéo | Utilisation au travail | Progrès\n1       |     |       |                        |\n2       |     |       |                        |\n3       |     |       |                        |\n4       |     |       |                        |\n\nMES TROIS FAUTES LES PLUS FRÉQUENTES\n1. J'écris : ________  Correct : ________\n2. J'écris : ________  Correct : ________\n3. J'écris : ________  Correct : ________\n\nCINQ FORMULES QUE J'ADOPTE\n1. ________ 2. ________ 3. ________ 4. ________ 5. ________",
+    reflect: [
+      "In which situations does your French feel less formal or less precise than your English?",
+      "Which false friends or grammar errors appear most often in your French emails?",
+      "Which expressions do respected French-speaking colleagues use that you could adopt?"
+    ],
+    checkpoint: "Record a two-minute work briefing in French at the start and again after eight weeks, and name three specific improvements."
   }
 };
 
@@ -576,7 +619,7 @@ for (const [id, list] of Object.entries(MORE)) GUIDES[id].examples.push(...list)
 // Eight vocabulary terms per module, kept in a separate file.
 for (const [id, list] of Object.entries(VOCAB)) GUIDES[id].vocab = list;
 
-// Polish Your English: each concept links to specific videos in the themed library.
-GUIDES.eng.concepts.forEach((c, i) => { c.pw = conceptLinks(i); });
+// Language modules: each concept links to specific videos in the themed library.
+for (const id of LINKED_MODULES) GUIDES[id].concepts.forEach((c, i) => { c.pw = conceptLinks(id, i); });
 
 export default GUIDES;

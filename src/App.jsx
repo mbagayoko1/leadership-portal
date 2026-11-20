@@ -17,9 +17,10 @@ import { SPEAKERS, PD_PLAN } from "./development.js";
 import { LIBRARY } from "./library.js";
 import ModuleGuide, { GUIDE_IDS } from "./ModuleGuide.jsx";
 import Glossary from "./Glossary.jsx";
-import EnglishLibrary from "./EnglishLibrary.jsx";
+import VideoLibrary from "./VideoLibrary.jsx";
 import WordBank from "./WordBank.jsx";
-import EnglishPractice from "./EnglishPractice.jsx";
+import LanguagePractice from "./LanguagePractice.jsx";
+import { PACKS } from "./languagePacks.js";
 import ModuleQuiz from "./ModuleQuiz.jsx";
 import { sourceLabel } from "./sourceLabel.js";
 
@@ -469,7 +470,7 @@ export default function App() {
   const [prog,setProg]=useState({mod:{},rt:{},ve:{}});
   const [sm,setSm]=useState("m1");
   const [st,setSt]=useState("learn");
-  const [engTheme,setEngTheme]=useState("");
+  const [libTheme,setLibTheme]=useState({}); // video-library theme filter, per language module
   const [dop,setDop]=useState(()=>Object.fromEntries(DS.map(n=>[n.id,true])));
   const [uv,setUv]=useState("list");
   const [ut,setUt]=useState(null);
@@ -996,7 +997,7 @@ export default function App() {
   ):null;
 
   // study guide
-  const sgTabs=[["learn",t.sgLearn,GUIDE_IDS.includes(cur.id)],["quiz",t.sgQuiz,GUIDE_IDS.includes(cur.id)],["words",t.sgWords,cur.id==="eng"],["practice",t.sgPractice,cur.id==="eng"],["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
+  const sgTabs=[["learn",t.sgLearn,GUIDE_IDS.includes(cur.id)],["quiz",t.sgQuiz,GUIDE_IDS.includes(cur.id)],["words",t.sgWords,!!PACKS[cur.id]],["practice",t.sgPractice,!!PACKS[cur.id]],["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
   const stE=sgTabs.some(a=>a[0]===st)?st:sgTabs[0][0];
   const studyTab=tab==="study-guide"?(
     <div>
@@ -1080,10 +1081,10 @@ export default function App() {
           )}
         </div>
       )}
-      {stE==="words"&&<WordBank t={t} lang={lang} done={prog.wb||{}} onToggle={k=>tp("wb",k)} onTheme={k=>{setEngTheme(k);setSt("videos");}}/>}
-      {stE==="practice"&&<EnglishPractice t={t} lang={lang}/>}
-      {stE==="videos"&&cur.id==="eng"&&<EnglishLibrary t={t} lang={lang} done={prog.ev||{}} onToggle={k=>tp("ev",k)} theme={engTheme} setTheme={setEngTheme}/>}
-      {stE==="videos"&&cur.id!=="eng"&&cur.vids&&cur.vids.length>0&&(
+      {stE==="words"&&PACKS[cur.id]&&<WordBank t={t} lang={lang} pack={PACKS[cur.id]} done={prog.wb||{}} onToggle={k=>tp("wb",k)} onTheme={k=>{setLibTheme(x=>({...x,[cur.id]:k}));setSt("videos");}}/>}
+      {stE==="practice"&&PACKS[cur.id]&&<LanguagePractice t={t} lang={lang} pack={PACKS[cur.id]}/>}
+      {stE==="videos"&&PACKS[cur.id]&&<VideoLibrary t={t} lang={lang} pack={PACKS[cur.id]} done={prog.ev||{}} onToggle={k=>tp("ev",k)} theme={libTheme[cur.id]||""} setTheme={k=>setLibTheme(x=>({...x,[cur.id]:k}))}/>}
+      {stE==="videos"&&!PACKS[cur.id]&&cur.vids&&cur.vids.length>0&&(
         <div className="space-y-2">{cur.vids.map((v,i)=><ResLink key={i} href={v.u} icon={Play} title={v.t} meta={v.d} tag={v.g}/>)}</div>
       )}
       {stE==="articles"&&cur.arts&&cur.arts.length>0&&(

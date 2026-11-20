@@ -134,6 +134,16 @@ const VOCAB = {
     { w: "shadowing (noun)", d: "Repeating a recording aloud just after the speaker, copying their stress, rhythm and intonation.", ex: "Every morning before work in Jakarta, Sari spends ten minutes **shadowing** a short video." },
     { w: "collocation (noun)", d: "Words that naturally go together, such as \"meet a deadline\" or \"raise a concern\".", warn: "Translating word for word often breaks collocations.", ex: "In Rome, Paolo replaced \"respect the deadline\" with the **collocation** \"meet the deadline\" in his report." },
     { w: "register (noun)", d: "The level of formality you choose for a situation, from casual to formal.", warn: "Mixing registers, such as slang in a formal letter, can undermine your credibility.", ex: "In Sydney, Grace switched **register** from her chatty team messages to a formal tone for the minister's office." }
+  ],
+  fra: [
+    { w: "formal register (noun)", d: "The careful, polished level of French used in official letters, notes and meetings: le registre soutenu.", ex: "For her note to the minister's office in Lomé, Akossiwa switched to a **formal register** and replaced « on » with « nous »." },
+    { w: "false friend (noun)", d: "A French word that looks like an English word but means something different, such as actuellement (currently).", warn: "Check any familiar-looking word in a dictionary before using it in a commitment.", ex: "In Kinshasa, Peter learned that « éventuellement » is a **false friend**: it means possibly, not eventually." },
+    { w: "logical connector (noun)", d: "A word that shows how two ideas relate, such as toutefois, par conséquent or en outre.", ex: "Marie-Claude in Port-au-Prince added one **logical connector** per paragraph, and her report became much easier to follow." },
+    { w: "subjunctive (noun)", d: "The verb form used after expressions of necessity, wish or doubt, such as il faut que or bien que.", ex: "Before sending his note in Luxembourg, Tomás checked every **subjunctive** after « il faut que »." },
+    { w: "liaison (noun)", d: "Pronouncing a normally silent final consonant when the next word starts with a vowel, as in « les‿enfants ».", warn: "Never make a liaison after « et ».", ex: "In Rabat, Youssef practised the **liaison** in « nous‿avons » until it sounded natural." },
+    { w: "nasal vowel (noun)", d: "A vowel pronounced partly through the nose, as in an, on and in; changing it can change the word.", ex: "Linh in Hanoi recorded « an », « on » and « in » until each **nasal vowel** sounded distinct." },
+    { w: "vouvoiement (noun)", d: "Addressing someone as « vous »: the polite and professional default with people you do not know well.", warn: "Switch to « tu » only when the other person suggests it.", ex: "In Nouméa, the new adviser kept the **vouvoiement** with the director until she suggested using « tu »." },
+    { w: "closing formula (noun)", d: "The set phrase that ends a formal French letter or email, chosen to suit the relationship: la formule de politesse.", ex: "Kwame in Brussels learned three **closing formulas**, from « Bien cordialement » to « Je vous prie d'agréer… »." }
   ]
 };
 

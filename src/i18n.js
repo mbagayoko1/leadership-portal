@@ -318,13 +318,13 @@ export const STR = {
       perfect: "Perfect score.", good: "Well done. Review the ones you missed, then try again.", keepGoing: "Keep practising: review the ones you missed, then try again.",
       review: "To review", retryMissed: "Retry the ones I missed", newQuiz: "New quiz", takeQuiz: "Test yourself: take the module quiz"
     },
-    eng: {
-      libTitle: "Video library", libSub: "{n} videos from Accurate English (YouTube), grouped by theme. Mark videos as watched to track your progress.",
+    lp: {
+      libTitle: "Video library", 
       watchedOf: "{n} of {m} watched", plan: "Eight-week path", planSub: "One focus a week, with the videos to watch and a task for your real work.",
       week: "Week {n}", task: "Task", search: "Search video titles", allThemes: "All themes", videos: "{n} videos", video1: "1 video",
       none: "No video matches your search.", short: "Short", watched: "Watched", markWatched: "Mark as watched", opens: "opens on YouTube",
-      leftOut: "Not included: videos from other channels saved in the channel's playlists, and partisan politics.",
-      bankTitle: "Word bank", bankSub: "Words and expressions for professional English, grouped by theme. Pronunciation hints follow American English, as in the videos; stress is in capitals.",
+      
+      bankTitle: "Word bank", 
       learnedOf: "{n} of {m} learned", bankSearch: "Search words, meanings or examples", allGroups: "All groups", entries: "{n} entries", entry1: "1 entry",
       bankNone: "No entry matches your search.", say: "Say it", tip: "Tip", learned: "Learned", markLearned: "Mark as learned",
       care: "Use with care: may confuse an international audience.", careShort: "Use with care", lesson: "Lesson", lessons: "Lessons", theme: "See the theme in the video library",
@@ -332,7 +332,7 @@ export const STR = {
       practiceGroup: "Words from", quiz: "Quiz", quizDesc: "Ten mixed questions: meanings, sentences to complete, stressed syllables and correct sentences.",
       match: "Word matching", matchDesc: "Match six words to their meanings. Play as many rounds as you like.",
       back: "Back to the games", 
-      meaningQ: "Which word or expression means:", gapQ: "Complete the sentence", stressQ: "Word stress", spotQ: "Which sentence is correct?",
+      meaningQ: "Which word or expression means:", gapQ: "Complete the sentence", stressQ: "Word stress", whoQ: "Who said or wrote this?", source: "Source", spotQ: "Which sentence is correct?",
       stressAsk: "Which syllable is stressed in \u201c{w}\u201d?", 
       
       
@@ -719,13 +719,13 @@ export const STR = {
       perfect: "Sans faute.", good: "Bravo. Revoyez les erreurs, puis réessayez.", keepGoing: "Continuez : revoyez les erreurs, puis réessayez.",
       review: "À revoir", retryMissed: "Refaire mes erreurs", newQuiz: "Nouveau quiz", takeQuiz: "Testez-vous : faites le quiz du module"
     },
-    eng: {
-      libTitle: "Vidéothèque", libSub: "{n} vidéos d'Accurate English (YouTube), classées par thème. Cochez les vidéos regardées pour suivre votre progression.",
+    lp: {
+      libTitle: "Vidéothèque", 
       watchedOf: "{n} sur {m} regardées", plan: "Parcours de huit semaines", planSub: "Un axe par semaine, avec les vidéos à regarder et une tâche pour votre travail réel.",
       week: "Semaine {n}", task: "Tâche", search: "Rechercher dans les titres", allThemes: "Tous les thèmes", videos: "{n} vidéos", video1: "1 vidéo",
       none: "Aucune vidéo ne correspond à votre recherche.", short: "Courte", watched: "Regardée", markWatched: "Marquer comme regardée", opens: "s'ouvre sur YouTube",
-      leftOut: "Non incluses : les vidéos d'autres chaînes enregistrées dans les playlists, et la politique partisane.",
-      bankTitle: "Banque de mots", bankSub: "Des mots et expressions pour l'anglais professionnel, classés par thème. Les indications de prononciation suivent l'anglais américain, comme les vidéos ; l'accent tonique est en majuscules.",
+      
+      bankTitle: "Banque de mots", 
       learnedOf: "{n} sur {m} acquis", bankSearch: "Rechercher un mot, un sens ou un exemple", allGroups: "Tous les groupes", entries: "{n} entrées", entry1: "1 entrée",
       bankNone: "Aucune entrée ne correspond à votre recherche.", say: "Prononciation", tip: "Astuce", learned: "Acquis", markLearned: "Marquer comme acquis",
       care: "À employer avec prudence : peut dérouter un public international.", careShort: "Avec prudence", lesson: "Leçon", lessons: "Leçons", theme: "Voir le thème dans la vidéothèque",
@@ -733,7 +733,7 @@ export const STR = {
       practiceGroup: "Mots du groupe", quiz: "Quiz", quizDesc: "Dix questions variées : sens, phrases à compléter, syllabes accentuées et phrases correctes.",
       match: "Associer les mots", matchDesc: "Associez six mots à leur sens. Jouez autant de manches que vous voulez.",
       back: "Retour aux jeux", 
-      meaningQ: "Quel mot ou quelle expression signifie :", gapQ: "Complétez la phrase", stressQ: "Accent tonique", spotQ: "Quelle phrase est correcte ?",
+      meaningQ: "Quel mot ou quelle expression signifie :", gapQ: "Complétez la phrase", stressQ: "Accent tonique", whoQ: "Qui a dit ou écrit ceci ?", source: "Source", spotQ: "Quelle phrase est correcte ?",
       stressAsk: "Quelle syllabe est accentuée dans « {w} » ?", 
       
       

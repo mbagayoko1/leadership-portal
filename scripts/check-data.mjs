@@ -15,6 +15,10 @@ import EN_VIDEOS from "../src/englishVideos.js";
 import { THEMES as EN_THEMES, PLAN as EN_PLAN, CONCEPT_VIDEOS as EN_CONCEPT_VIDEOS } from "../src/englishLibrary.js";
 import WORDBANK from "../src/guides/wordbank.js";
 import SPOT from "../src/guides/englishQuiz.js";
+import FR_VIDEOS from "../src/frenchVideos.js";
+import { FR_THEMES, FR_PLAN, FR_CONCEPT_VIDEOS } from "../src/frenchLibrary.js";
+import WORDBANK_FR from "../src/guides/wordbank-fr.js";
+import SPOT_FR from "../src/guides/frenchQuiz.js";
 import { buildModuleQuiz } from "../src/quiz.js";
 import { STR as QUIZ_STR } from "../src/i18n.js";
 import VOCAB_EN from "../src/guides/vocab-en.js";
@@ -113,33 +117,42 @@ for (const [lang, guides] of [["en", GUIDES_EN], ["fr", GUIDES_FR]]) for (const 
   for (const q of qs) if (!q.label || !q.opts.includes(q.answer) || new Set(q.opts).size !== q.opts.length || q.opts.length < 2) p("module quiz", id, lang, "bad question", q.prompt);
 }
 
-// Polish Your English: every video referenced by the eight-week path, the
-// concept links and the word bank exists in the generated library; every
-// theme has videos; word-bank entries are complete in both languages.
+// Language modules (eng, fra): every video referenced by the eight-week
+// path, the concept links and the word bank exists in the generated library;
+// every theme has videos; word-bank entries are complete in both languages;
+// word-bank group keys are unique across modules (they key "learned" ticks).
 {
-  const ids = new Set(Object.values(EN_VIDEOS).flat().map(v => v.id));
-  if (ids.size !== Object.values(EN_VIDEOS).flat().length) p("english library: a video appears in two themes");
-  for (const th of EN_THEMES) if (!(EN_VIDEOS[th.k] || []).length) p("english library: empty theme", th.k);
-  Object.keys(EN_VIDEOS).filter(x => !EN_THEMES.some(th => th.k === x)).forEach(x => p("english library: theme without a name", x));
-  const need = (id, where) => { if (!ids.has(id)) p("english library: unknown video", id, "in", where); };
-  EN_PLAN.forEach((w, i) => { w.v.forEach(id => need(id, "week " + (i + 1))); if (!w.f[1] || !w.task[1]) p("eight-week path: week", i + 1, "without French"); });
-  EN_CONCEPT_VIDEOS.forEach((l, i) => l.forEach(id => need(id, "concept " + (i + 1))));
-  const seen = new Set();
-  for (const g of WORDBANK) {
-    if (!EN_THEMES.some(th => th.k === g.theme)) p("word bank group", g.k, "has unknown theme", g.theme);
-    (g.v || []).forEach(id => need(id, "word bank group " + g.k));
-    for (const e of g.e) {
-      const key = g.k + ":" + e.w;
-      if (seen.has(key)) p("word bank: duplicate", key); seen.add(key);
-      if (!e.w || !e.d || !e.d[0] || !e.d[1] || !e.ex) p("word bank entry incomplete", key);
-      else if (!/\*\*.+?\*\*/.test(e.ex)) p("word bank example without **term**", key);
-      if (e.tip && (!e.tip[0] || !e.tip[1])) p("word bank tip without both languages", key);
-      if (e.v) need(e.v, key);
+  const LANG = { eng: { videos: EN_VIDEOS, themes: EN_THEMES, plan: EN_PLAN, concepts: EN_CONCEPT_VIDEOS, bank: WORDBANK, spot: SPOT },
+                 fra: { videos: FR_VIDEOS, themes: FR_THEMES, plan: FR_PLAN, concepts: FR_CONCEPT_VIDEOS, bank: WORDBANK_FR, spot: SPOT_FR } };
+  const groupKeys = new Set();
+  for (const [mod, L] of Object.entries(LANG)) {
+    const all = Object.values(L.videos).flat();
+    const ids = new Set(all.map(v => v.id));
+    if (ids.size !== all.length) p(mod, "library: a video appears in two themes");
+    for (const th of L.themes) if (!(L.videos[th.k] || []).length) p(mod, "library: empty theme", th.k);
+    Object.keys(L.videos).filter(x => !L.themes.some(th => th.k === x)).forEach(x => p(mod, "library: theme without a name", x));
+    const need = (id, where) => { if (!ids.has(id)) p(mod, "library: unknown video", id, "in", where); };
+    L.plan.forEach((w, i) => { w.v.forEach(id => need(id, "week " + (i + 1))); if (!w.f[1] || !w.task[1]) p(mod, "eight-week path: week", i + 1, "without French"); });
+    L.concepts.forEach((l, i) => l.forEach(id => need(id, "concept " + (i + 1))));
+    const seen = new Set();
+    for (const g of L.bank) {
+      if (groupKeys.has(g.k)) p("word bank group key used twice:", g.k); groupKeys.add(g.k);
+      if (!L.themes.some(th => th.k === g.theme)) p(mod, "word bank group", g.k, "has unknown theme", g.theme);
+      if (!g.t || !g.t[0] || !g.t[1] || !g.i || !g.i[1]) p(mod, "word bank group", g.k, "without both languages");
+      (g.v || []).forEach(id => need(id, "word bank group " + g.k));
+      for (const e of g.e) {
+        const key = g.k + ":" + e.w;
+        if (seen.has(key)) p(mod, "word bank: duplicate", key); seen.add(key);
+        if (!e.w || !e.d || !e.d[0] || !e.d[1] || !e.ex) p(mod, "word bank entry incomplete", key);
+        else if (!/\*\*.+?\*\*/.test(e.ex)) p(mod, "word bank example without **term**", key);
+        if (e.tip && (!e.tip[0] || !e.tip[1])) p(mod, "word bank tip without both languages", key);
+        if (e.v) need(e.v, key);
+      }
     }
-  }
-  for (const it of SPOT) {
-    if (!it.ok || !it.bad || it.ok === it.bad || !it.why || !it.why[0] || !it.why[1]) p("quiz item incomplete", it.ok || "?");
-    if (it.g && !WORDBANK.some(g => g.k === it.g)) p("quiz item has unknown group", it.g);
+    for (const it of L.spot) {
+      if (!it.ok || !it.bad || it.ok === it.bad || !it.why || !it.why[0] || !it.why[1]) p(mod, "quiz item incomplete", it.ok || "?");
+      if (it.g && !L.bank.some(g => g.k === it.g)) p(mod, "quiz item has unknown group", it.g);
+    }
   }
 }
 
