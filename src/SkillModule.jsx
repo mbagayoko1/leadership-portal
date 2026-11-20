@@ -36,7 +36,7 @@ function CopyBlock({ title, text, k }) {
             {copied ? <Check className="w-3.5 h-3.5 text-green-600" /> : <Copy className="w-3.5 h-3.5" />}{copied ? k.copied : k.copy}
           </button>
         </div>
-        <pre ref={preRef} className="text-xs leading-relaxed font-mono whitespace-pre-wrap bg-gray-50 border border-gray-100 rounded p-3 text-gray-800 overflow-x-auto">{text}</pre>
+        <pre ref={preRef} className="text-xs leading-relaxed font-code whitespace-pre-wrap bg-gray-50 border border-gray-100 rounded p-3 text-gray-800 overflow-x-auto">{text}</pre>
       </div>
     </details>
   );
@@ -68,7 +68,7 @@ export default function SkillModule({ id, t, lang, done, onToggle, stage, onStag
           {m.stages.map((s, n) => (
             <li key={s.id} className="flex-shrink-0 lg:flex-shrink">
               <button onClick={() => onStage(s.id)} aria-current={n === i ? "step" : undefined}
-                className={"w-full flex items-start gap-2 text-left text-sm leading-snug px-2 py-2 rounded-lg transition-colors " + (n === i ? "bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#E85D1F]" : "text-gray-700 hover:bg-gray-100")}>
+                className={"w-full flex items-start gap-2 text-left text-sm leading-snug px-2 py-2 rounded-lg transition-colors " + (n === i ? "bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#C23668]" : "text-gray-700 hover:bg-gray-100")}>
                 {done[s.id] ? <CheckCircle2 className="w-4 h-4 text-green-600 mt-0.5 flex-shrink-0" aria-label={k.practised} /> : <span className="font-mono text-xs text-gray-500 w-4 mt-0.5 flex-shrink-0">{n + 1}</span>}
                 <span className="whitespace-nowrap lg:whitespace-normal">{L(s.title, lang)}</span>
               </button>

@@ -29,7 +29,7 @@ function Av({ user, size }) {
   const ini = user.name.split(" ").map(w=>w[0]).slice(0,2).join("").toUpperCase();
   return <div className={s+" rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold flex-shrink-0"}>{ini}</div>;
 }
-// Signature element: asymmetric UNFPA-orange / brass / verdigris band
+// Signature element: asymmetric hibiscus / millet-gold / baobab-green band
 function Band() {
   return (
     <div className="h-1 flex">
@@ -144,16 +144,28 @@ function Library({ t, lang }) {
   );
 }
 // One sourced line for the day, the same for everyone. Skips unsourced lines and book titles.
-function DailyQuote({ t, lang }) {
+// The dashboard's opening band: the welcome and one sourced line for the
+// day, in the indigo used by the sign-in page and the AI Coach. The ring is
+// the portal's voice motif, shared with the AI Coach banner.
+function WelcomeBand({ t, lang, title, sub }) {
   const pool=useMemo(()=>SPEAKERS.flatMap(s=>s.quotes.filter(q=>!/widely attributed|attributed|title/i.test(q.source)).map(q=>({...q,by:s.name}))),[]);
   const q=pool[Math.floor(Date.now()/86400000)%pool.length];
-  if(!q) return null;
   return (
-    <figure className="ldp-card p-5 border-l-4 border-l-yellow-400">
-      <figcaption className="text-xs font-semibold text-gray-500 mb-1">{t.dailyQuote}</figcaption>
-      <blockquote className="font-serif italic text-lg text-gray-800 leading-snug">“{lang==="fr"&&q.fr?q.fr:q.text}”</blockquote>
-      <p className="text-xs text-gray-500 mt-2">{q.by}, {q.source}</p>
-    </figure>
+    <section className="relative overflow-hidden rounded-xl bg-purple-700 text-white px-6 py-7 lg:px-10 lg:py-9 mb-5">
+      <div aria-hidden="true" className="absolute -right-8 -top-8 w-24 h-24 border-[10px] sm:-right-12 sm:-top-12 sm:w-56 sm:h-56 sm:border-[20px] rounded-full border-orange-500 opacity-90"/>
+      <div aria-hidden="true" className="absolute right-16 top-28 w-24 h-24 rounded-full border-[6px] border-yellow-400 opacity-80 hidden sm:block"/>
+      <div className="relative max-w-2xl pr-10 sm:pr-48 lg:pr-0">
+        <h2 className="font-serif text-3xl lg:text-[2.6rem] leading-tight font-semibold">{title}</h2>
+        {sub&&<p className="text-sm text-blue-200 mt-1">{sub}</p>}
+        {q&&(
+          <figure className="mt-6 lg:mt-8 pl-4 border-l-2 border-yellow-400">
+            <figcaption className="text-xs text-blue-200 mb-1.5">{t.dailyQuote}</figcaption>
+            <blockquote className="font-serif italic text-xl lg:text-2xl leading-snug text-white">“{lang==="fr"&&q.fr?q.fr:q.text}”</blockquote>
+            <p className="text-xs text-blue-200 mt-2">{q.by}, {q.source}</p>
+          </figure>
+        )}
+      </div>
+    </section>
   );
 }
 // One icon per entry of STR[lang].compItems, in the same order.
@@ -169,7 +181,7 @@ function Competencies({ t, selected, onSelect }) {
           const on=selected===i;
           return (
             <li key={i}>
-              <button onClick={()=>onSelect(i)} aria-pressed={on} className={"w-full text-left flex items-start gap-2.5 px-2.5 py-2 rounded-lg transition-colors "+(on?"bg-orange-50 shadow-[inset_3px_0_0_#E85D1F]":"hover:bg-gray-100")}>
+              <button onClick={()=>onSelect(i)} aria-pressed={on} className={"w-full text-left flex items-start gap-2.5 px-2.5 py-2 rounded-lg transition-colors "+(on?"bg-orange-50 shadow-[inset_3px_0_0_#C23668]":"hover:bg-gray-100")}>
                 <Icon className={"w-4 h-4 mt-0.5 flex-shrink-0 "+(on?"text-orange-700":"text-gray-500")} aria-hidden="true"/>
                 <span className={"text-sm leading-snug flex-1 "+(on?"font-semibold text-gray-900":"text-gray-700")}>{item}</span>
               </button>
@@ -256,7 +268,7 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
           </div>
         </div>
         <div className="hidden lg:block">
-          <PageHead eyebrow={p.title+(sec.items.length>1?" · "+p.groups[sec.g]:"")} title={viewLabel} sub={p.sectionSub[view]}/>
+          <PageHead eyebrow={sec.items.length>1?p.groups[sec.g]:p.title} title={viewLabel} sub={p.sectionSub[view]}/>
         </div>
       </div>
       {view==="voice"?(
@@ -308,7 +320,7 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
           <div key={kind}>
             <p className="ldp-eyebrow px-2 mb-1">{label} <span className="font-mono font-normal text-gray-400">{SPEAKERS.filter(s=>s.kind===kind&&shown(s)).length}</span></p>
             <ul>{SPEAKERS.map((s,i)=>s.kind===kind&&shown(s)&&(
-              <li key={s.id}><button onClick={()=>onSelect(i)} aria-current={selected===i?"true":undefined} className={"w-full text-left px-2 py-1.5 rounded-lg transition-colors "+(selected===i?"bg-orange-50 shadow-[inset_3px_0_0_#E85D1F]":"hover:bg-gray-100")}>
+              <li key={s.id}><button onClick={()=>onSelect(i)} aria-current={selected===i?"true":undefined} className={"w-full text-left px-2 py-1.5 rounded-lg transition-colors "+(selected===i?"bg-orange-50 shadow-[inset_3px_0_0_#C23668]":"hover:bg-gray-100")}>
                 <span className={"block text-sm leading-snug "+(selected===i?"font-semibold text-gray-900":"text-gray-700")}>{s.name}</span>
                 <span className="block text-xs text-gray-500 leading-snug">{s.theme[lang]||s.theme.en}</span>
               </button></li>
@@ -490,7 +502,7 @@ export default function App() {
   // On narrow screens the tab bar scrolls sideways; keep the active tab visible.
   // A new section always starts at the top of the page.
   useEffect(()=>{ window.scrollTo(0,0); },[tab]);
-  useEffect(()=>{ const tb=tabs.find(x=>x.k===tab); document.title=(li&&tb?tb.l+" · ":"")+"Leadership & Communication Mastery · UNFPA WCARO"; },[tab,lang,li]);
+  useEffect(()=>{ const tb=tabs.find(x=>x.k===tab); document.title=(li&&tb?tb.l+" · ":"")+"Leadership & Communication Mastery"; },[tab,lang,li]);
   const [openMods,setOpenMods]=useState({});
   // Opens a module in the Curriculum (from the Route) and scrolls to it.
   function openModule(id){ setTab("curriculum"); setOpenMods(o=>({...o,[id]:true})); setTimeout(()=>{ const el=document.getElementById("mod-"+id); if(el) el.scrollIntoView({block:"start"}); },60); }
@@ -600,14 +612,16 @@ export default function App() {
   if(!li){
     return (
       <div className="min-h-screen bg-gray-50 lg:grid lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-        <aside className="bg-purple-700 text-white flex flex-col px-6 py-6 lg:px-14 lg:py-12">
-          <div className="flex items-center gap-3"><Mark/><p className="text-sm font-semibold">UNFPA WCARO</p></div>
-          <div className="mt-6 lg:mt-auto">
+        <aside className="relative overflow-hidden bg-purple-700 text-white flex flex-col px-6 py-6 lg:px-14 lg:py-12">
+          <div aria-hidden="true" className="absolute -right-10 -top-10 w-32 h-32 border-[12px] lg:-right-24 lg:-top-24 lg:w-80 lg:h-80 lg:border-[28px] rounded-full border-orange-500 opacity-90"/>
+          <div aria-hidden="true" className="hidden lg:block absolute right-52 top-10 w-28 h-28 rounded-full border-[7px] border-yellow-400 opacity-80"/>
+          <div className="relative flex items-center gap-3"><Mark/><p className="text-sm font-semibold">{t.cohort}</p></div>
+          <div className="relative mt-6 lg:mt-auto">
             <h1 className="text-3xl lg:text-5xl font-semibold leading-[1.08] max-w-xl">Leadership &amp; Communication Development Portal</h1>
             <p className="text-blue-100 mt-3 lg:mt-5 max-w-lg lg:text-lg">{t.loginIntro}</p>
           </div>
-          <div className="hidden lg:block mt-10 mb-auto"><Route t={t} cur={L.CUR} dark/></div>
-          <p className="hidden lg:block text-xs text-blue-200 mt-10">{t.loginSubtitle}</p>
+          <div className="relative hidden lg:block mt-10 mb-auto"><Route t={t} cur={L.CUR} dark/></div>
+          <p className="relative hidden lg:block text-xs text-blue-200 mt-10">{t.loginSubtitle}</p>
         </aside>
         <main className="relative flex flex-col items-center justify-center px-6 py-10 lg:py-12">
           <div className="absolute top-4 right-4"><LangSwitch lang={lang} setLang={setLang} light/></div>
@@ -669,7 +683,7 @@ export default function App() {
         <Mark/>
         <div className="min-w-0">
           <p className="font-serif text-lg font-semibold leading-tight">Leadership &amp; Communication Mastery</p>
-          <p className="text-xs text-blue-200 mt-1">UNFPA WCARO, Cohort 1</p>
+          <p className="text-xs text-blue-200 mt-1">{t.cohort}</p>
         </div>
       </div>
       <nav className="flex-1 overflow-y-auto px-3 pb-3 space-y-3">
@@ -677,7 +691,7 @@ export default function App() {
           <div key={g}>
             <p className="px-2 mb-1 text-xs text-blue-200">{t.navGroups[g]}</p>
             <ul className="space-y-0.5">{keys.map(k=>{const tb=tabs.find(x=>x.k===k);const on=tab===k;return (
-              <li key={k}><button onClick={()=>setTab(k)} aria-current={on?"page":undefined} aria-expanded={k==="development"?on:undefined} className={"w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm transition-colors "+(on?"bg-white/10 text-white font-semibold shadow-[inset_3px_0_0_#E85D1F]":"text-blue-100 hover:bg-white/5")}>
+              <li key={k}><button onClick={()=>setTab(k)} aria-current={on?"page":undefined} aria-expanded={k==="development"?on:undefined} className={"w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm transition-colors "+(on?"bg-white/10 text-white font-semibold shadow-[inset_3px_0_0_#C23668]":"text-blue-100 hover:bg-white/5")}>
                 <tb.I className="w-4 h-4 flex-shrink-0" aria-hidden="true"/>{tb.l}
                 {k==="users"&&<span className="ml-auto text-xs text-blue-200">{Object.keys(users).length}</span>}
               </button>
@@ -747,7 +761,7 @@ export default function App() {
   const mentorDash=(tab==="dashboard"&&me.role==="mentor")?(
     <div className="space-y-5">
       <div>
-        <PageHead title={t.welcome+", "+firstName}/>
+        <WelcomeBand t={t} lang={lang} title={t.welcome+", "+firstName}/>
         <div className="ldp-subtabs">
           {[["overview",t.mTabs.overview,BarChart3],["participants",t.mTabs.participants,UsersRound],["sessions",t.mTabs.sessions,Calendar],["goals",t.mTabs.goals,Target],["notes",t.mTabs.notes,FileText]].map(([k,label,Icon])=>(
             <button key={k} onClick={()=>setMt(k)} aria-pressed={mt===k} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{label}</button>
@@ -757,7 +771,6 @@ export default function App() {
       {mt==="overview"&&(
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
           <div className="lg:col-span-2 space-y-4">
-            <DailyQuote t={t} lang={lang}/>
             <div className="ldp-card grid grid-cols-3 divide-x divide-gray-100">
               {[[pts.length,t.statParticipants],[ms.length,t.statSessions],[dg+"/"+mg.length,t.statGoalsDone]].map(([v,l])=>(
                 <div key={l} className="p-4"><p className="font-mono text-3xl font-semibold text-gray-900">{v}</p><p className="text-xs text-gray-500 mt-1">{l}</p></div>
@@ -859,7 +872,7 @@ export default function App() {
   // dashboard – participant/admin
   const partDash=(tab==="dashboard"&&me.role!=="mentor")?(
     <div className="space-y-4">
-      <PageHead title={t.welcome+", "+firstName} sub={[me.title||t.participantDefault,me.organization].filter(Boolean).join(", ")}/>
+      <WelcomeBand t={t} lang={lang} title={t.welcome+", "+firstName} sub={[me.title||t.participantDefault,me.organization].filter(Boolean).join(", ")}/>
       <section className="ldp-card p-5">
         <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
           <h3 className="font-semibold text-gray-800">{t.route.title}</h3>
@@ -868,7 +881,6 @@ export default function App() {
         <Route t={t} cur={L.CUR} done={prog.mod} current={nextMod&&nextMod.id} onOpen={openModule}/>
         <RouteLegend t={t}/>
       </section>
-      <DailyQuote t={t} lang={lang}/>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
         {nextMod?(
           <section className="ldp-card lg:col-span-2 overflow-hidden">
@@ -991,7 +1003,7 @@ export default function App() {
           <div key={label}>
             <p className="ldp-eyebrow px-2 mb-1">{label}</p>
             <ul>{mods.map(m=>(
-              <li key={m.id}><button onClick={()=>{setSm(m.id);setSt("guide");}} aria-current={sm===m.id?"true":undefined} className={"w-full flex items-start gap-1.5 text-left px-2 py-1.5 rounded-lg text-sm leading-snug transition-colors "+(sm===m.id?"bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#E85D1F]":"text-gray-700 hover:bg-gray-100")}>
+              <li key={m.id}><button onClick={()=>{setSm(m.id);setSt("guide");}} aria-current={sm===m.id?"true":undefined} className={"w-full flex items-start gap-1.5 text-left px-2 py-1.5 rounded-lg text-sm leading-snug transition-colors "+(sm===m.id?"bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#C23668]":"text-gray-700 hover:bg-gray-100")}>
                 <span className="flex-1">{m.title}</span>{prog.mod[m.id]&&<CheckCircle2 className="w-3.5 h-3.5 text-green-600 mt-0.5 flex-shrink-0" aria-label={t.route.done}/>}
               </button></li>
             ))}</ul>

@@ -3,7 +3,8 @@
 export const STR = {
   en: {
     // chrome
-    eyebrow: "UNFPA WCARO · Cohort 1 · 2026 Strategic Growth Plan",
+    eyebrow: "Cohort 1, 2026 Strategic Growth Plan",
+    cohort: "Cohort 1, 2026",
     logout: "Logout",
     nav: { dashboard: "Dashboard", curriculum: "Curriculum", study: "Study Guide", development: "Personal Development", coach: "AI Coach", resources: "Resources", drive: "Drive", users: "Users" },
     navGroups: { programme: "Programme", growth: "Growth", library: "Library", admin: "Administration" },
@@ -255,7 +256,7 @@ export const STR = {
     },
     save: "Save", cancel: "Cancel", edit: "Edit", del: "Delete", back: "← Back",
     // login
-    loginSubtitle: "Cohort 1 · 2026 Strategic Growth Plan · UNFPA WCARO",
+    loginSubtitle: "2026 Strategic Growth Plan",
     signIn: "Sign In", requestAccess: "Request Access",
     username: "Username", password: "Password",
     enterUsername: "Enter your username", enterPassword: "Enter your password",
@@ -268,7 +269,7 @@ export const STR = {
     accessGuides: "✓ All Study Guides (Modules 1–11)", accessVideos: "✓ Videos, Articles & Reading Lists", accessFolders: "✓ Google Drive Resource Folders",
     openDriveRepo: "Open Drive Repository ↗", redirecting: "Redirecting to sign in…",
     markDone: "Mark as done", errAllRequired: "All fields are required.", errNoMatch: "Passwords do not match.", errMinChars: "Password must be at least 6 characters.", errTaken: "Username already taken.", errUsernameFormat: "Username: 3–30 characters, using letters, numbers, dots, dashes or underscores (no spaces).", errEmail: "Please enter a valid email address.",
-    loginFooter: "© 2026 UNFPA WCARO · Leadership & Communication Development Programme",
+    loginFooter: "© 2026 Leadership & Communication Development Programme",
     loading: "Loading portal…",
     // dashboard (participant/admin)
     welcome: "Welcome", participantDefault: "Participant",
@@ -372,7 +373,8 @@ export const STR = {
     roleNamesPl: { admin: "Admins", mentor: "Mentors", participant: "Participants", observer: "Observers" }
   },
   fr: {
-    eyebrow: "UNFPA WCARO · Cohorte 1 · Plan de croissance stratégique 2026",
+    eyebrow: "Cohorte 1, plan de croissance stratégique 2026",
+    cohort: "Cohorte 1, 2026",
     logout: "Déconnexion",
     nav: { dashboard: "Tableau de bord", curriculum: "Programme", study: "Guide d'étude", development: "Développement personnel", coach: "Coach IA", resources: "Ressources", drive: "Drive", users: "Utilisateurs" },
     navGroups: { programme: "Programme", growth: "Développement", library: "Bibliothèque", admin: "Administration" },
@@ -623,7 +625,7 @@ export const STR = {
       remove: "Retirer la clé"
     },
     save: "Enregistrer", cancel: "Annuler", edit: "Modifier", del: "Supprimer", back: "← Retour",
-    loginSubtitle: "Cohorte 1 · Plan de croissance stratégique 2026 · UNFPA WCARO",
+    loginSubtitle: "Plan de croissance stratégique 2026",
     signIn: "Connexion", requestAccess: "Demander l'accès",
     username: "Nom d'utilisateur", password: "Mot de passe",
     enterUsername: "Entrez votre nom d'utilisateur", enterPassword: "Entrez votre mot de passe",
@@ -636,7 +638,7 @@ export const STR = {
     accessGuides: "✓ Tous les guides d'étude (Modules 1–11)", accessVideos: "✓ Vidéos, articles et listes de lecture", accessFolders: "✓ Dossiers de ressources Google Drive",
     openDriveRepo: "Ouvrir le dépôt Drive ↗", redirecting: "Redirection vers la connexion…",
     markDone: "Marquer comme fait", errAllRequired: "Tous les champs sont obligatoires.", errNoMatch: "Les mots de passe ne correspondent pas.", errMinChars: "Le mot de passe doit contenir au moins 6 caractères.", errTaken: "Nom d'utilisateur déjà pris.", errUsernameFormat: "Nom d'utilisateur : 3 à 30 caractères (lettres, chiffres, points, tirets ou tirets bas, sans espace).", errEmail: "Veuillez saisir une adresse électronique valide.",
-    loginFooter: "© 2026 UNFPA WCARO · Programme de développement du leadership et de la communication",
+    loginFooter: "© 2026 Programme de développement du leadership et de la communication",
     loading: "Chargement du portail…",
     welcome: "Bienvenue", participantDefault: "Participant",
     resourcesReady: "Vos ressources sont prêtes",

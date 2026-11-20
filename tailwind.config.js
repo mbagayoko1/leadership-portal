@@ -1,28 +1,38 @@
 /** @type {import('tailwindcss').Config} */
-// Palette remaps Tailwind's default scales to the portal's "diplomatic dossier"
-// system: ink navy (purple), steel blue (blue), warm paper (gray), UNFPA
-// orange (orange), brass (yellow/amber), verdigris (green). The app's existing
-// utility classes pick these up without markup changes.
+// Palette remaps Tailwind's default scales to the portal's own identity, drawn
+// from West African materials rather than any organisation's brand: indigo ink
+// (purple), indigo blue (blue), morning haze (gray), hibiscus (orange), millet
+// gold (yellow/amber), baobab green (green). Existing utility classes pick
+// these up without markup changes.
 export default {
   content: ["./index.html", "./src/**/*.{js,jsx}"],
   theme: {
     extend: {
       colors: {
-        purple: { 50:"#F4F5F9", 100:"#E7EAF2", 200:"#C7CEDF", 300:"#9AA6C2", 400:"#6E7EA3", 500:"#46577F", 600:"#26324F", 700:"#1E2A44", 800:"#161F33", 900:"#101726" },
-        blue:   { 50:"#F0F5F9", 100:"#E2EAF1", 200:"#C4D3E1", 300:"#9BB3C9", 400:"#6C8CAD", 500:"#3E648F", 600:"#2F5077", 700:"#274361", 800:"#1F3750", 900:"#16283B" },
-        indigo: { 700:"#1B2438", 800:"#131A2A" },
-        gray:   { 50:"#FAF9F7", 100:"#F1EFEA", 200:"#E5E1D8", 300:"#D0CBBF", 400:"#A39D8F", 500:"#7C766A", 600:"#5D5749", 700:"#454037", 800:"#2E2A24", 900:"#1E1B16" },
-        orange: { 50:"#FDF3EC", 100:"#FCE8DB", 200:"#F8CFB4", 300:"#F2AC80", 400:"#EC834D", 500:"#E85D1F", 600:"#D14E14", 700:"#AC3F10", 800:"#87310D", 900:"#62240A" },
-        yellow: { 50:"#FBF6E9", 100:"#F6ECCF", 200:"#EFDDB0", 300:"#E5C77A", 400:"#D9A62E", 500:"#C08F1F", 600:"#A2761A", 700:"#835E15", 800:"#64470F", 900:"#4A350B" },
-        amber:  { 50:"#FBF5E9", 100:"#F5E8CB", 200:"#EAD79F", 300:"#DDBE66", 400:"#CBA23A", 500:"#B98C25", 600:"#A2761D", 700:"#836018", 800:"#654A12", 900:"#4B370E" },
-        green:  { 50:"#EEF7F2", 100:"#DCEFE6", 200:"#C2E3D3", 300:"#93CBB2", 400:"#5FAE8D", 500:"#2E8B6E", 600:"#257459", 700:"#1E5F49", 800:"#174A39", 900:"#11382B" },
+        // Indigo ink: side menu, headings, primary buttons
+        purple: { 50:"#F2F4FA", 100:"#E4E8F3", 200:"#C6CEE4", 300:"#9AA6CB", 400:"#6B7AAB", 500:"#45558A", 600:"#2A3766", 700:"#1C2541", 800:"#151C33", 900:"#0F1424" },
+        // Indigo blue: links and secondary accents
+        blue:   { 50:"#EFF3FB", 100:"#DFE7F6", 200:"#BFCFEC", 300:"#94AEDC", 400:"#6587C6", 500:"#4366AF", 600:"#34508A", 700:"#2B4373", 800:"#22365C", 900:"#1A2945" },
+        indigo: { 700:"#161D35", 800:"#10162A" },
+        // Morning haze: cool neutrals for page, lines and text
+        gray:   { 50:"#F4F5F9", 100:"#EBEDF3", 200:"#DCDFEA", 300:"#C3C8D6", 400:"#9CA2B6", 500:"#646A80", 600:"#5B6178", 700:"#434860", 800:"#2C3045", 900:"#1A1D2C" },
+        // Hibiscus: the one bold colour, for where you are and what is next
+        orange: { 50:"#FCEFF3", 100:"#F8DCE6", 200:"#F0B8CB", 300:"#E58AA8", 400:"#D45985", 500:"#C23668", 600:"#B4235A", 700:"#941C4A", 800:"#741639", 900:"#551029" },
+        // Millet gold: quotes and highlights (400 is decorative only)
+        yellow: { 50:"#FBF6EA", 100:"#F6EAC8", 200:"#EED89A", 300:"#E3BF63", 400:"#D6A23A", 500:"#BC8A26", 600:"#9E721E", 700:"#8A6418", 800:"#654912", 900:"#4A350D" },
+        amber:  { 50:"#FBF6EA", 100:"#F6EAC8", 200:"#EED89A", 300:"#E3BF63", 400:"#D6A23A", 500:"#BC8A26", 600:"#9E721E", 700:"#8A6418", 800:"#654912", 900:"#4A350D" },
+        // Baobab green: completed work
+        green:  { 50:"#EEF6F2", 100:"#D9EDE3", 200:"#B6DAC8", 300:"#86BFA3", 400:"#559F7D", 500:"#3A8A68", 600:"#2F7A5C", 700:"#25624A", 800:"#1C4B39", 900:"#14362A" },
         red:    { 50:"#FBF0EE", 100:"#F7E1DE", 200:"#EFC7C2", 300:"#E3A199", 400:"#D97C72", 500:"#CE5B4E", 600:"#C2453A", 700:"#A03830", 800:"#7E2C26", 900:"#5C201C" },
         teal:   { 50:"#EDF6F5", 100:"#D8ECEA", 200:"#B7DBD7", 500:"#2E8A80", 600:"#26766D", 700:"#1F6E66", 800:"#185750", 900:"#124440" }
       },
       fontFamily: {
         sans: ['"Public Sans"', "system-ui", "-apple-system", "Segoe UI", "sans-serif"],
         serif: ["Newsreader", "Georgia", "Times New Roman", "serif"],
-        mono: ['"IBM Plex Mono"', "SFMono-Regular", "Menlo", "monospace"]
+        // Figures use the body face with aligned (tabular) digits; true
+        // monospace is kept for copyable templates, where columns line up.
+        mono: ['"Public Sans"', "system-ui", "sans-serif"],
+        code: ['"IBM Plex Mono"', "SFMono-Regular", "Menlo", "monospace"]
       },
       borderRadius: {
         DEFAULT: "0.1875rem",

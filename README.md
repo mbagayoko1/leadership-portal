@@ -1,6 +1,6 @@
 # Leadership Development Portal
 
-UNFPA WCARO · Cohort 1 · 2026 Strategic Growth Plan — a leadership & communication
+Cohort 1 · 2026 Strategic Growth Plan — a leadership & communication
 development dashboard for a 12-month mentorship programme.
 
 **Open the portal:** <https://mbagayoko1.github.io/leadership-portal/>

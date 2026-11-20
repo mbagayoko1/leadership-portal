@@ -45,7 +45,7 @@ export default function VoiceStudio({ t, lang, user, drill, onDrill }) {
               return (
                 <li key={d.id} className="flex-shrink-0 lg:flex-shrink">
                   <button onClick={() => onDrill(d.id)} aria-current={d.id === current.id ? "step" : undefined}
-                    className={"w-full flex items-center gap-2 text-left text-sm leading-snug px-2 py-2 rounded-lg transition-colors " + (d.id === current.id ? "bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#E85D1F]" : "text-gray-700 hover:bg-gray-100")}>
+                    className={"w-full flex items-center gap-2 text-left text-sm leading-snug px-2 py-2 rounded-lg transition-colors " + (d.id === current.id ? "bg-orange-50 font-semibold text-gray-900 shadow-[inset_3px_0_0_#C23668]" : "text-gray-700 hover:bg-gray-100")}>
                     <span className="whitespace-nowrap lg:whitespace-normal flex-1">{L(d.title, lang)}</span>
                     {d.id === "warmup" && data.warmups.length > 0 && <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" aria-label={k.warmupCount(data.warmups.length)} />}
                     {st && <span className={"w-2 h-2 rounded-full flex-shrink-0 " + (st.status === "good" ? "bg-green-500" : st.status === "near" ? "bg-amber-400" : "bg-orange-500")} aria-label={k.status[st.status]} />}

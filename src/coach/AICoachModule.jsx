@@ -7,7 +7,7 @@ import { COMPANION_INSTR, PORTAL_RULES, LIVE_LINK_RULE, stripNav, navTargets, sp
 
 /*
   AI Coach module (bilingual English / French)
-  UNFPA WCARO Leadership and Communication Development Portal, Cohort 1 2026
+  Leadership and Communication Development Portal, Cohort 1 2026
 
   Drop-in usage inside the portal (e.g. as a new tab):
     <AICoachModule currentUser={currentUser} modules={CURRICULUM} language="fr" />
@@ -55,21 +55,21 @@ import { COMPANION_INSTR, PORTAL_RULES, LIVE_LINK_RULE, stripNav, navTargets, sp
   return, function() callbacks in .map, no IIFEs, all components at top level.
 */
 
-/* Portal design tokens (see tailwind.config.js): ink navy, steel blue,
-   UNFPA orange, warm paper greys, verdigris. */
+/* Portal design tokens (see tailwind.config.js): indigo ink, hibiscus,
+   millet gold, cool haze greys, baobab green. */
 const C = {
-  orange: "#E85D1F",
-  orangeSoft: "#FDF3EC",
-  blue: "#2F5077",
-  blueSoft: "#F0F5F9",
-  dark: "#1E2A44",
-  ink: "#2E2A24",
-  muted: "#7C766A",
-  line: "#E5E1D8",
-  bg: "#FAF9F7",
+  orange: "#B4235A",
+  orangeSoft: "#FCEFF3",
+  blue: "#34508A",
+  blueSoft: "#EFF3FB",
+  dark: "#1C2541",
+  ink: "#1A1D2C",
+  muted: "#5B6178",
+  line: "#DCDFEA",
+  bg: "#F4F5F9",
   card: "#FFFFFF",
-  green: "#2E8B6E",
-  greenSoft: "#EEF7F2",
+  green: "#2F7A5C",
+  greenSoft: "#EEF6F2",
   red: "#C2453A"
 };
 
@@ -578,7 +578,7 @@ const SCENARIOS = [
       en: "You must brief the Country Representative on a delayed programme deliverable and recommend a way forward. You have five minutes.",
       fr: "Vous devez informer le Repr\u00e9sentant pays du retard d'un livrable du programme et recommander une solution. Vous disposez de cinq minutes."
     },
-    character: "You are a busy, sharp UNFPA Country Representative with five minutes between meetings. You interrupt if the briefing is unfocused, ask what decision is needed from you, and press for a clear recommendation and the main risk.",
+    character: "You are a busy, sharp Country Representative with five minutes between meetings. You interrupt if the briefing is unfocused, ask what decision is needed from you, and press for a clear recommendation and the main risk.",
     opener: {
       en: "I have five minutes before my call with the Minister. What do you have for me?",
       fr: "J'ai cinq minutes avant mon appel avec le Ministre. Qu'avez-vous pour moi ?"
@@ -625,8 +625,8 @@ const SCENARIOS = [
     },
     character: "You are a friendly but time-constrained donor programme officer. You care about results, value for money and visibility. Ask one probing question about evidence of impact, and lose interest if the answer is full of jargon.",
     opener: {
-      en: "Nice to meet you. So what are you working on at UNFPA these days?",
-      fr: "Enchant\u00e9. Alors, sur quoi travaillez-vous \u00e0 l'UNFPA en ce moment ?"
+      en: "Nice to meet you. So what are you working on these days?",
+      fr: "Enchant\u00e9. Alors, sur quoi travaillez-vous en ce moment ?"
     }
   },
   {
@@ -679,13 +679,13 @@ const EMPTY = { sessions: [], practice: [], goals: [], checkins: [], share: fals
 
 const CSS = `
 .aic-root, .aic-root * { box-sizing: border-box; }
-.aic-root button:focus-visible, .aic-root textarea:focus-visible, .aic-root input:focus-visible, .aic-root select:focus-visible { outline: 2px solid #2F5077; outline-offset: 2px; }
+.aic-root button:focus-visible, .aic-root textarea:focus-visible, .aic-root input:focus-visible, .aic-root select:focus-visible { outline: 2px solid #34508A; outline-offset: 2px; }
 .aic-grid { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 16px; align-items: start; }
 .aic-two { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
 .aic-picks { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
 .aic-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
 .aic-pick { cursor: pointer; text-align: left; transition: border-color .15s, background .15s; }
-.aic-pick:hover { border-color: #2F5077 !important; }
+.aic-pick:hover { border-color: #34508A !important; }
 .aic-btn { transition: filter .15s; }
 .aic-btn:hover:not(:disabled) { filter: brightness(0.94); }
 .aic-typing span { display: inline-block; width: 7px; height: 7px; margin: 0 2px; background: #98A2B3; border-radius: 50%; animation: aicBlink 1.2s infinite both; }
@@ -702,11 +702,11 @@ const CSS = `
 @keyframes aicPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
 .aic-orb-listen { animation: aicBreath 2.2s ease-in-out infinite; }
 .aic-orb-speak { animation: aicTalk .9s ease-in-out infinite; }
-.aic-orb-think { position: absolute; inset: -10px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.15); border-top-color: #E85D1F; animation: aicSpin 1s linear infinite; }
+.aic-orb-think { position: absolute; inset: -10px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.15); border-top-color: #C23668; animation: aicSpin 1s linear infinite; }
 @keyframes aicBreath { 0%, 100% { box-shadow: 0 0 0 0 rgba(91,214,164,.5); } 50% { box-shadow: 0 0 0 26px rgba(91,214,164,0); } }
 @keyframes aicTalk { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
 @keyframes aicSpin { to { transform: rotate(360deg); } }
-.aic-live-overlay button:focus-visible { outline: 3px solid #E85D1F; outline-offset: 3px; }
+.aic-live-overlay button:focus-visible { outline: 3px solid #C23668; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   .aic-reveal, .aic-typing span, .aic-live, .aic-orb-listen, .aic-orb-speak, .aic-orb-think { animation: none; }
 }
@@ -1021,7 +1021,7 @@ function coachSystem(user, modeId, moduleName, goals, lang, portal) {
     ? goals.slice(0, 6).map(function (g) { return "- " + g.title + " (" + goalProgress(g) + "% done)"; }).join("\n")
     : "None recorded yet.";
   return [
-    "You are an experienced executive coach supporting a participant in the UNFPA West and Central Africa Regional Office (WCARO) Leadership and Communication Development Programme, Cohort 1 2026.",
+    "You are an experienced executive coach supporting a participant in the Leadership and Communication Development Programme, Cohort 1 2026, for professionals working in West and Central Africa.",
     "Participant: " + user.name + ".",
     "Current curriculum focus: " + moduleName + ".",
     "Their development goals:\n" + goalText,
@@ -1041,7 +1041,7 @@ function wrapSystem(lang) {
 
 function roleplaySystem(s, lang) {
   return [
-    "You are playing a character in a communication practice simulation for a UNFPA WCARO staff member (the learner).",
+    "You are playing a character in a communication practice simulation for a programme participant (the learner).",
     "Scenario: " + s.setting,
     "Your character: " + s.character,
     "Language: the whole scene takes place in " + (lang === "fr" ? "French" : "English") + ". Always speak in that language, even if the learner switches.",
@@ -1050,21 +1050,21 @@ function roleplaySystem(s, lang) {
 }
 
 function feedbackSystem(lang) {
-  return `You are an expert communication and leadership coach assessing a role-play by a UNFPA WCARO staff member (the learner). Assess only the learner's lines. Be specific, fair and encouraging, and refer to what they actually said. Scores are integers from 1 to 10. Respond ONLY with valid JSON, no markdown, no other text, in exactly this shape:
+  return `You are an expert communication and leadership coach assessing a role-play by a programme participant (the learner). Assess only the learner's lines. Be specific, fair and encouraging, and refer to what they actually said. Scores are integers from 1 to 10. Respond ONLY with valid JSON, no markdown, no other text, in exactly this shape:
 {"overall": 7, "headline": "one-sentence verdict", "scores": {"clarity": 7, "structure": 6, "audience": 7, "presence": 8, "concision": 6}, "strengths": ["specific strength", "specific strength"], "improvements": ["specific improvement", "specific improvement"], "rewrite": {"original": "a short line the learner actually said, quoted exactly", "better": "a stronger version of that line, in the same language as the scene"}, "nextDrill": "one specific exercise to practise next"}
 If delivery data is included, the learner spoke their lines aloud: let pace and fillers inform the presence and concision scores, and make one improvement about delivery when the data shows a clear issue (target 140 to 160 words per minute, no fillers). If their wording is weak for the setting, use the rewrite to show stronger vocabulary.
 ` + jsonLanguageRule(lang);
 }
 
 function suggestSystem(lang) {
-  return `You help UNFPA WCARO staff build a personal leadership and communication development plan. Respond ONLY with valid JSON, no markdown, no other text, in exactly this shape:
+  return `You help programme participants build a personal leadership and communication development plan. Respond ONLY with valid JSON, no markdown, no other text, in exactly this shape:
 {"goals": [{"title": "goal phrased as an outcome", "category": "Leadership", "why": "one sentence linking it to the evidence", "actions": ["concrete action", "concrete action", "concrete action"]}]}
 Suggest exactly 3 goals. The category value must be exactly one of these English words: Leadership, Communication, Personal effectiveness. Do not repeat goals the person already has.
 ` + jsonLanguageRule(lang) + " The category value stays in English.";
 }
 
 function insightSystem(lang) {
-  return "You are a leadership coach writing a short progress note to a participant in the UNFPA WCARO Leadership and Communication Development Programme. Write 90 to 140 words of plain text in second person: what is improving, what deserves attention next, and one suggestion for the coming two weeks. Base it only on the data given. Be warm and specific. No headings, no lists. " + (lang === "fr" ? "Write in French, using the formal vous." : "Write in English.");
+  return "You are a leadership coach writing a short progress note to a participant in the Leadership and Communication Development Programme. Write 90 to 140 words of plain text in second person: what is improving, what deserves attention next, and one suggestion for the coming two weeks. Base it only on the data given. Be warm and specific. No headings, no lists. " + (lang === "fr" ? "Write in French, using the formal vous." : "Write in English.");
 }
 
 /* ---------------- UI primitives ---------------- */
@@ -2201,7 +2201,7 @@ function LiveCall(props) {
       aria-modal="true"
       aria-label={props.title}
       lang={lang}
-      style={{ position: "fixed", inset: 0, zIndex: 10000, background: "#1E2A44", color: "#fff", display: "flex", flexDirection: "column", fontFamily: FONT_B }}
+      style={{ position: "fixed", inset: 0, zIndex: 10000, background: "#1C2541", color: "#fff", display: "flex", flexDirection: "column", fontFamily: FONT_B }}
     >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, padding: "calc(16px + env(safe-area-inset-top, 0px)) 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.12)" }}>
         <div style={{ minWidth: 0 }}>
@@ -3004,7 +3004,7 @@ function PlanTab(props) {
         .join("\n");
       const current = data.goals.map(function (g) { return "- " + g.title; }).join("\n");
       const content = [
-        "Participant role: staff member at UNFPA WCARO.",
+        "Participant role: programme participant working in West and Central Africa.",
         "Curriculum modules: " + props.modules.map(function (m) { return L(m, lang); }).join("; "),
         "Insights from coaching sessions:\n" + (wraps || "None yet."),
         "Improvement areas from practice feedback:\n" + (improvements || "None yet."),

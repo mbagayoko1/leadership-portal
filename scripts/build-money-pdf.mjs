@@ -18,7 +18,7 @@ const T = {
   en: {
     kinds: { video: "Videos", article: "Articles", tool: "Guides and tools", book: "Books" },
     docTitle: "Money &amp; financial freedom: templates, quotes and resources",
-    org: "UNFPA WCARO · Leadership &amp; Communication Development Programme",
+    org: "Leadership &amp; Communication Development Programme",
     sub: "Templates, quotes and resources from the Personal Development module: a spending plan, a debt payoff plan, a family loan agreement, a net worth statement and a one-page investment plan.",
     noteLabel: "Please note:", templates: "Templates", tplLead: "Fill in the brackets by hand or copy the text into a document. Revisit each one every few months.",
     quotes: "Quotes", quotesLead: "Lines marked “verified” were checked against the published text.",
@@ -29,7 +29,7 @@ const T = {
   fr: {
     kinds: { video: "Vidéos", article: "Articles", tool: "Guides et outils", book: "Livres" },
     docTitle: "Argent et liberté financière : modèles, citations et ressources",
-    org: "UNFPA WCARO · Programme de développement du leadership et de la communication",
+    org: "Programme de développement du leadership et de la communication",
     sub: "Modèles, citations et ressources du module de développement personnel : un plan de dépenses, un plan de remboursement des dettes, une reconnaissance de dette familiale, un bilan patrimonial et un plan d'investissement en une page.",
     noteLabel: "À noter :", templates: "Modèles", tplLead: "Complétez les crochets à la main ou copiez le texte dans un document. Revoyez chaque modèle tous les quelques mois.",
     quotes: "Citations", quotesLead: "Les citations sont données en traduction libre, suivies du texte original. La mention « vérifié » signifie que le texte original a été contrôlé dans l'ouvrage publié.",

@@ -9,19 +9,21 @@
     @apply bg-gray-50 text-gray-800 antialiased;
     font-feature-settings: "kern" 1, "liga" 1;
   }
+  /* Figures line up in tables, counters and timers. */
+  .font-mono { font-variant-numeric: tabular-nums; letter-spacing: 0; }
   h1, h2 {
     @apply font-serif;
     letter-spacing: -0.01em;
   }
   :focus-visible {
-    outline: 2px solid #e85d1f;
+    outline: 2px solid #B4235A;
     outline-offset: 2px;
     border-radius: 3px;
   }
   ::-webkit-scrollbar { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: #d0cbbf; border-radius: 99px; }
-  ::-webkit-scrollbar-thumb:hover { background: #a39d8f; }
+  ::-webkit-scrollbar-thumb { background: #C3C8D6; border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: #9CA2B6; }
   @media (prefers-reduced-motion: reduce) {
     *, ::before, ::after {
       animation-duration: 0.01ms !important;
@@ -34,7 +36,7 @@
 @layer components {
   /* ── Card system ──────────────────────────────────── */
   .ldp-card {
-    @apply bg-white rounded-xl border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_8px_rgba(0,0,0,0.04)];
+    @apply bg-white rounded-xl border border-gray-200;
   }
 
   /* Stat card: coloured top stripe via CSS var */
@@ -46,13 +48,13 @@
     position: absolute;
     top: 0; left: 0; right: 0;
     height: 3px;
-    background: var(--stat-accent, #e85d1f);
+    background: var(--stat-accent, #B4235A);
     border-radius: 0.75rem 0.75rem 0 0;
   }
 
   /* ── Phase header ─────────────────────────────────── */
   .ldp-phase-header {
-    background: linear-gradient(135deg, #1e2a44 0%, #2f5077 100%);
+    background: linear-gradient(135deg, #1C2541 0%, #34508A 100%);
     @apply text-white px-5 py-4 flex items-baseline gap-4;
   }
 
@@ -66,7 +68,7 @@
     @apply w-full bg-gray-100 rounded-full overflow-hidden;
   }
   .ldp-progress-fill {
-    background: #e85d1f;
+    background: #B4235A;
     @apply h-full rounded-full transition-all duration-700;
   }
 
@@ -80,7 +82,7 @@
 
   /* ── Buttons ──────────────────────────────────────── */
   .ldp-btn-primary {
-    background: #1e2a44;
+    background: #1C2541;
     @apply w-full text-white py-3 rounded-lg font-semibold text-sm
            hover:opacity-90 transition-opacity cursor-pointer;
   }
@@ -114,7 +116,7 @@
   .ldp-hint  { @apply text-[11px] text-gray-400 mt-1; }
   .ldp-section-title { @apply text-sm font-semibold text-gray-800 mb-3 flex items-center gap-2; }
   .ldp-btn {
-    background: #1e2a44;
+    background: #1C2541;
     @apply inline-flex items-center justify-center gap-1.5 text-white px-4 py-2 rounded-lg font-semibold text-sm
            hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed;
   }
@@ -130,7 +132,7 @@
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
 /* Visible keyboard focus everywhere, without changing mouse clicks. */
-:focus-visible { outline: 2px solid #E85D1F; outline-offset: 2px; border-radius: 4px; }
+:focus-visible { outline: 2px solid #C23668; outline-offset: 2px; border-radius: 4px; }
 
 /* ── Animations ──────────────────────────────────────── */
 @keyframes fade-up {
@@ -144,7 +146,7 @@
   to   { background-position: 400px 0; }
 }
 .shimmer {
-  background: linear-gradient(90deg, #f1efea 25%, #e5e1d8 50%, #f1efea 75%);
+  background: linear-gradient(90deg, #EBEDF3 25%, #DCDFEA 50%, #EBEDF3 75%);
   background-size: 400px 100%;
   animation: shimmer 1.4s ease-in-out infinite;
 }
