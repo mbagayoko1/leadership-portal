@@ -5,7 +5,7 @@ import {
   Eye, EyeOff, Save, FolderOpen, ChevronRight, ChevronDown,
   Shield, Play, FileText, Link, ExternalLink, Sparkles,
   UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone, Lightbulb,
-  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder, Search, AudioLines, BookA, Gamepad2
+  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder, Search, AudioLines, BookA, Gamepad2, ListChecks
 } from "lucide-react";
 import { RC, ROLES, TC, EF, IU, CUR, SM, CI, DS, DDC, DEFAULT_GOALS } from "./data.js";
 import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON, moveUserData, deleteUserData } from "./storage.js";
@@ -20,6 +20,7 @@ import Glossary from "./Glossary.jsx";
 import EnglishLibrary from "./EnglishLibrary.jsx";
 import WordBank from "./WordBank.jsx";
 import EnglishPractice from "./EnglishPractice.jsx";
+import ModuleQuiz from "./ModuleQuiz.jsx";
 import { sourceLabel } from "./sourceLabel.js";
 
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
@@ -580,6 +581,8 @@ export default function App() {
   function logout(){setLi(false);setMe(null);setLf({username:"",password:""});setLe("");setTab("dashboard");setCoachOpened(false);clearSession();
     setProg({mod:{},rt:{},ve:{}});setMs([]);setMg(DEFAULT_GOALS);setMn({});
     setSm("m1");setSt("learn");setCp(0);setPdSel(0);setPdView("plan");setSpSel("s01");setSkStage({});setOpenMods({});setMt("overview");setUv("list");setUt(null);}
+  // Best module-quiz score, kept only when a new score beats it.
+  function saveBest(id,sc,n){setProg(p=>{const b=(p.mq||{})[id];if(b&&b.s/b.n>=sc/n)return p;return {...p,mq:{...(p.mq||{}),[id]:{s:sc,n}}};})}
   function tp(cat,id){setProg(p=>{const c=p[cat]||{};return {...p,[cat]:{...c,[id]:!c[id]}};})}
   function pct(){let tt=0,d=0;Object.values(L.CUR).forEach(ph=>ph.modules.forEach(m=>{tt++;if(prog.mod[m.id])d++;}));return tt?Math.round(d/tt*100):0;}
   const pts=Object.values(users).filter(u=>u.role==="participant");
@@ -993,7 +996,7 @@ export default function App() {
   ):null;
 
   // study guide
-  const sgTabs=[["learn",t.sgLearn,GUIDE_IDS.includes(cur.id)],["words",t.sgWords,cur.id==="eng"],["practice",t.sgPractice,cur.id==="eng"],["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
+  const sgTabs=[["learn",t.sgLearn,GUIDE_IDS.includes(cur.id)],["quiz",t.sgQuiz,GUIDE_IDS.includes(cur.id)],["words",t.sgWords,cur.id==="eng"],["practice",t.sgPractice,cur.id==="eng"],["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
   const stE=sgTabs.some(a=>a[0]===st)?st:sgTabs[0][0];
   const studyTab=tab==="study-guide"?(
     <div>
@@ -1027,9 +1030,10 @@ export default function App() {
         </div>
       </div>
       <div className="ldp-subtabs">
-        {sgTabs.map(a=>{const Icon={learn:BookOpen,words:BookA,practice:Gamepad2,guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={stE===a[0]} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{a[1]}</button>;})}
+        {sgTabs.map(a=>{const Icon={learn:BookOpen,quiz:ListChecks,words:BookA,practice:Gamepad2,guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={stE===a[0]} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{a[1]}</button>;})}
       </div>
-      {stE==="learn"&&<ModuleGuide id={cur.id} t={t} lang={lang} done={prog.mg||{}} onToggle={k=>tp("mg",k)}/>}
+      {stE==="learn"&&<ModuleGuide id={cur.id} t={t} lang={lang} done={prog.mg||{}} onToggle={k=>tp("mg",k)} onQuiz={()=>{setSt("quiz");window.scrollTo({top:0,behavior:"smooth"});}}/>}
+      {stE==="quiz"&&<ModuleQuiz id={cur.id} t={t} lang={lang} best={(prog.mq||{})[cur.id]} onScore={(sc,n)=>saveBest(cur.id,sc,n)}/>}
       {stE==="guide"&&(
         <div className="space-y-3">
           <div className="bg-white border rounded-xl shadow-sm overflow-hidden">

@@ -15,6 +15,8 @@ import EN_VIDEOS from "../src/englishVideos.js";
 import { THEMES as EN_THEMES, PLAN as EN_PLAN, CONCEPT_VIDEOS as EN_CONCEPT_VIDEOS } from "../src/englishLibrary.js";
 import WORDBANK from "../src/guides/wordbank.js";
 import SPOT from "../src/guides/englishQuiz.js";
+import { buildModuleQuiz } from "../src/quiz.js";
+import { STR as QUIZ_STR } from "../src/i18n.js";
 import VOCAB_EN from "../src/guides/vocab-en.js";
 import VOCAB_FR from "../src/guides/vocab-fr.js";
 import fs from "fs";
@@ -102,6 +104,14 @@ const vocabTerms = Object.values(VOCAB_EN).flat().map(v => v.w.toLowerCase());
 vocabTerms.filter((x, i) => vocabTerms.indexOf(x) !== i).forEach(x => p("duplicate vocabulary term", x));
 
 Object.keys(GUIDES_EN).filter(x => !GUIDE_IDS.includes(x)).forEach(x => p("module guide not listed in GUIDE_IDS", x));
+
+// Module quizzes: every guide module yields ten valid questions in each
+// language (answer among the options, options unique, at least two).
+for (const [lang, guides] of [["en", GUIDES_EN], ["fr", GUIDES_FR]]) for (const id of GUIDE_IDS) {
+  const qs = buildModuleQuiz(guides[id], guides, QUIZ_STR[lang].quiz);
+  if (qs.length !== 10) p("module quiz", id, lang, "has", qs.length, "questions");
+  for (const q of qs) if (!q.label || !q.opts.includes(q.answer) || new Set(q.opts).size !== q.opts.length || q.opts.length < 2) p("module quiz", id, lang, "bad question", q.prompt);
+}
 
 // Polish Your English: every video referenced by the eight-week path, the
 // concept links and the word bank exists in the generated library; every

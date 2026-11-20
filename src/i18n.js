@@ -308,6 +308,16 @@ export const STR = {
     selectModule: "Select Module / Resource:",
     phase1: "── Phase 1: Foundation", phase2: "── Phase 2: Skill Building", phase3: "── Phase 3: Advanced Application", phase4: "── Phase 4: Mastery & Integration", commGroup: "── Communication",
     sgLearn: "Learn",
+    quiz: {
+      title: "Module quiz", sub: "Ten questions on this module's concepts, vocabulary, sources and worked examples, in a new mix each time.",
+      start: "Start the quiz", best: "Your best score: {n} / {m}", notTaken: "You have not taken this quiz yet.", back: "Back",
+      conceptQ: "Which concept is this?", mistakeQ: "This is a common mistake with which concept?", vocabQ: "Which term means:",
+      gapQ: "Complete the sentence", originQ: "Where does this concept come from?", exampleQ: "Which response is stronger?",
+      qOf: "Question {n} of {m}", scoreNow: "Score: {n}", hint: "Meaning", correct: "Correct.", wrong: "Not quite. The answer is: {a}", wrongShort: "Not quite.",
+      watchLesson: "Watch the lesson", next: "Next question", finish: "See my score", scoreOf: "{n} / {m}",
+      perfect: "Perfect score.", good: "Well done. Review the ones you missed, then try again.", keepGoing: "Keep practising: review the ones you missed, then try again.",
+      review: "To review", retryMissed: "Retry the ones I missed", newQuiz: "New quiz", takeQuiz: "Test yourself: take the module quiz"
+    },
     eng: {
       libTitle: "Video library", libSub: "{n} videos from Accurate English (YouTube), grouped by theme. Mark videos as watched to track your progress.",
       watchedOf: "{n} of {m} watched", plan: "Eight-week path", planSub: "One focus a week, with the videos to watch and a task for your real work.",
@@ -321,19 +331,19 @@ export const STR = {
       practiceTitle: "Practice", practiceSub: "Test yourself on the word bank: a ten-question quiz, or a matching game with six words a round.",
       practiceGroup: "Words from", quiz: "Quiz", quizDesc: "Ten mixed questions: meanings, sentences to complete, stressed syllables and correct sentences.",
       match: "Word matching", matchDesc: "Match six words to their meanings. Play as many rounds as you like.",
-      back: "Back to the games", qOf: "Question {n} of {m}", scoreNow: "Score: {n}",
+      back: "Back to the games", 
       meaningQ: "Which word or expression means:", gapQ: "Complete the sentence", stressQ: "Word stress", spotQ: "Which sentence is correct?",
-      hint: "Meaning", stressAsk: "Which syllable is stressed in \u201c{w}\u201d?", correct: "Correct.", wrong: "Not quite. The answer is: {a}",
-      watchLesson: "Watch the lesson", next: "Next question", finish: "See my score", scoreOf: "{n} / {m}",
-      perfect: "Perfect score.", good: "Well done. Review the ones you missed, then try again.", keepGoing: "Keep practising: review the ones you missed, then try again.",
-      review: "To review", retryMissed: "Retry the ones I missed", newQuiz: "New quiz",
+      stressAsk: "Which syllable is stressed in \u201c{w}\u201d?", 
+      
+      
+      
       pairsOf: "{n} of {m} pairs", mistakes: "{n} mistakes", mistake1: "1 mistake", matchHow: "Select a word, then its meaning (or the other way round).",
       matchRight: "Correct pair.", matchWrong: "Not a pair. Try again.", roundDone: "Round complete.", noMistakes: "No mistakes.", newRound: "New round",
       wordsCol: "Words", meaningsCol: "Meanings"
     },
     glossary: { title: "Vocabulary glossary", sub: "Key terms from every module, with a plain definition and a real-world example. The term in the other language is shown under each one.", search: "Search the glossary", allModules: "All modules", module: "Module", count: "{n} terms", count1: "1 term", none: "No term matches your search.", other: "In French", open: "Open in the module guide", loading: "Loading the glossary…" },
     mg: { what: "What this module is", outcomes: "By the end of the module, you can:", concepts: "Key concepts", why: "Why it matters", miss: "Common mistake", origin: "Origin", practise: "Practise with", examples: "Worked examples", vocab: "Vocabulary", vocabEx: "Example", warn: "Watch out", c: ": ", first: "First attempt", better: "Stronger version", changed: "What changed", steps: "Step by step", progress: "{n} of {total} steps done", mark: "Mark as done", undo: "Mark as not done", time: "Time", done: "Done when", template: "Template to copy", copy: "Copy", copied: "Copied", self: "Self-check", loading: "Loading the guide…", failed: "The guide could not load. Check your connection and reload the page." },
-    sgGuide: "Resource Guide", sgVideos: "Videos", sgArticles: "Articles", sgReadings: "Readings", sgReflect: "Reflect", sgWords: "Word bank", sgPractice: "Practice",
+    sgGuide: "Resource Guide", sgVideos: "Videos", sgArticles: "Articles", sgReadings: "Readings", sgReflect: "Reflect", sgWords: "Word bank", sgPractice: "Practice", sgQuiz: "Quiz",
     openInDrive: "Open in Drive ↗", folderBtn: "Folder ↗",
     rgTitle: "Resource Guide · Google Drive", live: "● Live", editInDrive: "Edit in Drive",
     driveOnly: "Full content available in Google Drive.", rgEnglish: "", openRG: "Open Resource Guide in Drive ↗",
@@ -699,6 +709,16 @@ export const STR = {
     selectModule: "Sélectionnez un module / une ressource :",
     phase1: "── Phase 1 : Fondations", phase2: "── Phase 2 : Développement des compétences", phase3: "── Phase 3 : Application avancée", phase4: "── Phase 4 : Maîtrise et intégration", commGroup: "── Communication",
     sgLearn: "Apprendre",
+    quiz: {
+      title: "Quiz du module", sub: "Dix questions sur les concepts, le vocabulaire, les sources et les exemples du module, dans un ordre nouveau à chaque fois.",
+      start: "Commencer le quiz", best: "Votre meilleur score : {n} / {m}", notTaken: "Vous n'avez pas encore fait ce quiz.", back: "Retour",
+      conceptQ: "De quel concept s'agit-il ?", mistakeQ: "C'est une erreur fréquente avec quel concept ?", vocabQ: "Quel terme signifie :",
+      gapQ: "Complétez la phrase", originQ: "D'où vient ce concept ?", exampleQ: "Quelle réponse est la plus convaincante ?",
+      qOf: "Question {n} sur {m}", scoreNow: "Score : {n}", hint: "Sens", correct: "Bonne réponse.", wrong: "Pas tout à fait. La réponse est : {a}", wrongShort: "Pas tout à fait.",
+      watchLesson: "Voir la leçon", next: "Question suivante", finish: "Voir mon score", scoreOf: "{n} / {m}",
+      perfect: "Sans faute.", good: "Bravo. Revoyez les erreurs, puis réessayez.", keepGoing: "Continuez : revoyez les erreurs, puis réessayez.",
+      review: "À revoir", retryMissed: "Refaire mes erreurs", newQuiz: "Nouveau quiz", takeQuiz: "Testez-vous : faites le quiz du module"
+    },
     eng: {
       libTitle: "Vidéothèque", libSub: "{n} vidéos d'Accurate English (YouTube), classées par thème. Cochez les vidéos regardées pour suivre votre progression.",
       watchedOf: "{n} sur {m} regardées", plan: "Parcours de huit semaines", planSub: "Un axe par semaine, avec les vidéos à regarder et une tâche pour votre travail réel.",
@@ -712,19 +732,19 @@ export const STR = {
       practiceTitle: "S'entraîner", practiceSub: "Testez-vous sur la banque de mots : un quiz de dix questions, ou un jeu d'association de six mots par manche.",
       practiceGroup: "Mots du groupe", quiz: "Quiz", quizDesc: "Dix questions variées : sens, phrases à compléter, syllabes accentuées et phrases correctes.",
       match: "Associer les mots", matchDesc: "Associez six mots à leur sens. Jouez autant de manches que vous voulez.",
-      back: "Retour aux jeux", qOf: "Question {n} sur {m}", scoreNow: "Score : {n}",
+      back: "Retour aux jeux", 
       meaningQ: "Quel mot ou quelle expression signifie :", gapQ: "Complétez la phrase", stressQ: "Accent tonique", spotQ: "Quelle phrase est correcte ?",
-      hint: "Sens", stressAsk: "Quelle syllabe est accentuée dans « {w} » ?", correct: "Bonne réponse.", wrong: "Pas tout à fait. La réponse est : {a}",
-      watchLesson: "Voir la leçon", next: "Question suivante", finish: "Voir mon score", scoreOf: "{n} / {m}",
-      perfect: "Sans faute.", good: "Bravo. Revoyez les erreurs, puis réessayez.", keepGoing: "Continuez : revoyez les erreurs, puis réessayez.",
-      review: "À revoir", retryMissed: "Refaire mes erreurs", newQuiz: "Nouveau quiz",
+      stressAsk: "Quelle syllabe est accentuée dans « {w} » ?", 
+      
+      
+      
       pairsOf: "{n} paires sur {m}", mistakes: "{n} erreurs", mistake1: "1 erreur", matchHow: "Choisissez un mot, puis son sens (ou l'inverse).",
       matchRight: "Bonne paire.", matchWrong: "Ce n'est pas une paire. Réessayez.", roundDone: "Manche terminée.", noMistakes: "Aucune erreur.", newRound: "Nouvelle manche",
       wordsCol: "Mots", meaningsCol: "Sens"
     },
     glossary: { title: "Glossaire", sub: "Les termes clés de chaque module, avec une définition simple et un exemple concret. Le terme dans l'autre langue figure sous chacun.", search: "Rechercher dans le glossaire", allModules: "Tous les modules", module: "Module", count: "{n} termes", count1: "1 terme", none: "Aucun terme ne correspond à votre recherche.", other: "En anglais", open: "Ouvrir dans le guide du module", loading: "Chargement du glossaire…" },
     mg: { what: "Ce qu'est ce module", outcomes: "À la fin du module, vous saurez :", concepts: "Concepts clés", why: "Pourquoi c'est important", miss: "Erreur fréquente", origin: "Origine", practise: "S'entraîner avec", examples: "Exemples commentés", vocab: "Vocabulaire", vocabEx: "Exemple", warn: "Attention", c: "\u00a0: ", first: "Première version", better: "Version améliorée", changed: "Ce qui a changé", steps: "Étape par étape", progress: "{n} étape(s) sur {total} terminée(s)", mark: "Marquer comme fait", undo: "Marquer comme non fait", time: "Durée", done: "C'est fait quand", template: "Modèle à copier", copy: "Copier", copied: "Copié", self: "Auto-évaluation", loading: "Chargement du guide…", failed: "Le guide n'a pas pu se charger. Vérifiez votre connexion et rechargez la page." },
-    sgGuide: "Guide de ressources", sgVideos: "Vidéos", sgArticles: "Articles", sgReadings: "Lectures", sgReflect: "Réflexion", sgWords: "Banque de mots", sgPractice: "S'entraîner",
+    sgGuide: "Guide de ressources", sgVideos: "Vidéos", sgArticles: "Articles", sgReadings: "Lectures", sgReflect: "Réflexion", sgWords: "Banque de mots", sgPractice: "S'entraîner", sgQuiz: "Quiz",
     openInDrive: "Ouvrir dans Drive ↗", folderBtn: "Dossier ↗",
     rgTitle: "Guide de ressources · Google Drive", live: "● En ligne", editInDrive: "Modifier dans Drive",
     driveOnly: "Contenu complet disponible dans Google Drive.", rgEnglish: "Ce guide reprend le document Drive, rédigé en anglais. Les titres des ressources restent dans leur langue d'origine.", openRG: "Ouvrir le guide de ressources dans Drive ↗",

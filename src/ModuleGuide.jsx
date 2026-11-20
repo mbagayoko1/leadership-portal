@@ -12,6 +12,8 @@ export { GUIDE_IDS };
 
 const loaders = { en: () => import("./guides/en.js"), fr: () => import("./guides/fr.js") };
 const cache = {};
+// Loads (once per language) the guides of every module; shared with ModuleQuiz.
+export const loadGuides = lang => cache[lang] ? Promise.resolve(cache[lang]) : loaders[lang]().then(m => (cache[lang] = m.default));
 
 // Renders **term** as bold; used for the term inside vocabulary examples.
 export function Bolded({ text }) {
@@ -27,7 +29,7 @@ function Section({ title, id, children }) {
   );
 }
 
-export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
+export default function ModuleGuide({ id, t, lang, done = {}, onToggle, onQuiz }) {
   const k = t.mg;
   const [data, setData] = useState(cache[lang] || null);
   const [failed, setFailed] = useState(false);
@@ -37,7 +39,7 @@ export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
     if (cache[lang]) { setData(cache[lang]); return; }
     let live = true;
     setData(null); setFailed(false);
-    loaders[lang]().then(m => { cache[lang] = m.default; if (live) setData(m.default); }).catch(() => { if (live) setFailed(true); });
+    loadGuides(lang).then(g => { if (live) setData(g); }).catch(() => { if (live) setFailed(true); });
     return () => { live = false; };
   }, [lang]);
 
@@ -152,6 +154,7 @@ export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
         {g.checkpoint && (
           <p className="mt-4 flex gap-2 text-sm text-gray-800 bg-orange-50 rounded-lg p-3"><Flag className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" aria-hidden="true" />{g.checkpoint}</p>
         )}
+        {onQuiz && <button onClick={onQuiz} className="ldp-btn mt-4">{t.quiz.takeQuiz}</button>}
       </Section>
     </div>
   );

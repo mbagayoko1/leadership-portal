@@ -42,7 +42,9 @@ New participants can self-register via **Request Access** on the sign-in screen.
 - **Study Guide** — a **Learn** tab for each module (definition and outcomes, key
   concepts, eight vocabulary terms with real-world examples, five worked
   examples set around the world, a step-by-step guide with a copyable template, and
-  a self-check), plus resource guides, TED/YouTube videos, HBR/CCL articles,
+  a self-check), a **Quiz** tab (ten questions built from the guide: concepts,
+  common mistakes, vocabulary, sources and worked examples, new mix each time,
+  best score saved), plus resource guides, TED/YouTube videos, HBR/CCL articles,
   required readings and reflection questions. The guides live in
   [`src/guides/`](src/guides) (EN and FR, loaded on demand) and follow the
   templates in [`prompts/module-guide.md`](prompts/module-guide.md) and
