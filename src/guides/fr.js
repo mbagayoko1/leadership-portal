@@ -5,6 +5,7 @@
 
 import MORE from "./examples-fr.js";
 import VOCAB from "./vocab-fr.js";
+import { AE } from "../accurateEnglish.js";
 
 const GUIDES = {
   m1: {
@@ -489,7 +490,7 @@ const GUIDES = {
     ],
     concepts: [
       { n: "Le soutien du souffle", d: "Respirer bas, dans l'abdomen, et contrôler l'expiration en parlant.", why: "Un souffle soutenu donne une voix plus pleine et plus stable, et aide à maîtriser le trac.", miss: "Une respiration haute et thoracique, qui rend la voix mince et tremblante." },
-      { n: "La résonance", d: "La façon dont la voix s'amplifie dans la poitrine, la bouche et le visage.", why: "Une voix résonante porte dans une salle sans crier.", miss: "Forcer le volume depuis la gorge, ce qui fatigue la voix." },
+      { n: "La résonance", d: "La façon dont la voix s'amplifie dans la gorge, la bouche et le nez.", why: "Une voix résonante porte dans une salle sans crier.", miss: "Forcer le volume depuis la gorge, ce qui fatigue la voix." },
       { n: "L'articulation", d: "Le modelage net des consonnes et des voyelles avec les lèvres, la langue et la mâchoire.", why: "Une parole claire est plus facile à suivre, surtout pour un public qui écoute dans sa deuxième ou troisième langue.", miss: "Avaler la fin des mots en parlant vite." },
       { n: "Débit et pauses", d: "La vitesse de la parole et les silences entre les idées.", why: "Les pauses laissent au public le temps d'assimiler et vous donnent l'air maître de vous.", miss: "Remplir chaque silence par « euh » ou « donc »." },
       { n: "La variété mélodique", d: "Faire monter et descendre la voix pour exprimer le sens et l'émotion.", why: "Une voix monocorde perd l'attention, même quand le contenu est fort.", miss: "Terminer les affirmations sur une note montante, comme une question." }
@@ -521,6 +522,49 @@ const GUIDES = {
       "Qu'est-ce qui vous a surpris·e dans votre enregistrement de départ ?"
     ],
     checkpoint: "Pratiquez la routine chaque jour ; vos chiffres hebdomadaires dans le Studio vocal montrent vos progrès sur l'ensemble des modules."
+  },
+  eng: {
+    def: "Perfectionner son anglais vous aide à parler et à écrire un anglais professionnel clair, juste et naturel, pour qu'on retienne vos idées plutôt que vos erreurs. Ce module continu couvre les sons, l'accent tonique, le rythme, la correction grammaticale, le vocabulaire professionnel et les expressions naturelles, avec des vidéos d'entraînement d'Accurate English (YouTube). L'objectif est d'être compris facilement et de paraître sûr de vous. Vous gardez votre accent.",
+    outcomes: [
+      "Présenter un point de situation de deux minutes en anglais, avec un accent tonique clair et un rythme naturel et lié.",
+      "Repérer et corriger vos trois erreurs de grammaire les plus fréquentes dans vos courriels et rapports en anglais.",
+      "Employer naturellement cinq expressions professionnelles en réunion, et choisir des mots simples quand une expression idiomatique ne passerait pas."
+    ],
+    concepts: [
+      { n: "L'intelligibilité avant l'accent", d: "L'intelligibilité, c'est la facilité avec laquelle on comprend ce que vous dites. Ce n'est pas la même chose que l'accent : on peut avoir un accent marqué et être parfaitement compréhensible.", why: "Collègues et partenaires jugent vos idées sur ce qu'ils comprennent, pas sur l'origine de votre accent.", src: "Murray Munro et Tracey Derwing, « Foreign accent, comprehensibility, and intelligibility in the speech of second language learners » (1995)", miss: "Chercher à effacer son accent au lieu de corriger les quelques traits qui gênent vraiment la compréhension.", pw: [AE.accent, AE.native] },
+      { n: "Les sons qui changent le sens", d: "Certaines voyelles et consonnes distinguent un mot d'un autre, comme ship et sheep, think et sink, ou light et right. Les travailler par paires entraîne à la fois l'oreille et la bouche.", why: "Un seul son erroné dans un mot clé, comme policy prononcé « bolicy », peut faire perdre le fil à l'auditeur.", miss: "Travailler les sons isolément sans jamais les pratiquer dans les mots de votre travail.", pw: [AE.vowels, AE.consonants, AE.difficult] },
+      { n: "L'accent tonique et le rythme de la phrase", d: "En anglais, la syllabe accentuée est plus longue, plus forte et plus haute : PHOtograph, phoTOgraphy, deVELopment. Dans la phrase, les mots porteurs de sens sont accentués et les petits mots sont réduits, souvent à la voyelle brève appelée schwa.", why: "On reconnaît les mots anglais à leur accent tonique ; un mauvais accent peut rendre méconnaissable un mot courant.", miss: "Donner le même poids à chaque syllabe et à chaque mot, comme souvent en français, ce qui sonne plat et se suit mal.", pw: [AE.stress] },
+      { n: "L'enchaînement (linking)", d: "Dans le discours naturel, les mots s'enchaînent : une consonne finale se lie à la voyelle suivante, si bien que « pick it up » se prononce « pi-ki-tup » et « turn off » « tur-noff ».", why: "L'enchaînement rend la parole plus fluide et aide à comprendre les interlocuteurs rapides en réunion.", miss: "Détacher chaque mot, ou ajouter une petite voyelle après les consonnes finales, ce qui hache le discours.", pw: [AE.linking] },
+      { n: "La correction grammaticale", d: "Les petites erreurs fréquentes que lecteurs et auditeurs remarquent : articles, temps verbaux, prépositions et noms indénombrables comme information, advice et equipment.", why: "Dans un rapport ou un courriel à un bailleur, quelques erreurs répétées peuvent affaiblir la confiance dans le contenu.", miss: "Calquer les structures de sa langue maternelle, comme « we are working here since 2023 » (calqué sur « nous travaillons ici depuis 2023 ») au lieu de « we have been working here since 2023 ».", pw: [AE.grammar, AE.native] },
+      { n: "L'expression naturelle et professionnelle", d: "Les collocations (mots qui vont naturellement ensemble, comme meet a deadline ou raise a concern) et les expressions qui sonnent juste. Il s'agit aussi de savoir quand une expression idiomatique est trop familière ou trop locale pour un public international.", why: "La bonne expression vous fait paraître précis et à l'aise ; la mauvaise peut perdre la moitié de la salle.", miss: "Employer des expressions sportives ou argotiques, comme « a slam dunk » ou « a home run », avec des collègues qui risquent de ne pas les connaître.", pw: [AE.professional, AE.idioms] }
+    ],
+    examples: [{
+      t: "Accentuer les mots qui comptent",
+      scene: "Thi Lan, analyste de programme à Hanoï, de langue maternelle vietnamienne, présente en anglais un point à l'équipe d'un vice-ministre lors d'une revue conjointe. Ensuite, un collègue lui dit que le contenu était solide mais difficile à suivre.",
+      first: "« WE NEED TO FI-NISH THE RE-PORT BE-FORE THE COM-MIT-TEE MEETS. » (chaque syllabe aussi forte que les autres, de courtes pauses entre tous les mots)",
+      better: "« We need to FINish the rePORT before the comMITtee MEETS. » (mots porteurs de sens accentués, petits mots légers, intonation descendante à la fin)",
+      changes: [
+        "L'accent tombe sur les mots porteurs de sens (finish, report, committee, meets) : l'information clé ressort.",
+        "Les petits mots comme to et the sont prononcés légèrement, avec un schwa, ce qui donne à l'anglais son rythme.",
+        "Chaque mot porte son accent correct : rePORT, comMITtee.",
+        "L'intonation descendante à la fin signale une affirmation claire et terminée."
+      ]
+    }],
+    steps: [
+      { do: "Enregistrer un point de départ", how: "Enregistrez sur votre téléphone un point de situation de deux minutes en anglais sur un vrai sujet de travail. Écoutez-le une fois et notez trois choses qui vous rendent plus difficile à suivre.", time: "15 minutes", done: "Un enregistrement sauvegardé et trois notes." },
+      { do: "Choisir un axe pour la semaine", how: "Choisissez un seul domaine : un son, l'accent tonique, l'enchaînement, une erreur de grammaire ou une série d'expressions. Prenez ce qui gêne le plus la compréhension, pas ce qui vous agace le plus.", time: "5 minutes", done: "Un axe écrit en haut de votre carnet d'entraînement." },
+      { do: "Regarder et noter la règle", how: "Regardez une vidéo de la playlist correspondante (voir « S'entraîner avec » sous chaque concept). Écrivez la règle avec vos mots, avec deux exemples tirés de votre travail.", time: "10 minutes", done: "Une règle et deux exemples dans votre carnet." },
+      { do: "Pratiquer le shadowing", how: "Écoutez un court passage, mettez en pause et répétez-le à voix haute avec le même accent tonique, le même rythme et la même intonation. Dites ensuite trois de vos propres phrases de travail de la même façon.", time: "10 minutes par jour", done: "Vous dites le passage avec fluidité sans mettre la vidéo en pause." },
+      { do: "L'utiliser au travail", how: "Mettez votre axe en pratique dans une vraie réunion, un appel ou un courriel cette semaine. Avant d'envoyer un courriel important, vérifiez-y vos trois erreurs les plus fréquentes.", time: "Pendant la semaine", done: "Une utilisation réelle notée dans votre carnet." },
+      { do: "Réenregistrer et comparer", how: "Réenregistrez le même point de situation et écoutez les deux versions. Demandez à un collègue de confiance laquelle est la plus facile à suivre.", time: "15 minutes par semaine", done: "Un progrès noté et l'axe de la semaine suivante choisi." }
+    ],
+    template: "CARNET D'ENTRAÎNEMENT HEBDOMADAIRE\nSemaine | Axe | Playlist | Utilisation au travail | Ce qui s'est amélioré\n1       |     |          |                        |\n2       |     |          |                        |\n3       |     |          |                        |\n4       |     |          |                        |\n\nMES TROIS ERREURS LES PLUS FRÉQUENTES\n1. J'écris/je dis : ________  Correct : ________\n2. J'écris/je dis : ________  Correct : ________\n3. J'écris/je dis : ________  Correct : ________\n\nCINQ EXPRESSIONS QUE J'ADOPTE\n1. ________ 2. ________ 3. ________ 4. ________ 5. ________",
+    reflect: [
+      "Quand vous demande-t-on de répéter, et qu'est-ce qui, selon vous, en est la cause ?",
+      "Quelles sont les trois erreurs les plus fréquentes dans vos courriels en anglais, et comment les repérerez-vous avant l'envoi ?",
+      "Quelles expressions employées par des collègues respectés pourriez-vous adopter, et quelles expressions idiomatiques risquent de dérouter un public international ?"
+    ],
+    checkpoint: "Enregistrez un point de situation de deux minutes au début, puis après huit semaines, et nommez trois progrès précis."
   }
 };
 

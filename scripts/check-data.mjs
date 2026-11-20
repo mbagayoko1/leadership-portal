@@ -75,12 +75,14 @@ for (const id of GUIDE_IDS) {
     if (!g.examples || g.examples.length !== 5) p("guide", id, "should have 5 worked examples");
     for (const x of g.examples || []) if (!x.t || !x.scene || !x.first || !x.better || !(x.changes || []).length) p("guide example incomplete", id, x.t || "?");
     for (const c of g.concepts) if (!c.n || !c.d || !c.why || !c.miss) p("guide concept incomplete", id, c.n || "?");
+    for (const c of g.concepts) for (const x of c.pw || []) if (!x || !x.t || !/^https:\/\//.test(x.u || "")) p("guide concept practice link broken", id, c.n);
     for (const s of g.steps) if (!s.do || !s.how || !s.time || !s.done) p("guide step incomplete", id, s.do || "?");
   }
   for (const k of ["outcomes", "concepts", "steps", "reflect"]) if (e[k].length !== f[k].length) p("guide", id, k, "EN/FR differ");
   if (e.examples.length !== f.examples.length) p("guide", id, "examples EN/FR differ");
   else e.examples.forEach((x, i) => { if (x.changes.length !== f.examples[i].changes.length) p("guide", id, "example", i + 1, "changes EN/FR differ"); });
   e.concepts.forEach((c, i) => { if (!!c.src !== !!(f.concepts[i] && f.concepts[i].src)) p("guide", id, "concept", i + 1, "origin in one language only"); });
+  e.concepts.forEach((c, i) => { const fp = (f.concepts[i] || {}).pw || []; if ((c.pw || []).map(x => x && x.u).join() !== fp.map(x => x && x.u).join()) p("guide", id, "concept", i + 1, "practice links differ EN/FR"); });
 }
 // Vocabulary: eight complete terms per module in both languages, with the
 // term in **bold** in its example.

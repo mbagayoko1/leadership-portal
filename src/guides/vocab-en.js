@@ -124,6 +124,16 @@ const VOCAB = {
     { w: "pace (noun)", d: "The speed at which you speak, often measured in words per minute.", ex: "Daniel in London slowed his **pace** from 190 to 140 words per minute, and his budget update became easy to follow." },
     { w: "upspeak (noun)", d: "Raising the pitch at the end of a statement so it sounds like a question.", ex: "Lucy in Sydney noticed her **upspeak** in a recording and practised ending her key points on a lower note." },
     { w: "vocal warm-up (noun)", d: "Short exercises that prepare the breath, voice and articulators before speaking.", ex: "Fatou's ten-minute **vocal warm-up** in Dakar includes lip trills, sirens and two tongue twisters." }
+  ],
+  eng: [
+    { w: "intelligibility (noun)", d: "How easily listeners can understand the words you say.", warn: "Not the same as accent: a noticeable accent can be perfectly intelligible.", ex: "Kofi, in Accra, recorded his briefing and asked a colleague to write down every word she heard, a quick test of his **intelligibility**." },
+    { w: "word stress (noun)", d: "The syllable said longer, louder and higher within a word, as in deVELopment.", ex: "Before her presentation in Lima, Inés checked the **word stress** of \"development\", \"committee\" and \"photography\"." },
+    { w: "schwa (noun)", d: "The short, relaxed vowel /ə/ heard in many unstressed syllables, like the first sound of \"about\".", ex: "Practising the **schwa** in words such as \"support\" and \"banana\" helped Dmitri, in Almaty, sound less choppy." },
+    { w: "linking (noun)", d: "Joining the end of one word to the start of the next in natural speech.", ex: "In Rabat, Fatima practised **linking** \"pick it up\" until it flowed as \"pi-ki-tup\"." },
+    { w: "minimal pair (noun)", d: "Two words that differ in only one sound, such as \"ship\" and \"sheep\".", ex: "Before chairing the meeting in Seoul, Min-jun drilled the **minimal pair** \"light\" and \"right\"." },
+    { w: "shadowing (noun)", d: "Repeating a recording aloud just after the speaker, copying their stress, rhythm and intonation.", ex: "Every morning before work in Jakarta, Sari spends ten minutes **shadowing** a short video." },
+    { w: "collocation (noun)", d: "Words that naturally go together, such as \"meet a deadline\" or \"raise a concern\".", warn: "Translating word for word often breaks collocations.", ex: "In Rome, Paolo replaced \"respect the deadline\" with the **collocation** \"meet the deadline\" in his report." },
+    { w: "register (noun)", d: "The level of formality you choose for a situation, from casual to formal.", warn: "Mixing registers, such as slang in a formal letter, can undermine your credibility.", ex: "In Sydney, Grace switched **register** from her chatty team messages to a formal tone for the minister's office." }
   ]
 };
 

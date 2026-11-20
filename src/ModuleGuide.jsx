@@ -71,6 +71,7 @@ export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
                 <p className="text-gray-600"><span className="font-semibold text-gray-700">{k.why}{k.c}</span>{c.why}</p>
                 <p className="text-gray-600"><span className="font-semibold text-orange-700">{k.miss}{k.c}</span>{c.miss}</p>
                 {c.src && <p className="text-xs text-gray-500">{k.origin}{k.c}{c.src}</p>}
+                {c.pw && <p className="text-xs text-gray-600"><span className="font-semibold text-gray-700">{k.practise}{k.c}</span>{c.pw.map((x, j) => <span key={x.u}>{j ? ", " : ""}<a href={x.u} target="_blank" rel="noopener noreferrer" className="font-medium text-blue-700 hover:underline">{x.t}</a></span>)}</p>}
               </dd>
             </div>
           ))}

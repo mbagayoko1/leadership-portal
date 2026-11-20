@@ -565,6 +565,56 @@ const MORE = {
         "Lever les yeux relie l'orateur au public."
       ]
     }
+  ],
+  eng: [
+    {
+      t: "Enchaîner les mots lors d'un appel avec un partenaire",
+      scene: "Rafael, coordinateur de projet à São Paulo, de langue maternelle portugaise, anime un appel vidéo avec un partenaire à Toronto. Il détache chaque mot et ajoute une petite voyelle après les consonnes finales ; le partenaire lui demande deux fois de répéter.",
+      first: "« Let's-i look-i at-i it again. » (chaque mot prononcé séparément, avec une voyelle en trop après les consonnes finales)",
+      better: "« Let's look at it again », dit d'un seul souffle, « let's-loo-ka-ti-ta-GAIN », avec l'accent sur LOOK et aGAIN.",
+      changes: [
+        "Chaque consonne finale se lie désormais à la voyelle suivante (look at → loo-kat) : plus besoin de voyelle ajoutée.",
+        "La phrase forme un seul bloc, ce qui sonne fluide et se suit mieux en appel vidéo.",
+        "L'accent sur look et again indique au partenaire ce qui compte.",
+        "Il a travaillé la phrase lentement, puis à vitesse normale, avec une vidéo de la playlist Linking."
+      ]
+    },
+    {
+      t: "Corriger un courriel à un bailleur",
+      scene: "Élodie, cheffe de projet à Montréal, de langue maternelle française, envoie un point d'avancement en anglais à un bailleur. Le fond est bon, mais une collègue relève plusieurs erreurs directement calquées sur le français.",
+      first: "« Please find attached the informations you asked. We are working on this project since 2023 and we made a big progress. Depending of the results, we will discuss about the next phase. »",
+      better: "« Please find attached the information you requested. We have been working on this project since 2023 and have made significant progress. Depending on the results, we will discuss the next phase. »",
+      changes: [
+        "Information est indénombrable en anglais : pas de s, et jamais « an information ».",
+        "Avec since, l'anglais emploie le present perfect (have been working), et non le présent qu'on utilise avec « depuis » en français.",
+        "Les prépositions suivent l'anglais, pas le français : depending on et non of (calqué sur « dépendant de ») ; discuss s'emploie sans préposition (pas de calque de « discuter de »).",
+        "« The information you requested » et « significant progress » sont les collocations qu'attend un bailleur dans un écrit formel."
+      ]
+    },
+    {
+      t: "Des mots clés clairs en conférence",
+      scene: "Ahmed, conseiller en politiques publiques au Caire, de langue maternelle arabe, intervient lors d'une conférence internationale. L'arabe n'a pas de son p distinct, et il lui arrive de prononcer p comme b. Plusieurs auditeurs restent perplexes devant l'un de ses mots clés.",
+      first: "« Our new bolicy will help beeble in rural areas. »",
+      better: "« Our new POLicy will help PEOple in RUral areas. » (un p net, avec un léger souffle, dans policy et people)",
+      changes: [
+        "Il a travaillé les paires minimales pin et bin, pay et bay, pull et bull jusqu'à ce qu'un collègue entende la différence.",
+        "Une main devant la bouche lui permet de sentir le léger souffle qui accompagne le p anglais en début de mot.",
+        "Il ralentit un peu sur les termes clés, pour que chacun soit clair dès la première fois.",
+        "Ses termes clés figurent aussi sur ses diapositives, ce qui aide les auditeurs de langues très diverses."
+      ]
+    },
+    {
+      t: "Des expressions qui ne voyagent pas",
+      scene: "Wanjiru, cheffe d'équipe à Nairobi, de langue maternelle kikuyu, anime une réunion en ligne avec des collègues de dix pays. Elle a adopté de nombreuses expressions américaines auprès d'anciens collègues, et plusieurs membres de l'équipe se taisent parce qu'ils ne sont pas sûrs de ce qu'elle veut dire.",
+      first: "« Let's not beat around the bush: this project is a slam dunk if we hit the ground running. Let's touch base offline. »",
+      better: "« Let me be direct: this project can succeed if we start quickly. Let's talk after the meeting. »",
+      changes: [
+        "L'expression sportive « slam dunk » est remplacée par des mots simples que tout le monde connaît.",
+        "« Let me be direct » garde le sens de « not beat around the bush » avec des mots qui voyagent.",
+        "« Let's talk after the meeting » est plus clair que « touch base offline » pour des collègues qui travaillent dans leur deuxième ou troisième langue.",
+        "Elle garde les expressions idiomatiques pour les échanges informels avec des collègues qui les partagent."
+      ]
+    }
   ]
 };
 

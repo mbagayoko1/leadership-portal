@@ -4,6 +4,7 @@
 // Book and article titles stay in their original language; only the chapter
 // labels around them are translated.
 import { CUR, SM, CI } from "./data.js";
+const ENG = CI.find(m => m.id === "eng");
 
 export const FR_TITLES = {
   m1: "Connaissance de soi et image personnelle",
@@ -18,6 +19,7 @@ export const FR_TITLES = {
   m10: "Préparation au niveau de Représentant",
   m11: "Héritage et impact durable",
   vocal: "Entraînement vocal",
+  eng: "Perfectionner son anglais",
   reading: "Lectures et guides d'étude"
 };
 
@@ -94,6 +96,12 @@ const GUIDE = {
   m10: { cp: "Passez une simulation d'entretien de Représentant évaluée par un jury.", reads: ["The Leadership Pipeline – Charan et al.", "Good to Great – Jim Collins (chap. 1–5)"], refs: ["Quels sont les 6 passages du leadership ? Lesquels traversez-vous maintenant ?", "À quoi ressemble le leadership de niveau 5 dans votre organisation ?", "Remplissez l'auto-évaluation de préparation au poste de Représentant dans le Drive."] },
   m11: { cp: "Présentez votre projet final « Philosophie du leadership » à la haute direction.", reads: ["Dare to Lead – Brené Brown (livre entier)", "The Infinite Game – Simon Sinek (livre entier)"], refs: ["Qu'entend Brené Brown par « leadership de tout cœur » ?", "Quelle différence entre un état d'esprit fini et infini ?", "Rédigez votre énoncé de philosophie du leadership avec le modèle du Drive."] },
   vocal: { cp: "Déposez chaque semaine vos enregistrements vocaux dans le dossier Exercices quotidiens du Drive.", refs: ["Qu'est-ce que la respiration diaphragmatique et pourquoi est-elle importante ?", "Décrivez une technique de l'intervention de Julian Treasure que vous allez pratiquer.", "Enregistrez-vous avant et après une semaine. Qu'est-ce qui a changé ?"] },
+  eng: {
+    cp: "Enregistrez un point de situation de deux minutes au début, puis après huit semaines, et nommez trois progrès précis.",
+    refs: ["Quand vous demande-t-on de répéter, et qu'est-ce qui, selon vous, en est la cause ?", "Quelles sont les trois erreurs les plus fréquentes dans vos courriels, et comment les repérerez-vous avant l'envoi ?", "Enregistrez-vous avant et après une semaine d'entraînement. Qu'est-ce qui a changé ?"],
+    vids: ENG.vids.map(v => ({ ...v, d: v.d.replace(/videos$/, "vidéos") })),
+    arts: ENG.arts.map(a => ({ ...a, t: "Accurate English – toutes les playlists (YouTube)" }))
+  },
   reading: { cp: "Déposez vos notes de compréhension dans le Drive après chaque livre terminé.", refs: ["Après chaque livre, expliquez les 3 concepts principaux en 60 secondes.", "Quel lien avec votre travail et votre contexte ?", "Quelle est l'idée la plus marquante de ce mois-ci ?"] }
 };
 

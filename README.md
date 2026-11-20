@@ -46,7 +46,12 @@ New participants can self-register via **Request Access** on the sign-in screen.
   required readings and reflection questions. The guides live in
   [`src/guides/`](src/guides) (EN and FR, loaded on demand) and follow the
   templates in [`prompts/module-guide.md`](prompts/module-guide.md) and
-  [`prompts/vocabulary.md`](prompts/vocabulary.md);
+  [`prompts/vocabulary.md`](prompts/vocabulary.md). Two ongoing tracks sit beside
+  the 11 modules: Vocal Training and **Polish Your English** (clear, accurate,
+  natural professional English, written from
+  [`prompts/polish-english.md`](prompts/polish-english.md)), whose concepts link to
+  practice playlists from the Accurate English YouTube channel, listed once in
+  [`src/accurateEnglish.js`](src/accurateEnglish.js);
   `npm run check` compares the two languages. Named origins, definitions and
   real-world figures were checked against primary sources; see
   [`docs/source-check.md`](docs/source-check.md). Steps ticked off are saved per user

@@ -566,6 +566,56 @@ const MORE = {
         "Looking up connects the speaker with the audience."
       ]
     }
+  ],
+  eng: [
+    {
+      t: "Linking words on a partner call",
+      scene: "Rafael, a project coordinator in São Paulo whose first language is Portuguese, runs a video call with a partner in Toronto. He separates every word and adds a short vowel after final consonants, and the partner asks him twice to repeat.",
+      first: "\"Let's-i look-i at-i it again.\" (each word said separately, with an extra vowel after the final consonants)",
+      better: "\"Let's look at it again,\" said as one smooth phrase, \"let's-loo-ka-ti-ta-GAIN\", with stress on LOOK and aGAIN.",
+      changes: [
+        "Each final consonant now joins the vowel that follows (look at → loo-kat), so no extra vowel is needed.",
+        "The phrase is said as one unit, which sounds fluent and is easier to follow on a video call.",
+        "Stress on look and again tells the partner what matters.",
+        "He practised the phrase slowly, then at normal speed, with a video from the Linking playlist."
+      ]
+    },
+    {
+      t: "Cleaning up an email to a donor",
+      scene: "Élodie, a project manager in Montréal whose first language is French, sends a progress update to a donor. Her content is good, but a colleague points out several errors that come straight from French.",
+      first: "\"Please find attached the informations you asked. We are working on this project since 2023 and we made a big progress. Depending of the results, we will discuss about the next phase.\"",
+      better: "\"Please find attached the information you requested. We have been working on this project since 2023 and have made significant progress. Depending on the results, we will discuss the next phase.\"",
+      changes: [
+        "Information is uncountable in English: no s, and never \"an information\".",
+        "With since, English uses the present perfect (have been working), not the present tense used with depuis in French.",
+        "Prepositions follow English, not French: depending on, not of; and discuss takes no preposition.",
+        "\"The information you requested\" and \"significant progress\" are the collocations a donor expects in formal writing."
+      ]
+    },
+    {
+      t: "Clear key words at a conference",
+      scene: "Ahmed, a policy adviser in Cairo whose first language is Arabic, presents at an international conference. Arabic has no separate p sound, and he sometimes says p as b. Several listeners look puzzled at one of his key words.",
+      first: "\"Our new bolicy will help beeble in rural areas.\"",
+      better: "\"Our new POLicy will help PEOple in RUral areas.\" (a clear p, with a small puff of air, in policy and people)",
+      changes: [
+        "He practised the minimal pairs pin and bin, pay and bay, pull and bull until a colleague could hear the difference.",
+        "Holding a hand in front of his mouth, he checks for the puff of air that English p has at the start of a word.",
+        "He slows down slightly on key terms, so each one is clear the first time.",
+        "His key terms also appear on his slides, which helps listeners from many language backgrounds."
+      ]
+    },
+    {
+      t: "Idioms that do not travel",
+      scene: "Wanjiru, a team leader in Nairobi whose first language is Kikuyu, chairs an online meeting with colleagues from ten countries. She has picked up many American idioms from former colleagues, and several team members stay quiet because they are not sure what she means.",
+      first: "\"Let's not beat around the bush: this project is a slam dunk if we hit the ground running. Let's touch base offline.\"",
+      better: "\"Let me be direct: this project can succeed if we start quickly. Let's talk after the meeting.\"",
+      changes: [
+        "The sports idiom \"slam dunk\" is replaced with plain words everyone knows.",
+        "\"Let me be direct\" keeps the meaning of \"not beat around the bush\" in words that travel.",
+        "\"Let's talk after the meeting\" is clearer than \"touch base offline\" for colleagues working in their second or third language.",
+        "She keeps idioms for informal chats with colleagues who share them."
+      ]
+    }
   ]
 };
 
