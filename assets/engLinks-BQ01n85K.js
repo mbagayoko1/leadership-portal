@@ -1,0 +1,1 @@
+import a from"./englishVideos-DYes_f7P.js";import{J as c,K as r}from"./index-BT7ds2Uf.js";const s=Object.fromEntries(Object.values(a).flat().map(t=>[t.id,t.t])),p=t=>(c[t]||[]).map(o=>({t:s[o],u:r(o)}));export{p as c};
