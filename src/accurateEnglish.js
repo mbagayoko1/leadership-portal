@@ -54,6 +54,14 @@ The practice videos come from Accurate English, a YouTube channel on American En
 • Accurate English – all playlists
   ${CHANNEL}
 
+HOW TO USE THIS MODULE
+• Learn tab: six key concepts, each linked to the lessons that practise it, with worked examples and a weekly routine.
+• Word bank tab: words and expressions grouped by theme, with pronunciation, meaning, an example and the lesson that teaches it. Tick each word you have learned.
+• Videos tab: an eight-week path, then all the channel's lessons grouped by theme. Tick each video you have watched.
+
+THE CHANNEL'S PLAYLISTS
+The playlists overlap, and a few contain videos from other channels; the Videos tab groups the lessons by theme instead.
+
 ${areas}
 
 DAILY PRACTICE ROUTINE (15 minutes)

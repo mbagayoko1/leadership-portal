@@ -1,0 +1,116 @@
+// Video library for the "Polish Your English" module: the eight-week path,
+// then every Accurate English video grouped by theme, searchable, with a
+// "watched" tick saved in the user's progress (category "ev"). Videos are
+// generated into englishVideos.js and loaded on demand.
+import { useState, useEffect, useMemo } from "react";
+import { Search, CheckCircle2, Circle, ExternalLink, Route } from "lucide-react";
+import { THEMES, PLAN, watchUrl } from "./englishLibrary.js";
+
+const fold = s => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+const isShort = d => /^0:\d\d$|^1:00$/.test(d);
+const fill = (s, o) => Object.entries(o).reduce((x, [k, v]) => x.replace("{" + k + "}", v), s);
+
+function VideoRow({ v, k, seen, onToggle }) {
+  return (
+    <li className="flex items-start gap-2.5 py-1.5">
+      <button onClick={() => onToggle(v.id)} aria-pressed={!!seen} aria-label={k.markWatched + ": " + v.t} title={seen ? k.watched : k.markWatched} className="mt-0.5 flex-shrink-0 rounded-full">
+        {seen ? <CheckCircle2 className="w-5 h-5 text-green-600" aria-hidden="true" /> : <Circle className="w-5 h-5 text-gray-300 hover:text-gray-500" aria-hidden="true" />}
+      </button>
+      <div className="min-w-0 flex-1 text-sm leading-snug">
+        <a href={watchUrl(v.id)} target="_blank" rel="noopener noreferrer" className={"font-medium hover:underline " + (seen ? "text-gray-500" : "text-blue-700")}>
+          {v.t}<span className="sr-only"> ({k.opens})</span><ExternalLink className="w-3 h-3 inline ml-1 -mt-0.5" aria-hidden="true" />
+        </a>
+        <span className="text-xs text-gray-500 ml-2 whitespace-nowrap">{v.d}{isShort(v.d) && <span className="ml-1.5 px-1.5 py-0.5 rounded bg-yellow-100 text-yellow-800 font-semibold">{k.short}</span>}</span>
+      </div>
+    </li>
+  );
+}
+
+export default function EnglishLibrary({ t, lang, done, onToggle, theme, setTheme }) {
+  const k = t.eng;
+  const li = lang === "fr" ? 1 : 0;
+  const [videos, setVideos] = useState(null);
+  const [q, setQ] = useState("");
+  useEffect(() => {
+    let live = true;
+    import("./englishVideos.js").then(m => { if (live) setVideos(m.default); }).catch(() => {});
+    return () => { live = false; };
+  }, []);
+
+  const byId = useMemo(() => videos ? Object.fromEntries(Object.values(videos).flat().map(v => [v.id, v])) : {}, [videos]);
+  const total = Object.keys(byId).length;
+  const seenCount = Object.keys(byId).filter(id => done[id]).length;
+  const f = fold(q.trim());
+  const filtering = !!(f || theme);
+  const shown = useMemo(() => !videos ? [] : THEMES
+    .filter(th => !theme || th.k === theme)
+    .map(th => ({ ...th, list: (videos[th.k] || []).filter(v => !f || fold(v.t).includes(f)) }))
+    .filter(th => th.list.length), [videos, theme, f]);
+  const matchCount = shown.reduce((n, th) => n + th.list.length, 0);
+
+  if (!videos) return <p className="text-sm text-gray-500" role="status">{t.mg.loading}</p>;
+  return (
+    <div className="space-y-5">
+      <div>
+        <h3 className="font-semibold text-gray-900 text-lg">{k.libTitle}</h3>
+        <p className="text-sm text-gray-600 mt-1">{fill(k.libSub, { n: total })}</p>
+        <p className="text-xs font-semibold text-green-700 mt-2">{fill(k.watchedOf, { n: seenCount, m: total })}</p>
+      </div>
+
+      {!filtering && (
+        <section aria-labelledby="eng-plan" className="rounded-lg border border-orange-200 bg-orange-50/40 p-4">
+          <h4 id="eng-plan" className="font-semibold text-gray-900 flex items-center gap-2"><Route className="w-4 h-4 text-orange-700" aria-hidden="true" />{k.plan}</h4>
+          <p className="text-sm text-gray-600 mt-1 mb-3">{k.planSub}</p>
+          <ol className="space-y-3">
+            {PLAN.map((w, i) => {
+              const all = w.v.every(id => done[id]);
+              return (
+                <li key={i} className="bg-white rounded-md border border-gray-200 p-3">
+                  <p className="text-sm"><span className={"font-semibold " + (all ? "text-green-700" : "text-orange-700")}>{fill(k.week, { n: i + 1 })}</span><span className="text-gray-400 mx-1.5" aria-hidden="true">·</span><span className="font-semibold text-gray-900">{w.f[li]}</span></p>
+                  <p className="text-sm text-gray-700 mt-1"><span className="font-semibold">{k.task}{t.mg.c}</span>{w.task[li]}</p>
+                  <ul className="mt-1">{w.v.filter(id => byId[id]).map(id => <VideoRow key={id} v={byId[id]} k={k} seen={done[id]} onToggle={onToggle} />)}</ul>
+                </li>
+              );
+            })}
+          </ol>
+        </section>
+      )}
+
+      <div className="flex flex-col sm:flex-row gap-2">
+        <label className="relative flex-1">
+          <span className="sr-only">{k.search}</span>
+          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" aria-hidden="true" />
+          <input type="search" value={q} onChange={e => setQ(e.target.value)} placeholder={k.search} className="ldp-input pl-9 py-2 w-full" />
+        </label>
+        <label className="sm:w-80">
+          <span className="sr-only">{k.allThemes}</span>
+          <select value={theme} onChange={e => setTheme(e.target.value)} className="ldp-input py-2 w-full bg-white">
+            <option value="">{k.allThemes}</option>
+            {THEMES.map(th => <option key={th.k} value={th.k}>{th.t[li]}</option>)}
+          </select>
+        </label>
+      </div>
+      {filtering && <p className="text-xs text-gray-500" aria-live="polite">{matchCount === 1 ? k.video1 : fill(k.videos, { n: matchCount })}</p>}
+      {!shown.length && <p className="text-sm text-gray-600">{k.none}</p>}
+
+      <div className="space-y-2">
+        {shown.map(th => {
+          const seen = th.list.filter(v => done[v.id]).length;
+          return (
+            <details key={th.k + (filtering ? ":f" : "")} open={filtering} className="group rounded-lg border border-gray-200 bg-white">
+              <summary className="cursor-pointer list-none px-4 py-3 flex items-baseline justify-between gap-3 hover:bg-gray-50 rounded-lg">
+                <span className="font-semibold text-gray-900">{th.t[li]}</span>
+                <span className="text-xs text-gray-500 whitespace-nowrap">{th.list.length === 1 ? k.video1 : fill(k.videos, { n: th.list.length })}{seen > 0 && <span className="text-green-700 font-semibold"> · {seen} ✓</span>}</span>
+              </summary>
+              <div className="px-4 pb-3">
+                <p className="text-sm text-gray-600 mb-1">{th.d[li]}</p>
+                <ul className="divide-y divide-gray-100">{th.list.map(v => <VideoRow key={v.id} v={v} k={k} seen={done[v.id]} onToggle={onToggle} />)}</ul>
+              </div>
+            </details>
+          );
+        })}
+      </div>
+      <p className="text-xs text-gray-500">{k.leftOut}</p>
+    </div>
+  );
+}

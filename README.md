@@ -50,8 +50,16 @@ New participants can self-register via **Request Access** on the sign-in screen.
   the 11 modules: Vocal Training and **Polish Your English** (clear, accurate,
   natural professional English, written from
   [`prompts/polish-english.md`](prompts/polish-english.md)), whose concepts link to
-  practice playlists from the Accurate English YouTube channel, listed once in
-  [`src/accurateEnglish.js`](src/accurateEnglish.js);
+  lessons from the Accurate English YouTube channel. Its **Videos** tab is a
+  library of the channel's lessons grouped by theme, with an eight-week path; its
+  **Word bank** tab has about 110 words and expressions grouped by theme, each with
+  pronunciation, meaning, an example and the lesson that teaches it. Run
+  `npm run pull:english` to refresh the library from the channel: it keeps only
+  the channel's own videos, leaves out partisan politics, and assigns each video
+  one theme ([`scripts/pull-accurate-english.mjs`](scripts/pull-accurate-english.mjs)
+  writes [`src/englishVideos.js`](src/englishVideos.js); themes and the path are in
+  [`src/englishLibrary.js`](src/englishLibrary.js), the word bank in
+  [`src/guides/wordbank.js`](src/guides/wordbank.js));
   `npm run check` compares the two languages. Named origins, definitions and
   real-world figures were checked against primary sources; see
   [`docs/source-check.md`](docs/source-check.md). Steps ticked off are saved per user

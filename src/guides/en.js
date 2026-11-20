@@ -8,7 +8,7 @@
 
 import MORE from "./examples-en.js";
 import VOCAB from "./vocab-en.js";
-import { AE } from "../accurateEnglish.js";
+import { conceptLinks } from "./engLinks.js";
 
 const GUIDES = {
   m1: {
@@ -534,12 +534,12 @@ const GUIDES = {
       "Use five professional expressions naturally in meetings, and choose plain words when an idiom would not travel."
     ],
     concepts: [
-      { n: "Intelligibility before accent", d: "Intelligibility is how easily listeners understand what you say. It is not the same as accent: a speaker with a noticeable accent can be perfectly easy to understand.", why: "Colleagues and partners judge your ideas by what they understand, not by where your accent comes from.", src: "Murray Munro and Tracey Derwing, \"Foreign accent, comprehensibility, and intelligibility in the speech of second language learners\" (1995)", miss: "Trying to remove your accent instead of fixing the few features that actually cause misunderstanding.", pw: [AE.accent, AE.native] },
-      { n: "Sounds that change meaning", d: "Some vowels and consonants separate one word from another, as in ship and sheep, think and sink, or light and right. Practising them in pairs trains both the ear and the mouth.", why: "One wrong sound in a key word, such as policy said as \"bolicy\", can make a listener lose the thread.", miss: "Practising sounds in isolation but never in the words you use at work.", pw: [AE.vowels, AE.consonants, AE.difficult] },
-      { n: "Word stress and sentence rhythm", d: "In English, a stressed syllable is longer, louder and higher: PHOtograph, phoTOgraphy, deVELopment. In a sentence, content words are stressed and small words are reduced, often to the short vowel called schwa.", why: "Listeners recognise words by their stress pattern; the wrong stress can make a familiar word sound unknown.", miss: "Giving every syllable and every word the same weight, which sounds flat and is harder to follow.", pw: [AE.stress] },
-      { n: "Linking", d: "In natural speech, words flow into each other: a final consonant joins the next vowel, so \"pick it up\" sounds like \"pi-ki-tup\" and \"turn off\" like \"tur-noff\".", why: "Linking makes speech smoother and helps you understand fast speakers in meetings.", miss: "Separating every word, or adding a small vowel after final consonants, which makes speech sound choppy.", pw: [AE.linking] },
-      { n: "Accuracy in grammar", d: "The small, frequent errors that readers and listeners notice: articles, verb tenses, prepositions, and uncountable nouns such as information, advice and equipment.", why: "In a report or an email to a donor, a few repeated errors can weaken trust in the content.", miss: "Translating structures from your first language, such as \"we are working here since 2023\" instead of \"we have been working here since 2023\".", pw: [AE.grammar, AE.native] },
-      { n: "Natural, professional expression", d: "Collocations (words that naturally go together, such as meet a deadline or raise a concern) and expressions that sound fluent. Part of the skill is knowing when an idiom is too informal or too local for an international audience.", why: "The right expression makes you sound precise and at ease; the wrong idiom can confuse half the room.", miss: "Using sports or slang idioms, such as \"a slam dunk\" or \"a home run\", with colleagues who may not know them.", pw: [AE.professional, AE.idioms] }
+      { n: "Intelligibility before accent", d: "Intelligibility is how easily listeners understand what you say. It is not the same as accent: a speaker with a noticeable accent can be perfectly easy to understand.", why: "Colleagues and partners judge your ideas by what they understand, not by where your accent comes from.", src: "Murray Munro and Tracey Derwing, \"Foreign accent, comprehensibility, and intelligibility in the speech of second language learners\" (1995)", miss: "Trying to remove your accent instead of fixing the few features that actually cause misunderstanding." },
+      { n: "Sounds that change meaning", d: "Some vowels and consonants separate one word from another, as in ship and sheep, think and sink, or light and right. Practising them in pairs trains both the ear and the mouth.", why: "One wrong sound in a key word, such as policy said as \"bolicy\", can make a listener lose the thread.", miss: "Practising sounds in isolation but never in the words you use at work." },
+      { n: "Word stress and sentence rhythm", d: "In English, a stressed syllable is longer, louder and higher: PHOtograph, phoTOgraphy, deVELopment. In a sentence, content words are stressed and small words are reduced, often to the short vowel called schwa.", why: "Listeners recognise words by their stress pattern; the wrong stress can make a familiar word sound unknown.", miss: "Giving every syllable and every word the same weight, which sounds flat and is harder to follow." },
+      { n: "Linking", d: "In natural speech, words flow into each other: a final consonant joins the next vowel, so \"pick it up\" sounds like \"pi-ki-tup\" and \"turn off\" like \"tur-noff\".", why: "Linking makes speech smoother and helps you understand fast speakers in meetings.", miss: "Separating every word, or adding a small vowel after final consonants, which makes speech sound choppy." },
+      { n: "Accuracy in grammar", d: "The small, frequent errors that readers and listeners notice: articles, verb tenses, prepositions, and uncountable nouns such as information, advice and equipment.", why: "In a report or an email to a donor, a few repeated errors can weaken trust in the content.", miss: "Translating structures from your first language, such as \"we are working here since 2023\" instead of \"we have been working here since 2023\"." },
+      { n: "Natural, professional expression", d: "Collocations (words that naturally go together, such as meet a deadline or raise a concern) and expressions that sound fluent. Part of the skill is knowing when an idiom is too informal or too local for an international audience.", why: "The right expression makes you sound precise and at ease; the wrong idiom can confuse half the room.", miss: "Using sports or slang idioms, such as \"a slam dunk\" or \"a home run\", with colleagues who may not know them." }
     ],
     examples: [{
       t: "Stressing the words that matter",
@@ -555,8 +555,8 @@ const GUIDES = {
     }],
     steps: [
       { do: "Record a baseline", how: "Record a two-minute briefing on a real work topic on your phone. Listen once and note three things that make you harder to follow.", time: "15 minutes", done: "A saved recording and three notes." },
-      { do: "Choose one focus for the week", how: "Pick one area: a sound, word stress, linking, a grammar error or a set of expressions. Choose what most affects understanding, not what bothers you most.", time: "5 minutes", done: "One focus written at the top of your practice log." },
-      { do: "Watch and note the rule", how: "Watch one video from the matching playlist (see \"Practise with\" under each concept). Write the rule in your own words, with two examples from your own work.", time: "10 minutes", done: "A rule and two examples in your log." },
+      { do: "Choose one focus for the week", how: "Follow the eight-week path in the Videos tab, or pick one area yourself: a sound, word stress, linking, a grammar error or a set of expressions. Choose what most affects understanding, not what bothers you most.", time: "5 minutes", done: "One focus written at the top of your practice log." },
+      { do: "Watch and note the rule", how: "Watch one video from the matching theme in the Videos tab, or one listed under \"Practise with\". Write the rule in your own words, with two examples from your own work, and check new words in the Word bank.", time: "10 minutes", done: "A rule and two examples in your log." },
       { do: "Shadow", how: "Play a short passage, pause, and repeat it aloud with the same stress, rhythm and intonation. Then say three of your own work sentences the same way.", time: "10 minutes daily", done: "You can say the passage smoothly without pausing the video." },
       { do: "Use it at work", how: "Use your focus in one real meeting, call or email this week. Before sending an important email, check it for your three most frequent errors.", time: "During the week", done: "One real use noted in your log." },
       { do: "Re-record and compare", how: "Record the same briefing again and listen to both versions. Ask a trusted colleague which is easier to follow.", time: "15 minutes weekly", done: "One improvement noted and next week's focus chosen." }
@@ -575,5 +575,8 @@ const GUIDES = {
 for (const [id, list] of Object.entries(MORE)) GUIDES[id].examples.push(...list);
 // Eight vocabulary terms per module, kept in a separate file.
 for (const [id, list] of Object.entries(VOCAB)) GUIDES[id].vocab = list;
+
+// Polish Your English: each concept links to specific videos in the themed library.
+GUIDES.eng.concepts.forEach((c, i) => { c.pw = conceptLinks(i); });
 
 export default GUIDES;

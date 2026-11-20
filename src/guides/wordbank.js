@@ -1,0 +1,190 @@
+// Word bank for the "Polish Your English" module, grouped by theme.
+// Definitions, examples and tips are original. Pronunciation hints follow
+// American English, as in the Accurate English videos, with stress in capitals.
+// An entry links to a video (v) only when that video's title names the word;
+// each group also links to the theme in the video library where it is taught.
+//
+// Entry: { w, say?, d: [en, fr], ex (English, with the term in **bold**), tip?: [en, fr], care?: 1, v? }
+// care: 1 marks an expression that may confuse an international audience.
+
+const GROUPS = [
+  {
+    k: "pron", theme: "words", v: ["lSKdLBkjWlU", "-s2hzlO6-ys"],
+    t: ["Words people often mispronounce", "Mots souvent mal prononcés"],
+    i: ["Common words where a sound, a silent letter or a dropped syllable gives people away.", "Des mots courants où un son, une lettre muette ou une syllabe avalée fait la différence."],
+    e: [
+      { w: "entrepreneur", say: "on-truh-pruh-NUR", v: "ssMzpemeX38", d: ["A person who starts and runs a business.", "Personne qui crée et dirige une entreprise."], ex: "Two young **entrepreneurs** presented their plan to the district council.", tip: ["Stress the last syllable.", "Accent sur la dernière syllabe."] },
+      { w: "foreign", say: "FOR-in", v: "60Mb6GpTG_Y", d: ["From or relating to another country.", "Étranger ; qui vient d'un autre pays."], ex: "The ministry welcomed **foreign** delegations to the conference.", tip: ["The g is silent.", "Le g ne se prononce pas."] },
+      { w: "literally", say: "LIT-er-uh-lee", v: "TidJQxZRSV8", d: ["Exactly as the words say; often used informally just for emphasis.", "Au sens propre ; souvent employé familièrement pour insister."], ex: "The new office is **literally** next door to the ministry.", tip: ["Avoid the emphatic use in formal writing.", "Évitez l'emploi d'insistance à l'écrit formel."] },
+      { w: "debut", say: "day-BYOO", v: "g5RgmPFj87w", d: ["A first public appearance.", "Première apparition publique."], ex: "The new report made its **debut** at the regional forum.", tip: ["The t is silent; \"debuted\" is day-BYOOD.", "Le t est muet ; « debuted » se dit day-BYOOD."] },
+      { w: "awry", say: "uh-RYE", v: "4OTeAQyGySg", d: ["Away from what was planned; wrong.", "De travers ; qui tourne mal."], ex: "The launch went **awry** when the venue cancelled.", tip: ["Not \"AW-ree\".", "Pas « AW-ree »."] },
+      { w: "water", say: "WAH-der (US), WAW-tuh (UK)", v: "zy8AkzH1Rxw", d: ["The liquid; the classic example of the American t between vowels.", "L'eau ; l'exemple type du t américain entre deux voyelles."], ex: "Access to clean **water** is the first indicator in the survey.", tip: ["In American English, a t between vowels often sounds like a quick d.", "En anglais américain, un t entre deux voyelles ressemble souvent à un d rapide."] },
+      { w: "twenty", say: "TWEN-tee", v: "uUZuh7wUhOs", d: ["The number 20.", "Le nombre 20."], ex: "The workshop has **twenty** participants.", tip: ["In fast American speech the t often disappears (TWEN-ee); keep it when numbers must be clear.", "À l'oral américain rapide, le t disparaît souvent (TWEN-ee) ; gardez-le quand les chiffres doivent être clairs."] },
+      { w: "temperature", say: "TEM-pruh-cher", v: "1I9z9tg6F58", d: ["How hot or cold something is.", "La température."], ex: "The vaccines must be kept at the right **temperature**.", tip: ["Stress the first syllable; the middle often shortens.", "Accent sur la première syllabe ; le milieu se réduit souvent."] },
+      { w: "business", say: "BIZ-nis", d: ["Commercial activity, or a company.", "Les affaires ; une entreprise."], ex: "Small **business** owners joined the consultation.", tip: ["Two syllables, not three.", "Deux syllabes, pas trois."] },
+      { w: "comfortable", say: "KUMF-ter-bul", d: ["At ease; or enough for your needs.", "À l'aise ; confortable."], ex: "Are you **comfortable** presenting the findings?", tip: ["Usually three syllables in natural speech.", "En général trois syllabes à l'oral naturel."] },
+      { w: "interesting", say: "IN-truh-sting", d: ["Holding your attention.", "Intéressant."], ex: "The pilot results are **interesting** but early.", tip: ["Often three syllables, stressed on the first.", "Souvent trois syllabes, accent sur la première."] },
+      { w: "the", say: "thuh / thee", v: "hTPUJDJqThw", d: ["\"Thuh\" before a consonant sound, \"thee\" before a vowel sound.", "« Thuh » devant une consonne, « thee » devant une voyelle."], ex: "**The** budget (thuh) and **the** annex (thee) are ready." },
+      { w: "a", say: "uh / ay", v: "HLY7qSva4mQ", d: ["Usually a short \"uh\"; \"ay\" only for emphasis or when hesitating.", "En général un « uh » bref ; « ay » seulement pour insister ou en hésitant."], ex: "We need **a** plan (uh), not just **a** list (uh)." },
+      { w: "them", say: "'em", v: "Se6SVYdtOE0", d: ["Object pronoun; in linked speech it often reduces to 'em.", "Pronom complément ; dans l'enchaînement, il se réduit souvent en 'em."], ex: "Please send **them** the agenda (\"send-em the agenda\")." }
+    ]
+  },
+  {
+    k: "pairs", theme: "words", v: ["KCFUdfMxtKk", "JxgIT-LDsW8"],
+    t: ["Easy to confuse", "Faciles à confondre"],
+    i: ["Pairs that differ in one sound, in stress or in spelling.", "Des paires qui diffèrent par un son, l'accent tonique ou l'orthographe."],
+    e: [
+      { w: "man / men", say: "MAN (as in cat) / MEN (as in pen)", v: "kvCIiuDfMdk", d: ["One adult male / more than one; only the vowel changes.", "Un homme / des hommes ; seule la voyelle change."], ex: "One **man** and two **men** volunteered for the night shift." },
+      { w: "woman / women", say: "WUH-mun / WIH-min", v: "NFXiU2BFldA", d: ["One adult female / more than one; listen to the first vowel.", "Une femme / des femmes ; écoutez la première voyelle."], ex: "The project trained 40 **women**, and each **woman** mentored two others." },
+      { w: "bit / beat", say: "short i / long ee", v: "4Ks-AmhahJ0", d: ["Bit has a short, relaxed vowel; beat has a long, tense one.", "Bit a une voyelle brève et relâchée ; beat, une voyelle longue et tendue."], ex: "The team **beat** the target by a **bit**." },
+      { w: "thirteen / thirty", say: "thir-TEEN / THIR-tee", v: "-fnPFp1cZd8", d: ["13 and 30: the stress tells them apart.", "13 et 30 : l'accent tonique les distingue."], ex: "The meeting is on the **thirteenth**, not the **thirtieth**.", tip: ["Stress -TEEN from 13 to 19; stress the first syllable from 30 to 90.", "Accentuez -TEEN de 13 à 19 ; la première syllabe de 30 à 90."] },
+      { w: "can / can't", say: "kun / KANT", v: "fhRjyNHIB7M", d: ["In a sentence, can is usually unstressed and short; can't is stressed.", "Dans la phrase, can est en général bref et inaccentué ; can't est accentué."], ex: "We **can** meet on Monday, but we **can't** meet on Tuesday." },
+      { w: "of / off", say: "uv / AWF", v: "M7jRoqoWwqg", d: ["Of links two nouns; off means away, or not working.", "Of relie deux noms ; off signifie « éloigné » ou « éteint »."], ex: "Two **of** the staff are **off** today." },
+      { w: "there / their / they're", say: "all three: THAIR", v: "IKOidukG4iE", d: ["A place / belonging to them / they are: one sound, three spellings.", "Un lieu / leur / ils sont : un seul son, trois orthographes."], ex: "**They're** sending **their** report, and it will be **there** by Monday." },
+      { w: "further / farther", v: "H4qWAJQpIUc", d: ["Farther: physical distance. Further: distance, or more and additional.", "Farther : distance physique. Further : distance, ou « supplémentaire »."], ex: "For **further** information, ask at the office **farther** down the hall.", tip: ["In British English, further is common for distance too.", "En anglais britannique, further s'emploie aussi pour la distance."] },
+      { w: "breath / breathe", say: "BRETH / BREEDH", v: "fgeHYzicz70", d: ["Breath is the noun; breathe is the verb.", "Breath est le nom ; breathe est le verbe."], ex: "Take a deep **breath** and **breathe** out slowly before you speak." },
+      { w: "dessert / desert", say: "dih-ZURT / DEZ-ert", v: "CD0B4JnixNI", d: ["Dessert: a sweet course. Desert: dry land (DEZ-ert), or to abandon (dih-ZURT).", "Dessert : le dessert. Desert : un désert (DEZ-ert), ou abandonner (dih-ZURT)."], ex: "The **desert** region has two clinics, and the team will not **desert** them." },
+      { w: "swollen / swallow", say: "SWOH-lun / SWAH-loh", v: "GvaMyCjUiOc", d: ["Swollen: larger than normal (from swell). Swallow: to make food go down your throat.", "Swollen : enflé (de swell). Swallow : avaler."], ex: "Her ankle was **swollen**, and she could not **swallow** the tablet." }
+    ]
+  },
+  {
+    k: "strong", theme: "advanced", v: ["IFjJ9c5A938"],
+    t: ["Precise words instead of \"very\"", "Des mots précis au lieu de « very »"],
+    i: ["One precise word is stronger and shorter than \"very\" + adjective.", "Un mot précis est plus fort et plus court que « very » + adjectif."],
+    e: [
+      { w: "crucial", say: "KROO-shul", d: ["Instead of very important: decisive for success.", "Au lieu de very important : décisif."], ex: "Timely data is **crucial** for the response." },
+      { w: "substantial", d: ["Instead of very big, for amounts and effects.", "Au lieu de very big, pour des montants et des effets : considérable."], ex: "The new grant is **substantial**." },
+      { w: "outstanding", v: "Y75VyIsGBWE", d: ["Instead of very good: excellent.", "Au lieu de very good : remarquable."], ex: "Her analysis was **outstanding**.", tip: ["Also means still to be done or paid: outstanding issues, outstanding invoices.", "Signifie aussi « en suspens, impayé » : outstanding issues, outstanding invoices."] },
+      { w: "severe", d: ["Instead of very bad, for problems, shortages or weather.", "Au lieu de very bad, pour des problèmes ou des pénuries : grave, sévère."], ex: "The district faces **severe** staff shortages." },
+      { w: "evident", d: ["Instead of very clear: easy to see or understand.", "Au lieu de very clear : évident, manifeste."], ex: "The benefits were **evident** within six months." },
+      { w: "challenging", d: ["Instead of very difficult, with a positive tone.", "Au lieu de very difficult, avec une nuance positive : exigeant."], ex: "The timeline is **challenging** but realistic." },
+      { w: "exhausted", d: ["Instead of very tired.", "Au lieu de very tired : épuisé."], ex: "After the emergency response, the team was **exhausted**." },
+      { w: "delighted", d: ["Instead of very happy, common in formal letters.", "Au lieu de very happy, fréquent dans les lettres formelles : ravi."], ex: "We are **delighted** to accept your invitation." },
+      { w: "astonished", d: ["Instead of very surprised.", "Au lieu de very surprised : stupéfait."], ex: "Partners were **astonished** by the response rate." },
+      { w: "negligible", d: ["Instead of very small, for amounts or effects.", "Au lieu de very small, pour des montants ou des effets : négligeable."], ex: "The cost of the change is **negligible**." },
+      { w: "rapid", d: ["Instead of very fast, for change or growth.", "Au lieu de very fast, pour un changement ou une croissance : rapide."], ex: "The city has seen **rapid** population growth." },
+      { w: "meticulous", say: "muh-TIK-yuh-lus", d: ["Instead of very careful: paying attention to every detail.", "Au lieu de very careful : méticuleux."], ex: "The auditors were **meticulous**." },
+      { w: "invaluable", d: ["Instead of very useful: extremely useful.", "Au lieu de very useful : inestimable."], ex: "Your feedback was **invaluable**.", tip: ["It means extremely valuable, not without value.", "Signifie « inestimable », pas « sans valeur »."] },
+      { w: "keen (on)", d: ["Instead of very interested or eager (common in British English).", "Au lieu de very interested : très intéressé, désireux (fréquent en anglais britannique)."], ex: "The ministry is **keen** to expand the pilot." }
+    ]
+  },
+  {
+    k: "advanced", theme: "advanced",
+    t: ["Advanced words from one-minute lessons", "Mots avancés des leçons d'une minute"],
+    i: ["Short videos that each teach one word or ending.", "De courtes vidéos qui enseignent chacune un mot ou une terminaison."],
+    e: [
+      { w: "misleading", say: "mis-LEE-ding", v: "fyKPF_3l4es", d: ["Giving a wrong idea or impression.", "Trompeur ; qui induit en erreur."], ex: "The chart was **misleading** because the axis did not start at zero." },
+      { w: "bettering", v: "z3n02CkkRPI", d: ["Improving, especially yourself or your situation.", "Améliorer, surtout soi-même ou sa situation."], ex: "The programme focuses on **bettering** the lives of rural families." },
+      { w: "-esque (suffix)", say: "ESK", v: "OJu4Xtpj7hE", d: ["Means \"in the style of\", as in picturesque.", "Signifie « à la manière de », comme dans picturesque."], ex: "The approval process had become almost **Kafkaesque**." }
+    ]
+  },
+  {
+    k: "business", theme: "business", v: ["j1u9YNQQ3as", "Vv498nkR9U4"],
+    t: ["Business expressions", "Expressions du monde professionnel"],
+    i: ["Expressions for meetings, emails and negotiations. Those marked \"use with care\" may confuse an international audience.", "Des expressions pour les réunions, les courriels et les négociations. Celles marquées « avec prudence » peuvent dérouter un public international."],
+    e: [
+      { w: "deal with", v: "iWSJUzLnJT4", d: ["To handle a problem, a task or a person.", "Traiter, gérer (un problème, une tâche, une personne)."], ex: "Who will **deal with** the donor's questions?" },
+      { w: "a big deal", v: "iWSJUzLnJT4", d: ["Something important; \"no big deal\" means not important.", "Quelque chose d'important ; « no big deal » : rien de grave."], ex: "Missing one report is not **a big deal**, but missing two is.", tip: ["Informal.", "Familier."] },
+      { w: "to an extent", v: "dt3fHAv0SnE", d: ["Partly, but not completely.", "Dans une certaine mesure."], ex: "I agree **to an extent**, but the timeline is too short." },
+      { w: "make up for", v: "68SBUnSM_fQ", d: ["To compensate for something bad or missing.", "Compenser, rattraper."], ex: "We will **make up for** the delay by adding a second team." },
+      { w: "follow up (on)", d: ["To take further action after a first contact.", "Assurer le suivi (de)."], ex: "I will **follow up on** your request next week." },
+      { w: "keep someone in the loop", d: ["To keep someone informed.", "Tenir quelqu'un informé."], ex: "Please **keep me in the loop** on the budget talks." },
+      { w: "on the same page", d: ["Sharing the same understanding.", "Avoir la même compréhension ; être sur la même longueur d'onde."], ex: "Before the mission, let's make sure we are **on the same page**." },
+      { w: "take ownership (of)", d: ["To accept responsibility for something.", "Prendre en charge ; assumer la responsabilité de."], ex: "The district team agreed to **take ownership** of the data review." },
+      { w: "the bottom line", d: ["The most important point or result.", "L'essentiel ; le résultat final."], ex: "**The bottom line** is that we need approval by Friday." },
+      { w: "raise a concern", d: ["To mention a possible problem formally.", "Soulever une préoccupation."], ex: "The auditor **raised a concern** about missing receipts." },
+      { w: "meet a deadline", d: ["To finish on time.", "Respecter un délai."], ex: "The team worked late to **meet the deadline**.", tip: ["Not \"respect a deadline\".", "Pas « respect a deadline »."] },
+      { w: "push back (on)", d: ["To resist or disagree with a request or plan.", "Résister à une demande ; s'y opposer."], ex: "The finance unit **pushed back on** the new timeline." },
+      { w: "bring someone up to speed", d: ["To give someone the latest information.", "Mettre quelqu'un au courant."], ex: "Can you **bring the new adviser up to speed**?" },
+      { w: "flag", d: ["To draw attention to a problem or risk.", "Signaler (un problème, un risque)."], ex: "Please **flag** any risks in your monthly report." },
+      { w: "action item", d: ["A specific task agreed in a meeting, with an owner and a date.", "Action décidée en réunion, avec un responsable et une échéance."], ex: "Each **action item** has an owner and a date." },
+      { w: "touch base", care: 1, d: ["To make brief contact.", "Prendre brièvement contact."], ex: "Let's **touch base** after the board meeting.", tip: ["Plainer: \"Let's talk briefly\".", "Plus simple : « Let's talk briefly »."] },
+      { w: "circle back", care: 1, d: ["To return to a topic later.", "Revenir sur un sujet plus tard."], ex: "Can we **circle back** to the staffing question tomorrow?", tip: ["Plainer: \"come back to\".", "Plus simple : « come back to »."] },
+      { w: "a ballpark figure", care: 1, d: ["A rough estimate.", "Une estimation approximative."], ex: "Can you give me **a ballpark figure** for the training costs?", tip: ["From baseball; \"a rough estimate\" travels better.", "Vient du baseball ; « a rough estimate » est plus universel."] }
+    ]
+  },
+  {
+    k: "phrasal", theme: "idioms", v: ["sRRi8OpkbUk"],
+    t: ["Phrasal verbs for work", "Verbes à particule pour le travail"],
+    i: ["A verb plus a small word, with a meaning you cannot always guess.", "Un verbe suivi d'une particule, dont le sens ne se devine pas toujours."],
+    e: [
+      { w: "pick up", v: "yWTNgtubSkc", d: ["To resume; to learn informally; or to collect.", "Reprendre ; apprendre sur le tas ; aller chercher."], ex: "Let's **pick up** where we stopped yesterday." },
+      { w: "talk over", v: "lcwxxw8AHWU", d: ["To discuss something before deciding.", "Discuter de quelque chose avant de décider."], ex: "Let's **talk over** the options with the team." },
+      { w: "carry out", d: ["To do or complete a task or study.", "Réaliser, mener (une tâche, une étude)."], ex: "The team will **carry out** the survey in March." },
+      { w: "set up", d: ["To establish or arrange.", "Mettre en place, organiser."], ex: "We **set up** a hotline for health workers." },
+      { w: "put forward", d: ["To propose an idea or plan.", "Proposer, avancer (une idée, un plan)."], ex: "She **put forward** a new budget model." },
+      { w: "point out", d: ["To draw attention to a fact.", "Faire remarquer, souligner."], ex: "He **pointed out** a gap in the data." },
+      { w: "figure out", d: ["To understand or solve after thinking.", "Comprendre, trouver la solution."], ex: "We need to **figure out** why reporting dropped." },
+      { w: "come up with", d: ["To produce an idea or solution.", "Trouver, proposer (une idée, une solution)."], ex: "The youth panel **came up with** three proposals." },
+      { w: "look into", d: ["To investigate.", "Examiner, se pencher sur."], ex: "I will **look into** the delay and report back." },
+      { w: "follow through (on)", d: ["To complete what you promised or started.", "Mener à terme ce qu'on a promis ou commencé."], ex: "Partners trust teams that **follow through on** commitments." },
+      { w: "run something by someone", d: ["To ask someone's opinion before acting.", "Soumettre quelque chose à quelqu'un pour avis."], ex: "Can I **run the draft by** you before I send it?" },
+      { w: "draw up", d: ["To prepare a written plan or document.", "Rédiger, établir (un plan, un document)."], ex: "Legal will **draw up** the agreement." },
+      { w: "take on", d: ["To accept a task or responsibility.", "Prendre en charge ; accepter (une tâche)."], ex: "She **took on** the coordination role." },
+      { w: "sort out", d: ["To resolve a problem or organise something.", "Régler, organiser."], ex: "We **sorted out** the travel approvals.", tip: ["Common in British English; \"resolve\" is more formal.", "Fréquent en anglais britannique ; « resolve » est plus formel."] }
+    ]
+  },
+  {
+    k: "idioms", theme: "idioms", v: ["gdU1sFMI5uo", "JqJGKt_D1no"],
+    t: ["Idioms: will it travel?", "Expressions idiomatiques : passeront-elles ?"],
+    i: ["Idioms make you sound natural, but some confuse international colleagues. Those marked \"use with care\" have a plainer alternative.", "Les expressions idiomatiques sonnent naturel, mais certaines déroutent des collègues internationaux. Celles marquées « avec prudence » ont une alternative plus simple."],
+    e: [
+      { w: "under way", d: ["Already started and in progress.", "En cours."], ex: "Data collection is **under way** in four districts." },
+      { w: "under review", d: ["Being examined before a decision.", "En cours d'examen."], ex: "The proposal is **under review**." },
+      { w: "under pressure", d: ["Facing demands or stress.", "Sous pression."], ex: "Staff are **under pressure** to finish before the holidays." },
+      { w: "back to square one", d: ["Back to the start, after a failure.", "Retour à la case départ."], ex: "When the funding fell through, we were **back to square one**." },
+      { w: "go the extra mile", d: ["To do more than is expected.", "Faire un effort supplémentaire."], ex: "The volunteers **went the extra mile** to reach remote villages." },
+      { w: "cut corners", d: ["To do something badly to save time or money.", "Bâcler pour gagner du temps ou de l'argent."], ex: "We cannot **cut corners** on data protection." },
+      { w: "a level playing field", d: ["A fair situation where everyone has the same chance.", "Des conditions équitables pour tous."], ex: "Open tenders create **a level playing field** for suppliers." },
+      { w: "in a nutshell", d: ["In a few words.", "En résumé ; en un mot."], ex: "**In a nutshell**, the pilot worked." },
+      { w: "the elephant in the room", d: ["An obvious problem nobody mentions.", "Le problème évident que personne n'ose aborder."], ex: "The budget gap is **the elephant in the room**." },
+      { w: "think outside the box", d: ["To think creatively.", "Sortir des sentiers battus."], ex: "We need to **think outside the box** on outreach.", tip: ["Overused; \"think creatively\" sounds fresher.", "Très usé ; « think creatively » sonne plus neuf."] },
+      { w: "under the weather", care: 1, d: ["Slightly ill.", "Un peu souffrant."], ex: "I am **under the weather**, so I will join by phone.", tip: ["Informal; \"unwell\" is clearer.", "Familier ; « unwell » est plus clair."] },
+      { w: "low-hanging fruit", care: 1, d: ["The easiest tasks or gains.", "Les gains les plus faciles à obtenir."], ex: "Let's start with the **low-hanging fruit**.", tip: ["Plainer: \"quick wins\".", "Plus simple : « quick wins »."] },
+      { w: "hit the ground running", care: 1, d: ["To start a new task fast and effectively.", "Être opérationnel tout de suite."], ex: "The new coordinator **hit the ground running**.", tip: ["Plainer: \"start quickly\".", "Plus simple : « start quickly »."] },
+      { w: "get the ball rolling", care: 1, d: ["To start an activity.", "Lancer une activité."], ex: "Let me **get the ball rolling** with a short update.", tip: ["Plainer: \"start\".", "Plus simple : « start »."] },
+      { w: "beat around the bush", care: 1, d: ["To avoid saying something directly.", "Tourner autour du pot."], ex: "Let's not **beat around the bush**: we are over budget.", tip: ["Plainer: \"Let me be direct\".", "Plus simple : « Let me be direct »."] },
+      { w: "a slam dunk", care: 1, d: ["A certain success.", "Une réussite assurée."], ex: "The renewal looked like **a slam dunk**.", tip: ["From basketball; \"a sure success\" travels better.", "Vient du basket-ball ; « a sure success » est plus universel."] }
+    ]
+  },
+  {
+    k: "uncount", theme: "grammar", v: ["p_2IoQa_f-8", "IA-b5rNMMxo"],
+    t: ["Nouns with no plural", "Noms sans pluriel"],
+    i: ["Uncountable nouns take no s and no \"a\". To count them, use \"a piece of\" or another noun.", "Les noms indénombrables ne prennent ni s ni « a ». Pour les compter, employez « a piece of » ou un autre nom."],
+    e: [
+      { w: "information", d: ["Facts about something.", "Des informations."], ex: "Here is the **information** you requested.", tip: ["Not \"informations\".", "Pas « informations »."] },
+      { w: "advice", d: ["An opinion about what to do.", "Des conseils."], ex: "Thank you for your **advice**.", tip: ["\"A piece of advice\", not \"an advice\".", "« A piece of advice », pas « an advice »."] },
+      { w: "equipment", d: ["The tools needed for a task.", "Du matériel, de l'équipement."], ex: "The clinics received new **equipment**.", tip: ["\"A piece of equipment\", not \"equipments\".", "« A piece of equipment », pas « equipments »."] },
+      { w: "feedback", d: ["Comments on how something was done.", "Des retours, des commentaires."], ex: "Thank you for the useful **feedback**.", tip: ["\"Some feedback\", not \"a feedback\".", "« Some feedback », pas « a feedback »."] },
+      { w: "research", d: ["Careful study to find facts.", "La recherche, des travaux de recherche."], ex: "Recent **research** supports the approach.", tip: ["\"A study\" or \"some research\", not \"a research\".", "« A study » ou « some research », pas « a research »."] },
+      { w: "evidence", d: ["Facts that show something is true.", "Des preuves, des données probantes."], ex: "There is strong **evidence** that the model works.", tip: ["\"A piece of evidence\", not \"an evidence\".", "« A piece of evidence », pas « an evidence »."] },
+      { w: "knowledge", d: ["What someone knows.", "Les connaissances."], ex: "Local **knowledge** shaped the design.", tip: ["Not \"knowledges\".", "Pas « knowledges »."] },
+      { w: "progress", d: ["Movement towards a goal.", "Des progrès."], ex: "We have made good **progress**.", tip: ["\"Make progress\", not \"make a progress\".", "« Make progress », pas « make a progress »."] },
+      { w: "software", d: ["Programs that run on a computer.", "Des logiciels."], ex: "The team is testing new **software**.", tip: ["\"A software package\" or \"an application\", not \"a software\".", "« A software package » ou « an application », pas « a software »."] },
+      { w: "training", d: ["Teaching skills for a job.", "La formation."], ex: "All staff received **training** in data protection.", tip: ["\"A training course\" or \"a training session\", not \"a training\".", "« A training course » ou « a training session », pas « a training »."] },
+      { w: "staff", d: ["The people who work for an organisation, as a group.", "Le personnel (nom collectif)."], ex: "Our **staff** work in six countries.", tip: ["For individuals, say \"staff members\" or \"colleagues\", not \"staffs\".", "Pour des personnes, dites « staff members » ou « colleagues », pas « staffs »."] }
+    ]
+  },
+  {
+    k: "prep", theme: "grammar", v: ["ZgIWzKIpFBQ"],
+    t: ["Preposition partners", "Les bonnes prépositions"],
+    i: ["Words that always take the same preposition, and a few that take none.", "Des mots qui prennent toujours la même préposition, et quelques-uns qui n'en prennent aucune."],
+    e: [
+      { w: "depend on", d: ["To be decided or affected by.", "Dépendre de."], ex: "The timeline will **depend on** the budget.", tip: ["Not \"depend of\".", "Pas « depend of »."] },
+      { w: "responsible for", d: ["In charge of; accountable for.", "Responsable de."], ex: "She is **responsible for** the regional reports." },
+      { w: "interested in", d: ["Wanting to know or do more about.", "Intéressé par."], ex: "The ministry is **interested in** the results." },
+      { w: "consist of", d: ["To be made up of.", "Se composer de."], ex: "The panel will **consist of** five experts." },
+      { w: "comply with", d: ["To follow a rule or standard.", "Se conformer à, respecter."], ex: "All partners must **comply with** the data policy." },
+      { w: "focus on", d: ["To give attention mainly to.", "Se concentrer sur."], ex: "This year we will **focus on** adolescents." },
+      { w: "in charge of", d: ["Responsible for and controlling.", "Chargé de, responsable de."], ex: "Who is **in charge of** logistics?" },
+      { w: "on behalf of", d: ["Representing someone.", "Au nom de."], ex: "I am writing **on behalf of** the steering committee." },
+      { w: "discuss", d: ["To talk about; it takes no preposition.", "Discuter de ; s'emploie sans préposition."], ex: "We will **discuss** the plan tomorrow.", tip: ["Not \"discuss about\".", "Pas « discuss about »."] },
+      { w: "attend", d: ["To be present at; it takes no preposition.", "Assister à ; s'emploie sans préposition."], ex: "Twelve partners will **attend** the meeting.", tip: ["\"Attend to\" means deal with.", "« Attend to » signifie « s'occuper de »."] },
+      { w: "by / until", d: ["By: no later than. Until: up to that time, continuously.", "By : au plus tard. Until : jusqu'à (en continu)."], ex: "Send the report **by** Friday; the office is open **until** six." },
+      { w: "arrive in / arrive at", d: ["In a city or country; at a building, event or place.", "In devant une ville ou un pays ; at devant un bâtiment, un événement ou un lieu."], ex: "We **arrive in** Nairobi on Monday and **arrive at** the office on Tuesday.", tip: ["Not \"arrive to\".", "Pas « arrive to »."] },
+      { w: "at / on / in (time)", d: ["At a time, on a day or date, in a month, year or season.", "At devant une heure, on devant un jour ou une date, in devant un mois, une année ou une saison."], ex: "The call is **at** 3 p.m. **on** Monday; the review is **in** June." }
+    ]
+  }
+];
+
+export default GROUPS;
