@@ -5,6 +5,7 @@
 import { useState } from "react";
 import { CheckCircle2, Circle, Play, FileText, BookOpen, Wrench, Download } from "lucide-react";
 import CopyBlock from "./CopyBlock.jsx";
+import { sourceLabel } from "./sourceLabel.js";
 import { SKILLS } from "./skills.js";
 import MoneyTools from "./MoneyTools.jsx";
 
@@ -108,8 +109,8 @@ export default function SkillModule({ id, t, lang, done, onToggle, stage, onStag
           {m.quotes.map((q, n) => (
             <figure key={n} className="border-l-4 border-yellow-400 pl-3">
               <blockquote className="font-serif italic text-gray-800 leading-snug">“{lang === "fr" ? q.fr : q.text}”</blockquote>
-              {lang === "fr" && <p className="text-xs text-gray-500 italic mt-0.5">“{q.text}”</p>}
-              <figcaption className="text-xs text-gray-500 mt-1">— {q.by}, {q.source}{lang === "fr" ? " · " + t.pd.freeTr : ""}</figcaption>
+              {lang === "fr" && q.orig !== "fr" && <p className="text-xs text-gray-500 italic mt-0.5">“{q.text}”</p>}
+              <figcaption className="text-xs text-gray-500 mt-1">— {q.by}, {sourceLabel(q.source, lang)}{q.orig === "fr" ? (lang === "fr" ? "" : " · " + t.pd.fromFr) : lang === "fr" ? " · " + t.pd.freeTr : ""}</figcaption>
             </figure>
           ))}
         </div>

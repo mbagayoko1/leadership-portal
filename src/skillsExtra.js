@@ -412,7 +412,7 @@ export const WRITING = {
           "Name the strongest counter-argument and answer it fairly.",
           "End with what should happen next, and who should do it.",
           "Keep to the outlet's length, often 600 to 800 words. Write plainly, without acronyms.",
-          "UN staff usually need clearance before publishing, in a personal or official capacity. Check your office's rules and involve communications colleagues early."
+          "Staff of international organisations and governments often need clearance before publishing, in a personal or official capacity. Check your organisation's rules and involve communications colleagues early."
         ],
         fr: [
           "Rattachez le texte à l'actualité ou à une date à venir, comme la Journée mondiale de la population.",
@@ -421,7 +421,7 @@ export const WRITING = {
           "Nommez l'objection la plus forte et répondez-y loyalement.",
           "Terminez par ce qui doit se passer ensuite, et par qui.",
           "Respectez la longueur demandée par le média, souvent 600 à 800 mots. Écrivez simplement, sans sigles.",
-          "Le personnel des Nations Unies doit généralement obtenir une autorisation avant de publier, à titre personnel ou officiel. Vérifiez les règles de votre bureau et associez tôt vos collègues de la communication."
+          "Le personnel des organisations internationales et des administrations doit souvent obtenir une autorisation avant de publier, à titre personnel ou officiel. Vérifiez les règles de votre organisation et associez tôt vos collègues de la communication."
         ]
       },
       say: {
@@ -623,8 +623,8 @@ AUTORISATION : [qui doit approuver, pour quand]`
     { text: "Never use a long word where a short one will do.", fr: "N'utilisez jamais un mot long quand un mot court suffit.", by: "George Orwell", source: "Politics and the English Language, 1946" },
     { text: "If it is possible to cut a word out, always cut it out.", fr: "S'il est possible de supprimer un mot, supprimez-le toujours.", by: "George Orwell", source: "Politics and the English Language, 1946" },
     { text: "Vigorous writing is concise.", fr: "Une écriture vigoureuse est concise.", by: "William Strunk Jr.", source: "The Elements of Style, 1918" },
-    { text: "I have made this letter longer only because I have not had the leisure to make it shorter.", fr: "Je n'ai fait celle-ci plus longue que parce que je n'ai pas eu le loisir de la faire plus courte.", by: "Blaise Pascal", source: "Les Provinciales, letter XVI, 1656 (French original; English translation ours)" },
-    { text: "What is well conceived is clearly said, and the words to say it come easily.", fr: "Ce que l'on conçoit bien s'énonce clairement, et les mots pour le dire arrivent aisément.", by: "Nicolas Boileau", source: "L'Art poétique, 1674 (French original; English translation ours)" }
+    { text: "I have made this letter longer only because I have not had the leisure to make it shorter.", fr: "Je n'ai fait celle-ci plus longue que parce que je n'ai pas eu le loisir de la faire plus courte.", by: "Blaise Pascal", source: "Les Provinciales, letter XVI, 1656", orig: "fr" },
+    { text: "What is well conceived is clearly said, and the words to say it come easily.", fr: "Ce que l'on conçoit bien s'énonce clairement, et les mots pour le dire arrivent aisément.", by: "Nicolas Boileau", source: "L'Art poétique, 1674", orig: "fr" }
   ],
   resources: [
     { t: "How to Write Email with Military Precision (Kabir Sehgal, 2016)", u: "https://hbr.org/2016/11/how-to-write-email-with-military-precision", by: "Harvard Business Review", kind: "article" },

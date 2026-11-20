@@ -56,7 +56,7 @@ export function buildPortalMap(user, prog) {
 
   lines.push("", "[skill:builder] Speech builder (Personal Development tab): the participant fills in a brief (topic, goal, occasion, audience, length, tone, language, structure, key messages, story, facts, call to action, acknowledgements, techniques) and gets a full draft to edit, refine, read aloud and save. Suggest it when someone needs to prepare a real speech.");
   lines.push("", "Skill modules (Personal Development tab). Each has stages with tips and sample phrases, copyable templates, quotes and resources:");
-  lines.push("For the money module: give general financial education only. Do not recommend specific securities, funds, crypto-assets, lenders or amounts, and do not predict markets. For personal decisions, suggest a licensed independent adviser, and the UN Joint Staff Pension Fund for pension questions. UN staff need prior approval for outside occupation or employment.");
+  lines.push("For the money module: give general financial education only. Do not recommend specific securities, funds, crypto-assets, lenders or amounts, and do not predict markets. For personal decisions, suggest a licensed independent adviser, and their own pension fund for pension questions (for UN staff, the UN Joint Staff Pension Fund). Many employers, including the UN, require prior approval for outside occupation or employment.");
   SKILLS.forEach(m => lines.push("[skill:" + m.id + "] " + m.title.en + ": " + m.sub.en + " Stages: " + m.stages.map(st => st.title.en + " (" + st.goal.en + ")").join("; ") + ". Templates: " + m.templates.map(tp => tp.title.en).join(", ") + "."));
 
   lines.push("", "PARTICIPANT PROGRESS");

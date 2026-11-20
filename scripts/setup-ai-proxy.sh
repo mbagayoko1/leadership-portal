@@ -255,7 +255,7 @@ pause
 stage "Secrets: Anthropic key, access code, allowed origins"
 say "The key goes straight to Supabase as a server secret. It is NOT saved in .env"
 say "and never in the repo."
-open_url "https://console.anthropic.com/settings/keys"
+open_url "https://platform.claude.com/settings/keys"
 step "Create Key → name it leadership-portal-proxy → copy it (shown once)."
 ask_secret ANTHROPIC_API_KEY "Paste the Anthropic key (hidden):"
 say ""

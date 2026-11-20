@@ -76,7 +76,7 @@ const GUIDES = {
         "The pause gives her a moment to organise her answer and signals calm.",
         "The first sentence gives the bottom line: the new date and why.",
         "She names the remaining risk herself, which builds trust in front of the partner.",
-        "He ends with a plan, so the director does not need to ask a follow-up."
+        "She ends with a plan, so the director does not need to ask a follow-up."
       ]
     }],
     steps: [
@@ -148,7 +148,7 @@ const GUIDES = {
     ],
     concepts: [
       { n: "Currencies of exchange", d: "People cooperate when they get something they value in return: information, recognition, support, resources or a sense of contributing to the mission.", why: "If you know someone's currency, you can offer value before you ask.", src: "Allan Cohen and David Bradford, Influence Without Authority (1990)", miss: "Assuming everyone values what you value." },
-      { n: "Stakeholder mapping", d: "Placing people on a grid by their power over your goal and their interest in it, then deciding how to engage each group.", why: "It shows where to spend your limited time.", src: "Aubrey Mendelow (1991)", miss: "Only engaging the people who already agree with you." },
+      { n: "Stakeholder mapping", d: "Placing people on a grid by their power over your goal and their interest in it, then deciding how to engage each group.", why: "It shows where to spend your limited time.", src: "Adapted from Aubrey Mendelow (1981)", miss: "Only engaging the people who already agree with you." },
       { n: "Reciprocity", d: "People feel a pull to return help they have received.", why: "Helping others early creates goodwill you can draw on later.", src: "Robert Cialdini, Influence (1984)", miss: "Helping only when you need something; people notice." },
       { n: "The trust equation", d: "Trust grows with credibility, reliability and closeness, and shrinks when people think you are serving yourself.", why: "Without positional power, trust is your main source of influence.", src: "David Maister, Charles Green and Robert Galford, The Trusted Advisor (2000)", miss: "Focusing on expertise and neglecting reliability on small promises." },
       { n: "Coalitions", d: "A small group of allies who support an idea before it is proposed widely.", why: "Proposals backed by several respected voices are hard to dismiss.", miss: "Presenting a new idea for the first time in a big meeting." }
@@ -190,7 +190,7 @@ const GUIDES = {
       "Deliver a 15-minute talk with notes on one card or fewer."
     ],
     concepts: [
-      { n: "One message", d: "A talk should leave the audience with a single idea they can repeat.", why: "Audiences forget most of a talk within days. One clear idea survives.", miss: "Covering everything you know about the topic." },
+      { n: "One message", d: "A talk should leave the audience with a single idea they can repeat.", why: "Audiences forget much of a talk within days. One clear idea survives.", miss: "Covering everything you know about the topic." },
       { n: "The motivated sequence", d: "Five steps: get attention, show a need, present your solution, help the audience visualise the result, and call them to act.", why: "It moves listeners from interest to action, which suits advocacy.", src: "Alan H. Monroe", miss: "Skipping the visualisation step, which is where people feel the result." },
       { n: "The rule of three", d: "Grouping ideas, examples or phrases in threes.", why: "Three items feel complete and are easy to remember.", miss: "Forcing four or five points into a structure built for three." },
       { n: "Stories with a point", d: "A short story with a person, a challenge and a change, linked clearly to your message.", why: "Stories make abstract issues human and memorable.", miss: "A story that is moving but does not connect to the ask." },
@@ -362,7 +362,7 @@ const GUIDES = {
       "Write a personal roadmap for mastering the system you work in."
     ],
     concepts: [
-      { n: "Three levels of culture", d: "Artefacts (what you see), espoused values (what people say) and basic assumptions (what people take for granted).", why: "Change efforts fail when they address artefacts but not assumptions.", src: "Edgar Schein, Organizational Culture and Leadership", miss: "Taking the values statement as a description of how things actually work." },
+      { n: "Three levels of culture", d: "Artefacts (what you see), espoused values (what people say) and basic assumptions (what people take for granted).", why: "Change efforts fail when they address artefacts but not assumptions.", src: "Edgar Schein, Organizational Culture and Leadership (1985)", miss: "Taking the values statement as a description of how things actually work." },
       { n: "Formal and informal structure", d: "The organisation chart shows who reports to whom. Informal networks show who people actually consult and trust.", why: "Decisions often move through informal channels before they are formalised.", miss: "Only working through official channels and being surprised by outcomes." },
       { n: "Planning and budget cycles", d: "The annual calendar when priorities are set, budgets decided and plans approved.", why: "Proposals that arrive after the cycle closes wait a year.", miss: "Bringing good ideas at the wrong time." },
       { n: "Mandate and governance", d: "What your organisation is authorised to do, who oversees it, and how it relates to governments and partners.", why: "Knowing the mandate helps you frame proposals that fit and avoid ones that will be blocked.", miss: "Proposing work that is valuable but outside the mandate." },
@@ -409,7 +409,7 @@ const GUIDES = {
       { n: "Competency-based interviews", d: "Interviews that ask for real examples of past behaviour to predict future performance.", why: "Senior selection panels judge evidence, not intentions.", miss: "Answering with what you would do instead of what you did." },
       { n: "Situation, task, action, result", d: "A structure for interview examples: the context, your responsibility, what you did and what changed.", why: "It keeps answers specific and focused on your contribution.", miss: "Spending most of the answer on the situation and too little on your actions." },
       { n: "Key messages and bridging", d: "Three short points you want any audience to remember, and phrases to return to them from difficult questions.", why: "Representatives speak to ministers, media and partners who may push other agendas.", miss: "Answering every question on its own terms and losing your message." },
-      { n: "Principled negotiation", d: "Separating people from the problem, focusing on interests rather than positions, and looking for options that serve both sides.", why: "Representatives negotiate constantly with governments and partners.", src: "Roger Fisher and William Ury, Getting to Yes (1981)", miss: "Defending a position without understanding what the other side needs." }
+      { n: "Principled negotiation", d: "Separating the people from the problem, focusing on interests rather than positions, inventing options for mutual gain and insisting on objective criteria.", why: "Representatives negotiate constantly with governments and partners.", src: "Roger Fisher and William Ury, Getting to Yes (1981)", miss: "Defending a position without understanding what the other side needs." }
     ],
     examples: [{
       t: "A competency interview question",
@@ -448,7 +448,7 @@ const GUIDES = {
       "Write and present a one-page leadership philosophy."
     ],
     concepts: [
-      { n: "Coaching with the GROW model", d: "A conversation in four stages: goal, reality, options and way forward.", why: "Coaching builds others' ability to solve problems, which multiplies your impact.", src: "John Whitmore, Coaching for Performance (1992)", miss: "Giving advice instead of asking questions." },
+      { n: "Coaching with the GROW model", d: "A conversation in four stages: goal, reality, options and way forward.", why: "Coaching builds others' ability to solve problems, which multiplies your impact.", src: "Graham Alexander, Alan Fine and John Whitmore; first published in Whitmore, Coaching for Performance (1992)", miss: "Giving advice instead of asking questions." },
       { n: "Succession", d: "Preparing others to take over your responsibilities.", why: "Work that depends on one person stops when they leave.", miss: "Seeing succession as a threat rather than as a sign of good leadership." },
       { n: "Knowledge transfer", d: "Recording and sharing what you know: contacts, processes, lessons and context.", why: "Much know-how is never written down and is lost at each handover.", miss: "Leaving a handover note written in the last week." },
       { n: "Anchoring change in culture", d: "Making new ways of working part of everyday norms, routines and recognition.", why: "Changes that are not anchored fade when their champion leaves.", src: "John Kotter, Leading Change (1996)", miss: "Assuming a successful project will continue by itself." },

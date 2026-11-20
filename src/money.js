@@ -18,8 +18,8 @@ export const MONEY = {
   },
   sayLabel: { en: "Ask yourself", fr: "Questions à vous poser" },
   disclaimer: {
-    en: "General financial education, not personal investment, tax or legal advice. Rules, products and taxes differ by country. For decisions about your own money, speak to a licensed, independent adviser, and for your pension, to the UN Joint Staff Pension Fund.",
-    fr: "Éducation financière générale, et non un conseil personnalisé en investissement, fiscalité ou droit. Les règles, produits et impôts varient selon les pays. Pour vos décisions personnelles, consultez un conseiller agréé et indépendant, et pour votre pension, la Caisse commune des pensions du personnel des Nations Unies."
+    en: "General financial education, not personal investment, tax or legal advice. Rules, products and taxes differ by country. For decisions about your own money, speak to a licensed, independent adviser, and for your pension, to your pension fund (for UN staff, the UN Joint Staff Pension Fund).",
+    fr: "Éducation financière générale, et non un conseil personnalisé en investissement, fiscalité ou droit. Les règles, produits et impôts varient selon les pays. Pour vos décisions personnelles, consultez un conseiller agréé et indépendant, et pour votre pension, votre caisse de retraite (pour le personnel des Nations Unies, la Caisse commune des pensions du personnel des Nations Unies)."
   },
   stages: [
     {
@@ -157,8 +157,8 @@ export const MONEY = {
           "Choose your mix of shares, bonds and cash by when you need the money and how much of a fall you could live through without selling in panic; rebalance once a year.",
           "Property can provide income, but check the title deed, the land registry and the seller's identity before paying anything; land fraud is common.",
           "Savings groups (tontines) build discipline and community. Agree written rules and join only groups you trust.",
-          "Mind currency risk: if you save in one currency and will spend in another (CFA franc, naira, cedi, dollar, euro), exchange rates change your results.",
-          "Know your pension: learn how your UN Joint Staff Pension Fund benefits work and keep your beneficiary details up to date."
+          "Mind currency risk: if you save in one currency and will spend in another (for example CFA franc, peso, rupee, dollar or euro), exchange rates change your results.",
+          "Know your pension: learn how your pension fund's benefits work (for UN staff, the UN Joint Staff Pension Fund) and keep your beneficiary details up to date."
         ],
         fr: [
           "N'investissez que l'argent dont vous n'aurez pas besoin avant au moins cinq ans, une fois l'épargne de précaution constituée et les dettes coûteuses soldées.",
@@ -168,8 +168,8 @@ export const MONEY = {
           "Choisissez votre répartition entre actions, obligations et liquidités selon l'échéance de vos besoins et la baisse que vous pourriez supporter sans vendre dans la panique ; rééquilibrez une fois par an.",
           "L'immobilier peut générer des revenus, mais vérifiez le titre foncier, le cadastre et l'identité du vendeur avant tout paiement : la fraude foncière est fréquente.",
           "Les tontines développent la discipline et la solidarité. Convenez de règles écrites et ne rejoignez que des groupes de confiance.",
-          "Attention au risque de change : si vous épargnez dans une monnaie et dépensez dans une autre (franc CFA, naira, cedi, dollar, euro), les taux de change modifient vos résultats.",
-          "Connaissez votre pension : comprenez le fonctionnement de vos droits auprès de la Caisse commune des pensions du personnel des Nations Unies et tenez vos bénéficiaires à jour."
+          "Attention au risque de change : si vous épargnez dans une monnaie et dépensez dans une autre (par exemple franc CFA, peso, roupie, dollar ou euro), les taux de change modifient vos résultats.",
+          "Connaissez votre pension : comprenez le fonctionnement de vos droits auprès de votre caisse de retraite (pour le personnel des Nations Unies, la Caisse commune des pensions) et tenez vos bénéficiaires à jour."
         ]
       },
       say: {
@@ -247,7 +247,7 @@ export const MONEY = {
           "Avoid lifestyle creep: when your income rises, raise your savings before your spending.",
           "Negotiate salary, rent, fees and interest rates; one conversation can be worth years of saving.",
           "Build skills that raise your value: certifications, languages, leadership, data.",
-          "Before taking on any side work, check your organisation's rules: UN staff regulations require prior approval for any outside occupation or employment, paid or unpaid.",
+          "Before taking on any side work, check your organisation's rules: many employers require prior approval for outside work, and UN staff regulations require it for any outside occupation or employment, paid or unpaid.",
           "Spending on experiences and on other people tends to bring more happiness than buying things, as Michael Norton's research shows.",
           "Review your money for 30 minutes each month, and once a year review your goals, net worth, insurance and will.",
           "Give with a plan: generosity belongs in a rich life when it doesn't put your own future at risk."
@@ -257,7 +257,7 @@ export const MONEY = {
           "Évitez l'inflation du train de vie : quand vos revenus augmentent, augmentez votre épargne avant vos dépenses.",
           "Négociez salaire, loyer, frais et taux d'intérêt : une seule conversation peut valoir des années d'épargne.",
           "Développez des compétences qui augmentent votre valeur : certifications, langues, leadership, données.",
-          "Avant toute activité complémentaire, vérifiez les règles de votre organisation : le statut du personnel des Nations Unies exige une autorisation préalable pour toute activité ou emploi extérieur, rémunéré ou non.",
+          "Avant toute activité complémentaire, vérifiez les règles de votre organisation : de nombreux employeurs exigent une autorisation préalable, et le statut du personnel des Nations Unies l'impose pour toute activité ou emploi extérieur, rémunéré ou non.",
           "Dépenser pour des expériences et pour les autres rend en général plus heureux qu'acheter des objets, comme le montrent les recherches de Michael Norton.",
           "Faites le point sur vos finances 30 minutes par mois et, une fois par an, revoyez vos objectifs, votre patrimoine, vos assurances et votre testament.",
           "Donnez avec méthode : la générosité a sa place dans une vie riche tant qu'elle ne met pas votre avenir en danger."
@@ -452,7 +452,7 @@ Date de revue : [ ]   Conseiller consulté (agréé, indépendant) : [ ]`
     { t: "Morgan Housel on getting rich, staying rich and being happy", u: yt("zEx_IGVfi7Y"), by: "The Knowledge Project · 94 min", kind: "video" },
     { t: "Artificial Intelligence (AI) and Investment Fraud: investor alert", u: "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins/investor-alerts/artificial-intelligence-fraud", by: "US SEC, Investor.gov", kind: "article" },
     { t: "Artificial Intelligence (AI) and Investment Fraud", u: "https://www.finra.org/investors/insights/artificial-intelligence-and-investment-fraud", by: "FINRA", kind: "article" },
-    { t: "The Psychology of Money (the original free essay)", u: "https://www.collaborativefund.com/blog/the-psychology-of-money/", by: "Morgan Housel, Collaborative Fund", kind: "article" },
+    { t: "The Psychology of Money (the original free essay)", u: "https://collabfund.com/blog/the-psychology-of-money/", by: "Morgan Housel, Collaborative Fund", kind: "article" },
     { t: "The Stock Series: a simple path to wealth (free)", u: "https://jlcollinsnh.com/stock-series/", by: "JL Collins", kind: "article" },
     { t: "Berkshire Hathaway shareholder letter 2013 (index fund advice for his family)", u: "https://www.berkshirehathaway.com/letters/2013ltr.pdf", by: "Warren Buffett", kind: "article" },
     { t: "Debt collection: know your rights", u: "https://www.consumerfinance.gov/consumer-tools/debt-collection/", by: "US Consumer Financial Protection Bureau", kind: "article" },

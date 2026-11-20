@@ -132,7 +132,7 @@ The programme's modules, for reference:
 | 3 | Senior Leadership Engagement | 15–17 |
 | 3 | Crisis Communication & Adaptability | 18–20 |
 | 3 | Visionary Leadership | 21–22 |
-| 4 | Organizational Navigation | 23–26 |
+| 4 | Organisational Navigation | 23–26 |
 | 4 | Representative-Level Readiness | 27–30 |
 | 4 | Legacy & Sustainable Impact | 31–34 |
 | Ongoing | Vocal Training | — |

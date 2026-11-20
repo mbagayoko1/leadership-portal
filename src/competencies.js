@@ -220,7 +220,7 @@ export const COMPETENCIES = [
   {
     id: "activation",
     overview: {
-      en: "Short, energising talks and workshops designed for a specific organization, to launch an initiative, shift a mindset or rally people around a goal. They combine a clear message, stories from the audience's own context and a call to action.",
+      en: "Short, energising talks and workshops designed for a specific organisation, to launch an initiative, shift a mindset or rally people around a goal. They combine a clear message, stories from the audience's own context and a call to action.",
       fr: "Des interventions et ateliers courts et mobilisateurs, conçus pour une organisation précise, afin de lancer une initiative, faire évoluer les mentalités ou rassembler autour d'un objectif. Ils associent un message clair, des récits issus du contexte du public et un appel à l'action."
     },
     practice: {

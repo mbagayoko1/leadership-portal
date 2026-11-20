@@ -242,7 +242,7 @@ function Drill({ k, lang, drill, history, onTake }) {
     if (!ai || !result) return;
     setAiTip({ busy: true, text: "", err: "" });
     const rows = result.score.rows.map(r => k.metric[r.key] + ": " + r.value + " (" + k.target[r.key] + ")").join("; ");
-    const system = "You are a warm, precise voice and public-speaking coach for professionals in a UN leadership programme. Give one specific, practical tip with a 30-second drill, in at most 70 words, in " + (lang === "fr" ? "French" : "English") + ". The figures are estimates from browser speech recognition and audio analysis; do not over-interpret them.";
+    const system = "You are a warm, precise voice and public-speaking coach for professionals in a leadership and communication programme. Give one specific, practical tip with a 30-second drill, in at most 70 words, in " + (lang === "fr" ? "French" : "English") + ". The figures are estimates from browser speech recognition and audio analysis; do not over-interpret them.";
     const msg = "Drill: " + L(drill.title, "en") + ". Goal: " + L(drill.goal, "en") + "\nMeasures: " + rows + "\nWhat the browser transcribed: " + (result.text || "(no transcript)").slice(0, 1500);
     try {
       const text = await ai.aiComplete(system, [{ role: "user", content: msg }]);

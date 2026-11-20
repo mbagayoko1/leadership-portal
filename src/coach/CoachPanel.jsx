@@ -102,7 +102,7 @@ function Connection({ t, mode, onChange, notice }) {
           <p className="text-xs text-gray-500 mt-1">{t.geminiData}</p>
           <p className="text-xs mt-1 flex flex-wrap gap-x-4">
             <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">{t.getKey}</a>
-            <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">{t.getKeyAnthropic}</a>
+            <a href="https://platform.claude.com/settings/keys" target="_blank" rel="noopener noreferrer" className="text-blue-700 hover:underline">{t.getKeyAnthropic}</a>
           </p>
         </div>
       </div>

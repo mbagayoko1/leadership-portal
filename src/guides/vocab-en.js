@@ -116,9 +116,9 @@ const VOCAB = {
     { w: "legacy (noun)", d: "What remains after you move on: people developed, systems built and culture shaped.", ex: "Sione's real **legacy** in Suva was not a report but a team that kept improving the data review without him." }
   ],
   vocal: [
-    { w: "diaphragm (noun)", d: "The large muscle below the lungs that controls breathing and supports the voice.", ex: "Before every presentation, Aroha in Wellington takes three slow breaths using her **diaphragm**, feeling her belly expand." },
+    { w: "diaphragm (noun)", d: "The dome-shaped muscle below the lungs that contracts to draw air in.", warn: "You cannot push sound out with the diaphragm; breath support means controlling the out-breath steadily.", ex: "Before every presentation, Aroha in Wellington takes three slow breaths using her **diaphragm**, feeling her belly expand." },
     { w: "projection (noun)", d: "Making your voice carry clearly to the back of a room without shouting.", ex: "With good **projection**, Adebayo in Ibadan was heard by 80 people when the microphone failed." },
-    { w: "resonance (noun)", d: "The fullness and richness of the voice, created as sound vibrates in the chest, mouth and face.", ex: "Humming exercises improved the **resonance** of Pedro's voice in Lisbon, so he sounded fuller on radio." },
+    { w: "resonance (noun)", d: "The fullness and richness of the voice, created as sound is amplified in the throat, mouth and nose.", ex: "Humming exercises improved the **resonance** of Pedro's voice in Lisbon, so he sounded fuller on radio." },
     { w: "articulation (noun)", d: "Shaping sounds clearly with the lips, tongue and jaw so each word is distinct.", ex: "Practising tongue twisters improved Sylvie's **articulation** in Montreal, and listeners no longer asked her to repeat." },
     { w: "intonation (noun)", d: "The rise and fall of the voice that carries meaning and emotion.", ex: "Kofi in Lomé learned that falling **intonation** at the end of a recommendation made him sound more certain." },
     { w: "pace (noun)", d: "The speed at which you speak, often measured in words per minute.", ex: "Daniel in London slowed his **pace** from 190 to 140 words per minute, and his budget update became easy to follow." },

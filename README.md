@@ -47,7 +47,9 @@ New participants can self-register via **Request Access** on the sign-in screen.
   [`src/guides/`](src/guides) (EN and FR, loaded on demand) and follow the
   templates in [`prompts/module-guide.md`](prompts/module-guide.md) and
   [`prompts/vocabulary.md`](prompts/vocabulary.md);
-  `npm run check` compares the two languages. Steps ticked off are saved per user
+  `npm run check` compares the two languages. Named origins, definitions and
+  real-world figures were checked against primary sources; see
+  [`docs/source-check.md`](docs/source-check.md). Steps ticked off are saved per user
 - **Resources** — a searchable vocabulary glossary of every module's terms
   (each shown with its equivalent in the other language), vocal training routine, practice opportunities, common pitfalls
 - **Drive** — navigable mirror of the Google Drive folder tree with direct links

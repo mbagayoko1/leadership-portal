@@ -622,7 +622,7 @@ const BASE = [
   },
   {
     id: "grant", name: "Adam Grant", kind: "research",
-    role: { en: "Wharton organizational psychologist, author of Give and Take and Think Again", fr: "Psychologue des organisations à Wharton, auteur de Give and Take et Think Again" },
+    role: { en: "Wharton organisational psychologist, author of Give and Take and Think Again", fr: "Psychologue des organisations à Wharton, auteur de Give and Take et Think Again" },
     theme: { en: "Generosity and rethinking", fr: "Générosité et remise en question" },
     channel: "https://www.ted.com/speakers/adam_grant",
     ideas: {

@@ -324,7 +324,7 @@ export const STR = {
     checkpointFlag: "Checkpoint", uploadToDrive: "Upload to Drive ↗",
     // resources tab
     compTitle: "Coaching & facilitation competencies",
-    compSub: "Support available through the programme, for individuals, teams and partner organizations.",
+    compSub: "Support available through the programme, for individuals, teams and partner organisations.",
     compItems: [
       "Executive and leadership coaching tailored to your goals",
       "Team coaching and facilitation for high-functioning collaboration",
@@ -332,7 +332,7 @@ export const STR = {
       "Diagnostics and actionable solutions for team challenges",
       "Career coaching that integrates work/life balance and communication skills",
       "Strengthening partnerships across donors, governments, and NGOs",
-      "Customized activation talks and workshops that inspire organizations"
+      "Customised activation talks and workshops that inspire organisations"
     ],
     compPick: "Select a competency to see its content, videos, articles and textbooks.",
     compOpen: "See content and resources",
@@ -345,7 +345,7 @@ export const STR = {
     vocalDesc: "Daily warm-up: jaw release → breathing → lip trills → sirens → articulation → projection (10 min).",
     dailyExercisesFolder: "Daily Exercises folder ↗",
     practiceTitle: "Practice Opportunities",
-    practiceItems: ["Toastmasters International — Join virtual club", "SWEDD Team Meetings — Volunteer to present", "Population & Data Unit — Lead quarterly reviews", "Regional Office Calls — Request speaking time", "Mentorship Cohort — Practice with peer feedback"],
+    practiceItems: ["Toastmasters International — Join virtual club", "Team meetings — Volunteer to present", "Data or planning unit — Lead a quarterly review", "Regional Office Calls — Request speaking time", "Mentorship Cohort — Practice with peer feedback"],
     pitfallsTitle: "Common Pitfalls & Solutions", pitfallWord: "Pitfall:", solutionWord: "Solution:",
     pitfallItems: [["Skipping daily practice", "Bundle with existing habits"], ["Fear of shining", "Speak up once per meeting"], ["Perfectionism", "Deliver at 80%, iterate on feedback"], ["Not tracking progress", "Block 15 min every Friday"]],
     // drive tab
@@ -366,12 +366,12 @@ export const STR = {
     userMgmt: "User Management", usersWord: "users", addUser: "Add User",
     searchPlaceholder: "Search…", allRoles: "All Roles", noUsersMatch: "No users match.", youTag: "You",
     createUser: "Create New User", editUser: "Edit User", profilePhoto: "Profile Photo",
-    fFullName: "Full Name*", fUsername: "Username*", fEmail: "Email*", fJobTitle: "Job Title", fOrg: "Organization",
+    fFullName: "Full Name*", fUsername: "Username*", fEmail: "Email*", fJobTitle: "Job Title", fOrg: "Organisation",
     fNewPassword: "New Password", fPassword: "Password*", keepCurrent: "Leave blank to keep current", minChars: "Min. 6 characters",
     fRole: "Role*", fBio: "Bio", saveChanges: "Save Changes", createUserBtn: "Create User",
     delUserTitle: "Delete User", delPrefix: "Delete", delSuffix: "? Cannot be undone.",
     errNameReq: "Name, username and email are required.", errPwdReq: "Password is required.", errExists: "Username already exists.",
-    organization: "Organization", roleWord: "Role",
+    organization: "Organisation", roleWord: "Role",
     roleNames: { admin: "Admin", mentor: "Mentor", participant: "Participant", observer: "Observer" },
     roleNamesPl: { admin: "Admins", mentor: "Mentors", participant: "Participants", observer: "Observers" }
   },
@@ -712,7 +712,7 @@ export const STR = {
     vocalDesc: "Échauffement quotidien : détente de la mâchoire → respiration → trilles de lèvres → sirènes → articulation → projection (10 min).",
     dailyExercisesFolder: "Dossier Exercices quotidiens ↗",
     practiceTitle: "Occasions de pratique",
-    practiceItems: ["Toastmasters International — Rejoignez un club virtuel", "Réunions de l'équipe SWEDD — Portez-vous volontaire pour présenter", "Unité Population & Données — Animez les revues trimestrielles", "Appels du bureau régional — Demandez un temps de parole", "Cohorte de mentorat — Pratiquez avec les retours des pairs"],
+    practiceItems: ["Toastmasters International — Rejoignez un club virtuel", "Réunions d'équipe — Portez-vous volontaire pour présenter", "Unité données ou planification — Animez une revue trimestrielle", "Appels du bureau régional — Demandez un temps de parole", "Cohorte de mentorat — Pratiquez avec les retours des pairs"],
     pitfallsTitle: "Pièges courants et solutions", pitfallWord: "Piège :", solutionWord: "Solution :",
     pitfallItems: [["Sauter la pratique quotidienne", "associez-la à des habitudes existantes"], ["Peur de briller", "prenez la parole une fois par réunion"], ["Perfectionnisme", "livrez à 80 %, itérez selon les retours"], ["Ne pas suivre ses progrès", "bloquez 15 min chaque vendredi"]],
     driveRepo: "Dépôt Drive",

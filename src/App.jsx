@@ -17,6 +17,7 @@ import { SPEAKERS, PD_PLAN } from "./development.js";
 import { LIBRARY } from "./library.js";
 import ModuleGuide, { GUIDE_IDS } from "./ModuleGuide.jsx";
 import Glossary from "./Glossary.jsx";
+import { sourceLabel } from "./sourceLabel.js";
 
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
 const SpeechLibrary = lazy(() => import("./SpeechLibrary.jsx"));
@@ -163,7 +164,7 @@ function WelcomeBand({ t, lang, title, sub }) {
           <figure className="mt-6 lg:mt-8 pl-4 border-l-2 border-yellow-400">
             <figcaption className="text-xs text-blue-200 mb-1.5">{t.dailyQuote}</figcaption>
             <blockquote className="font-serif italic text-xl lg:text-2xl leading-snug text-white">“{lang==="fr"&&q.fr?q.fr:q.text}”</blockquote>
-            <p className="text-xs text-blue-200 mt-2">{q.by}, {q.source}</p>
+            <p className="text-xs text-blue-200 mt-2">{q.by}, {sourceLabel(q.source,lang)}</p>
           </figure>
         )}
       </div>
@@ -344,7 +345,7 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
                 <figure key={i} className={"border-l-4 border-yellow-400 pl-4 "+(i?"":"pb-1")}>
                   <blockquote className={"font-serif italic text-gray-800 leading-snug "+(i?"":"text-lg")}>“{lang==="fr"&&q.fr?q.fr:q.text}”</blockquote>
                   {lang==="fr"&&q.fr&&q.orig!=="fr"&&<p className="text-xs text-gray-500 italic mt-0.5">“{q.text}”</p>}
-                  <figcaption className="text-xs text-gray-500 mt-1">— {sp.name}, {q.source}{q.orig==="fr"?(lang==="fr"?"":" · "+p.fromFr):lang==="fr"?" · "+(q.fr?p.freeTr:p.quoteNote):""}</figcaption>
+                  <figcaption className="text-xs text-gray-500 mt-1">— {sp.name}, {sourceLabel(q.source,lang)}{q.orig==="fr"?(lang==="fr"?"":" · "+p.fromFr):lang==="fr"?" · "+(q.fr?p.freeTr:p.quoteNote):""}</figcaption>
                 </figure>
               ))}</div>
               {sp.kind==="classic"&&sp.channel.includes("gutenberg.org")&&<p className="text-[11px] text-gray-400 mt-2">{p.classicNote}</p>}
@@ -504,7 +505,7 @@ export default function App() {
   // On narrow screens the tab bar scrolls sideways; keep the active tab visible.
   // A new section always starts at the top of the page.
   useEffect(()=>{ window.scrollTo(0,0); },[tab]);
-  useEffect(()=>{ const tb=tabs.find(x=>x.k===tab); document.title=(li&&tb?tb.l+" · ":"")+"Leadership & Communication Mastery"; },[tab,lang,li]);
+  useEffect(()=>{ const tb=tabs.find(x=>x.k===tab); document.title=(li&&tb?tb.l+" · ":"")+"Leadership & Communication Mastery"; document.documentElement.lang=lang; },[tab,lang,li]);
   const [openMods,setOpenMods]=useState({});
   // Opens a module in the Curriculum (from the Route) and scrolls to it.
   function openModule(id){ setTab("curriculum"); setOpenMods(o=>({...o,[id]:true})); setTimeout(()=>{ const el=document.getElementById("mod-"+id); if(el) el.scrollIntoView({block:"start"}); },60); }
@@ -684,7 +685,7 @@ export default function App() {
       <div className="flex gap-3 px-5 pt-5 pb-4">
         <Mark/>
         <div className="min-w-0">
-          <p className="font-serif text-lg font-semibold leading-tight">Leadership &amp; Communication Mastery</p>
+          <h1 className="font-serif text-lg font-semibold leading-tight">Leadership &amp; Communication Mastery</h1>
           <p className="text-xs text-blue-200 mt-1">{t.cohort}</p>
         </div>
       </div>
@@ -736,7 +737,7 @@ export default function App() {
   const topbar=(
     <div className="lg:hidden bg-purple-700 text-white">
       <div className="px-4 py-3 flex items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 min-w-0"><Mark/><p className="font-serif text-base font-semibold leading-tight">Leadership &amp; Communication Mastery</p></div>
+        <div className="flex items-center gap-2.5 min-w-0"><Mark/><h1 className="font-serif text-base font-semibold leading-tight">Leadership &amp; Communication Mastery</h1></div>
         <div className="flex items-center gap-2 flex-shrink-0">
           <LangSwitch lang={lang} setLang={setLang}/>
           <button onClick={logout} aria-label={t.logout} title={t.logout} className="ldp-btn-ghost text-white"><LogOut className="w-4 h-4"/></button>

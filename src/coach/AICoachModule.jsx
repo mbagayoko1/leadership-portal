@@ -698,6 +698,10 @@ const CSS = `
   .aic-grid, .aic-two { grid-template-columns: 1fr; }
   .aic-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
+/* On phones the banner ring shrinks into the corner so it stays clear of the greeting. */
+@media (max-width: 640px) {
+  .aic-ring { width: 96px !important; height: 96px !important; right: -36px !important; top: -36px !important; border-width: 10px !important; }
+}
 .aic-live { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #23906A; animation: aicPulse 1.1s ease-in-out infinite; }
 @keyframes aicPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .35; transform: scale(.7); } }
 .aic-orb-listen { animation: aicBreath 2.2s ease-in-out infinite; }
@@ -1027,9 +1031,9 @@ function coachSystem(user, modeId, moduleName, goals, lang, portal) {
     "Their development goals:\n" + goalText,
     "Session type: " + L(m.label, "en") + ". " + m.instr,
     "Language: " + languageRule(lang),
-    "Style: warm, direct and concise, usually under 120 words. Ask one question at a time. Reflect back what you hear before moving on. Do not lecture or give long lists. Give advice only when asked or when it clearly helps, and keep it concrete and grounded in the UN and West and Central African working context: multilateral settings, government counterparts, protocol and hierarchy, multilingual teams, limited time.",
+    "Style: warm, direct and concise, usually under 120 words. Ask one question at a time. Reflect back what you hear before moving on. Do not lecture or give long lists. Give advice only when asked or when it clearly helps, and keep it concrete and grounded in the participant's working context, which may include international organisations, government counterparts, protocol and hierarchy, multilingual teams and limited time. Ask about their setting rather than assuming it.",
     "Use plain text only. No markdown headings or bold. Short lines starting with '- ' are fine when a list is truly needed.",
-    "If the person shares confidential details about named colleagues, gently suggest keeping them general. If they express serious distress, respond with care and encourage them to talk to their mentor, a trusted colleague or the UN staff counsellor."
+    "If the person shares confidential details about named colleagues, gently suggest keeping them general. If they express serious distress, respond with care and encourage them to talk to their mentor, a trusted colleague or their organisation's staff counsellor or employee assistance service."
   ].concat(portal ? [PORTAL_RULES, portal] : []).join("\n\n");
 }
 
@@ -2725,7 +2729,7 @@ function PracticeTab(props) {
       role: form.who.trim(),
       skill: form.aim.trim() || t("customSkill"),
       setting: form.situation.trim() + (form.aim.trim() ? " The learner wants to: " + form.aim.trim() + "." : ""),
-      character: "You are " + form.who.trim() + ". Behave realistically for this person in a UN and West or Central African professional context. Raise plausible concerns and do not make it too easy.",
+      character: "You are " + form.who.trim() + ". Behave realistically for this person in their professional and cultural context. Raise plausible concerns and do not make it too easy.",
       opener: null
     };
     setShowCustom(false);
@@ -3433,7 +3437,7 @@ function CoachShell(props) {
     <div className="aic-root" lang={lang} style={{ fontFamily: FONT_B, color: C.ink, background: props.embedded ? "transparent" : C.bg, padding: props.embedded ? 0 : 20, borderRadius: 14, minHeight: 600 }}>
       <style>{CSS}</style>
       <div style={{ background: C.dark, borderRadius: 14, padding: "22px 24px", color: "#fff", marginBottom: 16, position: "relative", overflow: "hidden" }}>
-        <div style={{ position: "absolute", right: -40, top: -40, width: 180, height: 180, borderRadius: "50%", border: "18px solid " + C.orange, opacity: 0.9 }} />
+        <div className="aic-ring" aria-hidden="true" style={{ position: "absolute", right: -40, top: -40, width: 180, height: 180, borderRadius: "50%", border: "18px solid " + C.orange, opacity: 0.9 }} />
         <div style={{ position: "relative", display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
           <div style={{ maxWidth: 620 }}>
             <div style={{ fontFamily: FONT_D, fontWeight: 600, fontSize: 28, lineHeight: 1.15 }}>{t("title")}</div>
