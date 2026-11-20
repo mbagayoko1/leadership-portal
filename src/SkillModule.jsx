@@ -54,10 +54,10 @@ export default function SkillModule({ id, t, lang, done, onToggle, stage, onStag
     <div className="space-y-4">
       <div className="ldp-card p-4 space-y-3">
         <div className="flex flex-wrap justify-between items-baseline gap-2">
-          <h3 className="font-semibold text-gray-800">{L(m.title, lang)}</h3>
+          <h3 className="font-semibold text-gray-800 lg:hidden">{L(m.title, lang)}</h3>
           <span className="font-mono text-xs text-orange-600">{k.count(nDone, m.stages.length)}</span>
         </div>
-        <p className="text-sm text-gray-600">{L(m.sub, lang)}</p>
+        <p className="text-sm text-gray-600 lg:hidden">{L(m.sub, lang)}</p>
         {m.disclaimer && <p className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">{L(m.disclaimer, lang)}</p>}
         <div className="ldp-progress-bar h-1.5"><div className="ldp-progress-fill h-1.5" style={{ width: (nDone / m.stages.length * 100) + "%" }} /></div>
       </div>

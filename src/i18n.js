@@ -27,6 +27,7 @@ export const STR = {
       title: "Keep growing",
       plan: ["Follow the four-week plan", "Purpose, discipline, voice and resilience"],
       builder: ["Write a speech", "Turn a brief into a full draft"],
+      voice: ["Train your voice", "A warm-up and six scored drills"],
       coach: ["Talk to the AI Coach", "Rehearse a hard conversation"],
       drive: ["Open the Drive folders", "All programme documents"]
     },
@@ -101,6 +102,18 @@ export const STR = {
       viewFac: "Meeting facilitation",
       viewMc: "Master of ceremonies",
       viewMoney: "Money",
+      groups: { inspire: "Inspiration", speak: "Speaking", skills: "Skills", money: "Money" },
+      sectionSub: {
+        plan: "A four-week plan and 55 voices: speakers, coaches, researchers, African leaders and classic thinkers.",
+        speeches: "30 original speeches to read, study and deliver in your own words.",
+        builder: "Describe the occasion and the audience; get a structured draft to rework.",
+        voice: "A daily warm-up and six drills that measure your delivery.",
+        data: "Turn evidence into a short, honest case that decision makers act on.",
+        writing: "Briefing notes, talking points, emails and op-eds that busy readers understand.",
+        facilitation: "Meetings that produce decisions, from agenda to follow-up.",
+        mc: "Host an event from the opening to the closing.",
+        money: "How money works, a plan you can keep, debt, investing safely and your rich life."
+      },
       viewBuilder: "Speech builder",
       sources: "About these sources",
       sb: {
@@ -383,6 +396,7 @@ export const STR = {
       title: "Continuer à progresser",
       plan: ["Suivre le plan sur quatre semaines", "Raison d'être, discipline, voix et résilience"],
       builder: ["Rédiger un discours", "Transformer un cadrage en brouillon complet"],
+      voice: ["Travailler sa voix", "Un échauffement et six exercices notés"],
       coach: ["Parler au Coach IA", "Répéter une conversation difficile"],
       drive: ["Ouvrir les dossiers Drive", "Tous les documents du programme"]
     },
@@ -457,6 +471,18 @@ export const STR = {
       viewFac: "Animation de réunions",
       viewMc: "Maître de cérémonie",
       viewMoney: "Argent",
+      groups: { inspire: "Inspiration", speak: "Prise de parole", skills: "Compétences", money: "Argent" },
+      sectionSub: {
+        plan: "Un plan sur quatre semaines et 55 voix : orateurs, coachs, chercheurs, leaders africains et penseurs classiques.",
+        speeches: "30 discours originaux à lire, étudier et prononcer avec vos propres mots.",
+        builder: "Décrivez l'occasion et le public ; obtenez un brouillon structuré à retravailler.",
+        voice: "Un échauffement quotidien et six exercices qui mesurent votre diction.",
+        data: "Transformez des données en un argumentaire court et honnête qui fait agir les décideurs.",
+        writing: "Notes d'information, éléments de langage, courriels et tribunes qu'un lecteur pressé comprend.",
+        facilitation: "Des réunions qui aboutissent à des décisions, de l'ordre du jour au suivi.",
+        mc: "Animer un événement de l'ouverture à la clôture.",
+        money: "Comment fonctionne l'argent, un plan tenable, les dettes, investir prudemment et votre vie riche."
+      },
       viewBuilder: "Rédacteur de discours",
       sources: "À propos de ces sources",
       sb: {

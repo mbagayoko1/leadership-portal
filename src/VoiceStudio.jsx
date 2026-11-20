@@ -29,8 +29,8 @@ export default function VoiceStudio({ t, lang, user, drill, onDrill }) {
   return (
     <div className="space-y-4">
       <div className="ldp-card p-4 space-y-2">
-        <h3 className="font-semibold text-gray-800">{k.title}</h3>
-        <p className="text-sm text-gray-600">{k.sub}</p>
+        <h3 className="font-semibold text-gray-800 lg:hidden">{k.title}</h3>
+        <p className="text-sm text-gray-600 lg:hidden">{k.sub}</p>
         <p className="text-xs text-gray-500">{k.privacy}</p>
         {!canRecord() && <p role="status" className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">{k.noMic}</p>}
         {canRecord() && !getRecognitionCtor() && <p role="status" className="text-xs text-amber-900 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">{k.noRecognition}</p>}

@@ -32,10 +32,10 @@ export default function SpeechLibrary({ t, lang, done, onToggle, selected, onSel
     <div className="space-y-4">
       <div className="ldp-card p-4 space-y-3">
         <div className="flex flex-wrap justify-between items-baseline gap-2">
-          <h3 className="font-semibold text-gray-800">{l.title}</h3>
+          <h3 className="font-semibold text-gray-800 lg:hidden">{l.title}</h3>
           <span className="font-mono text-xs text-orange-600">{l.practisedCount(nDone, SPEECHES.length)}</span>
         </div>
-        <p className="text-sm text-gray-600">{l.sub}</p>
+        <p className="text-sm text-gray-600 lg:hidden">{l.sub}</p>
         <div className="flex flex-wrap gap-1.5">
           {chip("all", l.all)}
           {Object.entries(SPEECH_THEMES).map(([k, v]) => chip(k, L(v, lang)))}

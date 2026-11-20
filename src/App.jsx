@@ -94,10 +94,11 @@ function RouteLegend({ t }) {
     </ul>
   );
 }
-function PageHead({ title, sub, children }) {
+function PageHead({ title, sub, eyebrow, children }) {
   return (
     <header className="flex flex-wrap items-end justify-between gap-3 mb-5">
       <div className="min-w-0">
+        {eyebrow&&<p className="ldp-eyebrow mb-1">{eyebrow}</p>}
         <h2 className="text-3xl font-semibold text-gray-900 leading-tight">{title}</h2>
         {sub&&<p className="text-sm text-gray-600 mt-1 max-w-2xl">{sub}</p>}
       </div>
@@ -105,6 +106,15 @@ function PageHead({ title, sub, children }) {
     </header>
   );
 }
+// Personal Development sections in groups. On large screens they are listed
+// under Personal Development in the side menu; on small screens as tabs.
+const PD_SECTIONS=[
+  {g:"inspire",items:[["plan","viewPlan",Compass],["speeches","viewSpeeches",BookOpen]]},
+  {g:"speak",items:[["builder","viewBuilder",PenLine],["voice","viewVoice",AudioLines]]},
+  {g:"skills",items:[["data","viewData",BarChart3],["writing","viewWriting",FileText],["facilitation","viewFac",Users],["mc","viewMc",Mic]]},
+  {g:"money",items:[["money","viewMoney",Wallet]]}
+];
+const pdSectionOf=view=>PD_SECTIONS.find(s=>s.items.some(i=>i[0]===view))||PD_SECTIONS[0];
 // One quiet row for every external resource, whatever its type.
 function ResLink({ href, icon:I, title, meta, tag }) {
   return (
@@ -212,7 +222,11 @@ function CompetencyDetail({ t, lang, index }) {
 }
 function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect, onCoach, onConnect, view, onView, speech, onSpeech, spDone, onSpToggle, skDone, onSkToggle, skStage, onSkStage, voiceDrill, onVoiceDrill }) {
   const p=t.pd;
-  const views=[["plan",p.viewPlan,Compass],["speeches",p.viewSpeeches,BookOpen],["builder",p.viewBuilder,PenLine],["voice",p.viewVoice,AudioLines],["data",p.viewData,BarChart3],["writing",p.viewWriting,FileText],["facilitation",p.viewFac,Users],["mc",p.viewMc,Mic],["money",p.viewMoney,Wallet]];
+  const sec=pdSectionOf(view);
+  // Small screens: keep the selected tab in view (it may be opened from a link).
+  const tabRow=useRef(null);
+  useEffect(()=>{ const row=tabRow.current; const el=row&&row.querySelector('[aria-selected="true"]'); if(row&&el) row.scrollLeft=el.offsetLeft-row.offsetLeft-(row.clientWidth-el.clientWidth)/2; },[view]);
+  const viewLabel=p[(sec.items.find(i=>i[0]===view)||sec.items[0])[1]];
   const sp=SPEAKERS[selected]||SPEAKERS[0];
   const nWeeks=PD_PLAN.filter(w=>done[w.id]).length;
   const nameOf=id=>(SPEAKERS.find(s=>s.id===id)||{}).name;
@@ -230,13 +244,19 @@ function PersonalDevelopment({ t, lang, user, done, onToggle, selected, onSelect
   return (
     <div className="space-y-4">
       <div>
-        <PageHead title={p.title} sub={p.sub}/>
-        <div role="tablist" aria-label={p.title} className="ldp-subtabs">
-          {views.map(([k,label,Icon])=>(
-            <button key={k} role="tab" aria-selected={view===k} onClick={()=>onView(k)} className="ldp-subtab">
-              <Icon className="w-4 h-4" aria-hidden="true"/>{label}
-            </button>
-          ))}
+        {/* Small screens: page title and tabs. Large screens: the section is chosen in the side menu, so the heading names it. */}
+        <div className="lg:hidden">
+          <PageHead title={p.title} sub={p.sub}/>
+          <div ref={tabRow} role="tablist" aria-label={p.title} className="ldp-subtabs">
+            {PD_SECTIONS.map((s,gi)=>s.items.map(([k,key,Icon],ii)=>(
+              <button key={k} role="tab" aria-selected={view===k} onClick={()=>onView(k)} className={"ldp-subtab"+(gi>0&&ii===0?" ml-2 pl-4 border-l border-l-gray-200":"")}>
+                <Icon className="w-4 h-4" aria-hidden="true"/>{p[key]}
+              </button>
+            )))}
+          </div>
+        </div>
+        <div className="hidden lg:block">
+          <PageHead eyebrow={p.title+(sec.items.length>1?" · "+p.groups[sec.g]:"")} title={viewLabel} sub={p.sectionSub[view]}/>
         </div>
       </div>
       {view==="voice"?(
@@ -404,10 +424,14 @@ export default function App() {
       // saves keyed the seeded mentor as "moussa"; re-key so each account
       // appears once, with the saved copy taking precedence over the seed.
       const rekeyed = saved && Object.keys(saved).some(k=>saved[k].username!==k);
+      // The mentor's job title and office are no longer shown: clear the
+      // values the seed used to set, leaving anything the mentor typed.
+      const oldTitle = saved && Object.values(saved).some(x=>x&&x.username==="moussa.bagayoko"&&(x.title==="Programme Specialist, M&E"||x.organization==="UNFPA WCARO"));
+      if (oldTitle) Object.values(saved).forEach(x=>{ if(x&&x.username==="moussa.bagayoko"){ if(x.title==="Programme Specialist, M&E") x.title=""; if(x.organization==="UNFPA WCARO") x.organization=""; } });
       const u = Object.fromEntries([...Object.values(IU), ...Object.values(saved||{})].filter(x=>x&&x.username).map(x=>[x.username,x]));
       setUsers(u);
       // Seed shared storage on first run, or rewrite it after a migration
-      if (!saved || (legacy && legacy.length) || rekeyed) await saveUsers(u);
+      if (!saved || (legacy && legacy.length) || rekeyed || oldTitle) await saveUsers(u);
       // Restore personal session
       let sess = await loadSession();
       if (sess && sess.username==="james.wanki") { sess={username:"moussa.bagayoko"}; await saveSession(sess.username); }
@@ -641,22 +665,35 @@ export default function App() {
   const groupsNav=[["programme",["dashboard","curriculum","study-guide"]],["growth",["development","coach"]],["library",["resources","drive"]],...(me.role==="admin"?[["admin",["users"]]]:[])];
   const rail=(
     <aside className="hidden lg:flex fixed inset-y-0 left-0 w-60 flex-col bg-purple-700 text-white z-40">
-      <div className="flex gap-3 px-5 pt-6 pb-5">
+      <div className="flex gap-3 px-5 pt-5 pb-4">
         <Mark/>
         <div className="min-w-0">
           <p className="font-serif text-lg font-semibold leading-tight">Leadership &amp; Communication Mastery</p>
           <p className="text-xs text-blue-200 mt-1">UNFPA WCARO, Cohort 1</p>
         </div>
       </div>
-      <nav className="flex-1 overflow-y-auto px-3 pb-3 space-y-5">
+      <nav className="flex-1 overflow-y-auto px-3 pb-3 space-y-3">
         {groupsNav.map(([g,keys])=>(
           <div key={g}>
             <p className="px-2 mb-1 text-xs text-blue-200">{t.navGroups[g]}</p>
             <ul className="space-y-0.5">{keys.map(k=>{const tb=tabs.find(x=>x.k===k);const on=tab===k;return (
-              <li key={k}><button onClick={()=>setTab(k)} aria-current={on?"page":undefined} className={"w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm transition-colors "+(on?"bg-white/10 text-white font-semibold shadow-[inset_3px_0_0_#E85D1F]":"text-blue-100 hover:bg-white/5")}>
+              <li key={k}><button onClick={()=>setTab(k)} aria-current={on?"page":undefined} aria-expanded={k==="development"?on:undefined} className={"w-full flex items-center gap-2.5 px-2 py-2 rounded-lg text-sm transition-colors "+(on?"bg-white/10 text-white font-semibold shadow-[inset_3px_0_0_#E85D1F]":"text-blue-100 hover:bg-white/5")}>
                 <tb.I className="w-4 h-4 flex-shrink-0" aria-hidden="true"/>{tb.l}
                 {k==="users"&&<span className="ml-auto text-xs text-blue-200">{Object.keys(users).length}</span>}
-              </button></li>
+              </button>
+              {k==="development"&&on&&(
+                <div className="mt-0.5 mb-1 ml-4 pl-3 border-l border-white/15 space-y-1">
+                  {PD_SECTIONS.map(s=>(
+                    <div key={s.g}>
+                      {s.items.length>1&&<p className="px-2 pt-0.5 text-[11px] text-blue-200/80">{t.pd.groups[s.g]}</p>}
+                      <ul>{s.items.map(([v,key])=>(
+                        <li key={v}><button onClick={()=>setPdView(v)} aria-current={pdView===v?"true":undefined} className={"w-full text-left px-2 py-[3px] rounded-md text-[13px] leading-snug transition-colors "+(pdView===v?"bg-white/10 text-white font-semibold":"text-blue-100 hover:bg-white/5 hover:text-white")}>{t.pd[key]}</button></li>
+                      ))}</ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+              </li>
             );})}</ul>
           </div>
         ))}
@@ -710,7 +747,7 @@ export default function App() {
   const mentorDash=(tab==="dashboard"&&me.role==="mentor")?(
     <div className="space-y-5">
       <div>
-        <PageHead title={t.welcome+", "+firstName} sub={(me.title||t.mentorDefault)+", "+(me.organization||"UNFPA WCARO")}/>
+        <PageHead title={t.welcome+", "+firstName}/>
         <div className="ldp-subtabs">
           {[["overview",t.mTabs.overview,BarChart3],["participants",t.mTabs.participants,UsersRound],["sessions",t.mTabs.sessions,Calendar],["goals",t.mTabs.goals,Target],["notes",t.mTabs.notes,FileText]].map(([k,label,Icon])=>(
             <button key={k} onClick={()=>setMt(k)} aria-pressed={mt===k} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{label}</button>
@@ -869,7 +906,7 @@ export default function App() {
           <section className="ldp-card p-2">
             <h3 className="font-semibold text-gray-800 px-2 pt-2 mb-1">{t.grow.title}</h3>
             <ul>
-              {[[t.grow.plan,Compass,()=>{setPdView("plan");setTab("development");}],[t.grow.builder,PenLine,()=>{setPdView("builder");setTab("development");}],[t.grow.coach,Sparkles,()=>setTab("coach")]].map(([[a,b],I,go])=>(
+              {[[t.grow.plan,Compass,()=>{setPdView("plan");setTab("development");}],[t.grow.builder,PenLine,()=>{setPdView("builder");setTab("development");}],[t.grow.voice,AudioLines,()=>{setPdView("voice");setTab("development");}],[t.grow.coach,Sparkles,()=>setTab("coach")]].map(([[a,b],I,go])=>(
                 <li key={a}><button onClick={go} className="w-full flex items-start gap-2.5 text-left px-2 py-2 rounded-lg hover:bg-gray-100"><I className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" aria-hidden="true"/><span><span className="block text-sm font-semibold text-gray-800 leading-snug">{a}</span><span className="block text-xs text-gray-500">{b}</span></span></button></li>
               ))}
               <li><a href="https://drive.google.com/drive/folders/1e3nvDC36AptxDysRtO0C5dYiTqSS-H87" target="_blank" rel="noopener noreferrer" className="flex items-start gap-2.5 px-2 py-2 rounded-lg hover:bg-gray-100"><FolderOpen className="w-4 h-4 text-orange-600 mt-0.5 flex-shrink-0" aria-hidden="true"/><span><span className="block text-sm font-semibold text-gray-800 leading-snug">{t.grow.drive[0]}</span><span className="block text-xs text-gray-500">{t.grow.drive[1]}</span></span></a></li>

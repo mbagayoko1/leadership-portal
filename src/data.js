@@ -9,7 +9,7 @@ export const EF = () => ({ name:"", username:"", email:"", password:"", role:"pa
 // Initial (seed) users
 export const IU = {
   admin:{ username:"admin", password:"passw0rd", role:"admin", name:"Administrator", email:"admin@unfpa.org", profilePicture:null, title:"", organization:"", description:"" },
-  "moussa.bagayoko":{ username:"moussa.bagayoko", password:"mentor2026", role:"mentor", name:"Moussa Bagayoko", title:"Programme Specialist, M&E", organization:"UNFPA WCARO", email:"moussa.bagayoko@unfpa.org", description:"Mentor, Leadership and Communication Development Programme.", profilePicture:null }
+  "moussa.bagayoko":{ username:"moussa.bagayoko", password:"mentor2026", role:"mentor", name:"Moussa Bagayoko", title:"", organization:"", email:"moussa.bagayoko@unfpa.org", description:"Mentor, Leadership and Communication Development Programme.", profilePicture:null }
 };
 // 12-month curriculum: 4 phases, 11 modules
 export const CUR = {
