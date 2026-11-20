@@ -593,7 +593,7 @@ const SCENARIOS = [
       en: "You need a Ministry of Health to agree to share subnational data on a regional platform. The Director is cautious about data sovereignty.",
       fr: "Vous devez obtenir d'un minist\u00e8re de la Sant\u00e9 qu'il partage des donn\u00e9es infranationales sur une plateforme r\u00e9gionale. Le Directeur est prudent quant \u00e0 la souverainet\u00e9 des donn\u00e9es."
     },
-    character: "You are a senior, courteous but cautious Ministry Director in a West African country. You raise concerns about data sovereignty, political sensitivity and your team's workload. You become receptive only with respect for protocol, clear benefits for the country and concrete safeguards.",
+    character: "You are a senior, courteous but cautious Ministry Director in a partner country. You raise concerns about data sovereignty, political sensitivity and your team's workload. You become receptive only with respect for protocol, clear benefits for the country and concrete safeguards.",
     opener: {
       en: "Thank you for coming. I must be honest with you, my team has concerns about putting our data on a regional platform.",
       fr: "Merci d'\u00eatre venu. Je dois \u00eatre franc avec vous : mon \u00e9quipe a des r\u00e9serves sur la mise en ligne de nos donn\u00e9es sur une plateforme r\u00e9gionale."
@@ -743,7 +743,7 @@ function L(value, lang) {
 
 function languageRule(lang) {
   return lang === "fr"
-    ? "Write in French, using the standard international French of UN and West African professional settings. If the participant writes in English, follow their language."
+    ? "Write in French, using the standard international French of international professional settings. If the participant writes in English, follow their language."
     : "Write in English. If the participant writes in French, follow their language.";
 }
 
@@ -1021,7 +1021,7 @@ function coachSystem(user, modeId, moduleName, goals, lang, portal) {
     ? goals.slice(0, 6).map(function (g) { return "- " + g.title + " (" + goalProgress(g) + "% done)"; }).join("\n")
     : "None recorded yet.";
   return [
-    "You are an experienced executive coach supporting a participant in the Leadership and Communication Development Programme, Cohort 1 2026, for professionals working in West and Central Africa.",
+    "You are an experienced executive coach supporting a participant in the Leadership and Communication Development Programme, Cohort 1 2026, for professionals working in countries and organisations around the world.",
     "Participant: " + user.name + ".",
     "Current curriculum focus: " + moduleName + ".",
     "Their development goals:\n" + goalText,
@@ -3004,7 +3004,7 @@ function PlanTab(props) {
         .join("\n");
       const current = data.goals.map(function (g) { return "- " + g.title; }).join("\n");
       const content = [
-        "Participant role: programme participant working in West and Central Africa.",
+        "Participant role: programme participant.",
         "Curriculum modules: " + props.modules.map(function (m) { return L(m, lang); }).join("; "),
         "Insights from coaching sessions:\n" + (wraps || "None yet."),
         "Improvement areas from practice feedback:\n" + (improvements || "None yet."),

@@ -80,7 +80,7 @@ function quoteList() {
 export function buildPrompt(b) {
   const lang = b.language === "fr" ? "French" : "English";
   const system = [
-    "You are an experienced speechwriter for senior leaders in public service and international development in West and Central Africa. You write speeches that are meant to be spoken: short sentences, clear signposting, rhythm, and room to breathe.",
+    "You are an experienced speechwriter for senior leaders in public service and international development around the world. You write speeches that are meant to be spoken: short sentences, clear signposting, rhythm, and room to breathe.",
     "Rules:",
     "1. Write the whole speech in " + lang + ".",
     "2. Aim for about " + targetWords(b) + " words (" + b.minutes + " minutes at about " + WPM + " words per minute), within 10%.",

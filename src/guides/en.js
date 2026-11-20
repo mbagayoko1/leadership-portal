@@ -1,10 +1,12 @@
 // Module guides (English). One per curriculum module, written from the
 // template in prompts/module-guide.md: definition and outcomes, key concepts,
-// worked example, step-by-step guide, self-check. Example scenes are set
+// five worked examples (the first here, four more in examples-en.js), step-by-step guide, self-check. Example scenes are set
 // around the world (Africa, the Americas, Asia, Europe, the Middle East). The French version in
 // fr.js must keep the same modules and the same number of items in each list
 // (npm run check:data compares them). Names in examples are fictional.
 // A concept's `src` is set only when the origin is certain.
+
+import MORE from "./examples-en.js";
 
 const GUIDES = {
   m1: {
@@ -21,7 +23,8 @@ const GUIDES = {
       { n: "Situation, behaviour, impact (SBI)", d: "A way to give and request feedback: describe the situation, the observable behaviour and its impact.", why: "It turns vague comments such as \"be more confident\" into something you can act on.", src: "Center for Creative Leadership", miss: "Describing a person's character instead of what they did." },
       { n: "Personal brand", d: "The consistent impression people hold of what you are good at and what you can be trusted with.", why: "In a large organisation, opportunities often go to people whose strengths are known, not only to the strongest.", miss: "Confusing brand with self-promotion. A credible brand is built from repeated behaviour, then stated." }
     ],
-    example: {
+    examples: [{
+      t: "Introducing yourself at a workshop",
       scene: "Aminata, a monitoring and evaluation analyst in Dakar, is asked to introduce herself at a regional workshop with partners from five countries. She has two minutes.",
       first: "\"Good morning, I'm Aminata, I work in monitoring and evaluation. I've been here for six years. I do a lot of things: reports, data, some trainings. Happy to be here.\"",
       better: "\"Good morning, I'm Aminata. For six years I've helped teams turn field data into decisions. Last year our district dashboards cut reporting delays from two months to two weeks. What I care about is evidence that reaches the people who decide. Today I'd like to learn how your countries use data in budget talks.\"",
@@ -31,7 +34,7 @@ const GUIDES = {
         "\"Evidence that reaches the people who decide\" states a core value in one line.",
         "She ends with a question for the room, which shows curiosity and invites connection."
       ]
-    },
+    }],
     steps: [
       { do: "List your values", how: "Write down ten values, then cut to three by asking: which would I keep if it cost me something?", time: "20 minutes", done: "Three values, each with a one-line example from the last year." },
       { do: "Ask for feedback", how: "Send three colleagues one question: \"What is one thing I do that helps the team, and one thing that would make me more effective?\" Ask them to use situation, behaviour, impact.", time: "15 minutes to send", done: "At least two replies received." },
@@ -63,7 +66,8 @@ const GUIDES = {
       { n: "Composure", d: "Staying steady in voice, body and words when challenged or surprised.", why: "People read composure as confidence and competence.", miss: "Answering instantly. A two-second pause looks thoughtful, not weak." },
       { n: "Presence through listening", d: "Giving full attention, asking good questions and building on what others say.", why: "In many settings, the most respected person speaks last and briefly.", miss: "Thinking presence means speaking the most." }
     ],
-    example: {
+    examples: [{
+      t: "Answering your director in front of a partner",
       scene: "Lucía, a programme officer in Bogotá, is asked by her director during a team meeting why a training was postponed. A partner is in the room.",
       first: "\"Well, there were a lot of issues. First the venue, then the consultant had visa problems, and also the participants list wasn't ready, so we thought maybe it was better to wait, and...\"",
       better: "(Pause.) \"We moved it to 14 March so the right participants can attend. The list is now confirmed and the venue booked. The one risk is the consultant's visa; I'll know by Friday and have a local backup ready.\"",
@@ -73,7 +77,7 @@ const GUIDES = {
         "She names the remaining risk herself, which builds trust in front of the partner.",
         "He ends with a plan, so the director does not need to ask a follow-up."
       ]
-    },
+    }],
     steps: [
       { do: "Score yourself", how: "Rate yourself from 1 to 5 on composure, clarity, brevity, listening and appearance, using the rubric below.", time: "15 minutes", done: "Five scores and your lowest area circled." },
       { do: "Ask one observer", how: "Ask a colleague to score you on the same rubric after your next meeting.", time: "5 minutes to ask", done: "You can compare their scores with yours." },
@@ -105,7 +109,8 @@ const GUIDES = {
       { n: "From data to \"so what\"", d: "Each chart or number should come with the conclusion it supports and what to do about it.", why: "Data does not speak for itself. Audiences remember messages, not tables.", miss: "Showing every number you have." },
       { n: "Sticky messages", d: "Messages are remembered when they are simple, unexpected, concrete, credible, emotional and told as stories.", why: "A memorable message travels further after the meeting ends.", src: "Chip Heath and Dan Heath, Made to Stick (2007)", miss: "Abstract language like \"strengthen capacity\" with no concrete picture." }
     ],
-    example: {
+    examples: [{
+      t: "Presenting survey results to a ministry",
       scene: "Priya, a data specialist in Dhaka, must present new survey results to the health ministry's planning team. She has ten minutes and twenty slides.",
       first: "She opens with the survey methodology, then shows fourteen charts in the order of the questionnaire. Her recommendation appears on the last slide, which she reaches as time runs out.",
       better: "She opens: \"In three northern districts, one woman in four who wants to avoid pregnancy has no access to modern contraception. Closing that gap in the next budget would cost less than treating the complications it causes. I'll show you three reasons and one option.\" She shows three charts, each with a headline that states its message, and spends the last four minutes on the option and questions.",
@@ -115,7 +120,7 @@ const GUIDES = {
         "\"One woman in four\" is concrete and easier to remember than a percentage table.",
         "The methodology moves to an annex, available if anyone asks."
       ]
-    },
+    }],
     steps: [
       { do: "Define the audience and action", how: "Write one sentence: \"After this, [audience] will [action].\"", time: "10 minutes", done: "The sentence names a person or group and a verb." },
       { do: "Write the main message", how: "Write your answer in under 25 words. Read it aloud. If it needs explaining, rewrite it.", time: "15 minutes", done: "A colleague can repeat it back after hearing it once." },
@@ -147,7 +152,8 @@ const GUIDES = {
       { n: "The trust equation", d: "Trust grows with credibility, reliability and closeness, and shrinks when people think you are serving yourself.", why: "Without positional power, trust is your main source of influence.", src: "David Maister, Charles Green and Robert Galford, The Trusted Advisor (2000)", miss: "Focusing on expertise and neglecting reliability on small promises." },
       { n: "Coalitions", d: "A small group of allies who support an idea before it is proposed widely.", why: "Proposals backed by several respected voices are hard to dismiss.", miss: "Presenting a new idea for the first time in a big meeting." }
     ],
-    example: {
+    examples: [{
+      t: "Moving a deadline owned by other teams",
       scene: "Fatou, a programme analyst in Bamako, needs the finance and supply teams to move a quarterly reporting deadline by one week so field data can be included. Neither team reports to her.",
       first: "She sends an email to both team leads: \"The current deadline doesn't work for programmes. Please move it by one week from next quarter.\" Finance replies that the deadline is fixed by headquarters.",
       better: "She first meets the finance lead to ask what makes the deadline hard for them, and learns they also struggle with late corrections. She proposes: \"If we include field data in one submission, you'll get fewer corrections afterwards. Could we test a one-week shift for one quarter and measure the corrections?\" The supply lead, who suffers from the same corrections, agrees to co-sign. Together they present a joint proposal.",
@@ -157,7 +163,7 @@ const GUIDES = {
         "A one-quarter trial lowers the risk of saying yes.",
         "She built a coalition with supply before the formal proposal."
       ]
-    },
+    }],
     steps: [
       { do: "Define the goal", how: "Write the specific change you need and by when.", time: "10 minutes", done: "One sentence with an outcome and a date." },
       { do: "Map stakeholders", how: "List everyone affected and place them on the influence/interest grid below.", time: "30 minutes", done: "Each person is in a quadrant with a plan: manage closely, keep satisfied, keep informed or monitor." },
@@ -189,7 +195,8 @@ const GUIDES = {
       { n: "Stories with a point", d: "A short story with a person, a challenge and a change, linked clearly to your message.", why: "Stories make abstract issues human and memorable.", miss: "A story that is moving but does not connect to the ask." },
       { n: "Reframing nerves as excitement", d: "Telling yourself \"I am excited\" rather than \"I am calm\" before speaking.", why: "Research found that people who reframed anxiety as excitement performed better than those who tried to calm down.", src: "Alison Wood Brooks (2014)", miss: "Trying to eliminate nerves completely; some energy helps." }
     ],
-    example: {
+    examples: [{
+      t: "A 15-minute speech at a youth forum",
       scene: "Jean-Baptiste, a youth programme coordinator in Kinshasa, has 15 minutes at an international youth forum to argue for investing in young people's skills.",
       first: "\"Thank you to the organisers. Today I'll talk about youth. There are more than a billion young people aged 15 to 24. There are many challenges: unemployment, education, health. Our programme works in many areas...\" He reads from his slides for 15 minutes.",
       better: "He opens: \"Grace is 19. She finished school top of her class, and for two years she has had no work.\" He names the need with one number, presents three proven solutions, describes Grace three years later with a skill and an income, and closes: \"Before you leave today, commit one internship place in your organisation. Write it on the card on your chair.\"",
@@ -199,7 +206,7 @@ const GUIDES = {
         "Three solutions follow the rule of three.",
         "The close asks for a specific, immediate action."
       ]
-    },
+    }],
     steps: [
       { do: "Write your one message", how: "Complete: \"I want this audience to believe ____ and to ____.\"", time: "15 minutes", done: "A sentence under 25 words." },
       { do: "Outline with the sequence", how: "Fill in the five steps of the template below, one or two lines each.", time: "30 minutes", done: "Every step has content." },
@@ -231,7 +238,8 @@ const GUIDES = {
       { n: "Managing up", d: "Working with your manager and senior leaders deliberately: understanding their style, keeping them informed and avoiding surprises.", why: "Leaders who are never surprised by bad news trust the person who told them early.", miss: "Hiding a problem until it is solved." },
       { n: "Follow-through", d: "Confirming in writing what was agreed and delivering on time.", why: "Reliability on small commitments earns larger responsibilities.", miss: "Leaving the meeting without owners and dates." }
     ],
-    example: {
+    examples: [{
+      t: "Asking a director for budget",
       scene: "Omar, a technical specialist in Amman, gets ten minutes with the country director to ask for budget for a new data system.",
       first: "He opens with the history of data problems over five years, explains the technical options in detail, and at minute nine asks for $80,000. The director says she needs to think and leaves for another meeting.",
       better: "He opens: \"I'm asking you to approve $80,000 for a data system that will let us report to donors in days instead of weeks, which supports your goal of faster donor reporting this year.\" He shows two options on one page, recommends one, names the main risk and mitigation, and asks: \"Can you approve today, or what would you need to decide by Friday?\" He emails a three-line summary that afternoon.",
@@ -241,7 +249,7 @@ const GUIDES = {
         "Two options and a recommendation make it decision-ready.",
         "A same-day written follow-up confirms the next step."
       ]
-    },
+    }],
     steps: [
       { do: "Research their priorities", how: "Read the senior leader's recent speeches, plans or emails. Note their top three priorities.", time: "30 minutes", done: "Three priorities written down." },
       { do: "Write the one-page brief", how: "Use the template below: decision needed, why now, options, recommendation, risks.", time: "45 minutes", done: "The page fits on one side and the decision is in line 1." },
@@ -273,7 +281,8 @@ const GUIDES = {
       { n: "Volatility, uncertainty, complexity, ambiguity (VUCA)", d: "A description of environments where change is fast and unpredictable.", why: "In such settings, short planning cycles and clear principles serve better than detailed long plans.", src: "US Army War College (late 1980s)", miss: "Using the term as an excuse rather than a reason to adapt." },
       { n: "After-action review", d: "A short, blame-free discussion: what was supposed to happen, what happened, why, and what we will do differently.", why: "It turns a crisis into learning and rebuilds team trust.", src: "US Army", miss: "Turning it into a search for someone to blame." }
     ],
-    example: {
+    examples: [{
+      t: "A false video goes viral",
       scene: "Ana, a communications lead in Manila, learns at 9 a.m. that a video circulating on social media falsely claims her organisation's clinics distribute expired medicines. Journalists are calling.",
       first: "The office says nothing while it investigates. By evening the video has thousands of shares, and a radio station reports that the organisation \"refused to comment\".",
       better: "By 10:30 she publishes a holding statement: \"We are aware of a video about medicines in our partner clinics. The safety of every patient is our priority. We are checking stock in all facilities with the health ministry today and will share the results by 6 p.m.\" At 6 p.m. she shares the inspection results, thanks the health workers and explains how patients can check expiry dates.",
@@ -283,7 +292,7 @@ const GUIDES = {
         "A specific update time makes the organisation credible.",
         "The final message gives the public a useful action."
       ]
-    },
+    }],
     steps: [
       { do: "List likely crises", how: "With your team, list five events that could hit your work, and rate each for likelihood and impact.", time: "30 minutes", done: "Top two risks chosen." },
       { do: "Draft holding statements", how: "Write a holding statement for each top risk using the template below.", time: "30 minutes", done: "Two statements, each under 80 words." },
@@ -315,7 +324,8 @@ const GUIDES = {
       { n: "Leading change", d: "An eight-step model for change, starting with a sense of urgency and a guiding coalition, and ending with anchoring change in the culture.", why: "Vision without a plan to bring people along stays a speech.", src: "John Kotter, Leading Change (1996)", miss: "Announcing the vision and assuming change will follow." },
       { n: "Optimism with realism", d: "Showing belief that the future can be better while naming the obstacles honestly.", why: "People follow leaders who are hopeful and credible at the same time.", miss: "Ignoring the difficulties, which makes the vision sound naive." }
     ],
-    example: {
+    examples: [{
+      t: "Sharing a vision with a new team",
       scene: "Sophie, a team leader in Yaoundé, is asked to share her leadership vision with a new team.",
       first: "\"My vision is to strengthen our capacity, improve coordination, and achieve our results in line with the strategic plan.\"",
       better: "\"When I was twelve, my aunt died giving birth in a village two hours from the nearest clinic. That's why I'm here. Every one of you has a reason too. Mine is a future where no woman in this region dies giving life. In five years, I want every district we support to have a midwife within one hour of every village. This year, that means three districts, and it starts with the plan we'll build together this month.\"",
@@ -325,7 +335,7 @@ const GUIDES = {
         "The vision is a specific picture, not a list of activities.",
         "She links the vision to this year's goal and an immediate step (story of now)."
       ]
-    },
+    }],
     steps: [
       { do: "Find your why", how: "Write about a moment that made you care about this work. Ask: what did I see, and what did I decide?", time: "30 minutes", done: "A half-page story." },
       { do: "Picture the future", how: "Describe what will be different in five to ten years if your work succeeds: who, where, what changes.", time: "30 minutes", done: "A paragraph someone could draw." },
@@ -357,7 +367,8 @@ const GUIDES = {
       { n: "Mandate and governance", d: "What your organisation is authorised to do, who oversees it, and how it relates to governments and partners.", why: "Knowing the mandate helps you frame proposals that fit and avoid ones that will be blocked.", miss: "Proposing work that is valuable but outside the mandate." },
       { n: "Political awareness", d: "Understanding interests, relationships and power without becoming cynical.", why: "Effective leaders work with organisational politics for good outcomes.", miss: "Avoiding politics altogether, which leaves the field to others." }
     ],
-    example: {
+    examples: [{
+      t: "A proposal rejected twice",
       scene: "Hiroshi, a technical officer in Bangkok, has a well-designed proposal for a new youth programme. It was rejected twice without clear reasons.",
       first: "He submits a revised version to the formal review committee in October, adding more data. It is rejected again because \"funds are committed\".",
       better: "He maps the decision. He learns that priorities are effectively set in a June planning retreat, that the deputy director's views carry great weight, and that the committee values alignment with the government's youth strategy. In May he shares a two-page concept with the deputy director, links it to the government strategy, and asks for advice. The idea enters the June retreat as a priority, and the October submission is approved.",
@@ -367,7 +378,7 @@ const GUIDES = {
         "He framed the proposal in terms of the mandate and partner priorities.",
         "Asking for advice instead of approval built an ally."
       ]
-    },
+    }],
     steps: [
       { do: "Describe the culture", how: "Write three lines for each level: what you see, what people say, what people assume.", time: "30 minutes", done: "One assumption that surprises a newcomer." },
       { do: "Map one decision", how: "Pick a recent decision and trace who was consulted, formally and informally, and when.", time: "30 minutes", done: "A sketch showing at least one informal influence." },
@@ -399,7 +410,8 @@ const GUIDES = {
       { n: "Key messages and bridging", d: "Three short points you want any audience to remember, and phrases to return to them from difficult questions.", why: "Representatives speak to ministers, media and partners who may push other agendas.", miss: "Answering every question on its own terms and losing your message." },
       { n: "Principled negotiation", d: "Separating people from the problem, focusing on interests rather than positions, and looking for options that serve both sides.", why: "Representatives negotiate constantly with governments and partners.", src: "Roger Fisher and William Ury, Getting to Yes (1981)", miss: "Defending a position without understanding what the other side needs." }
     ],
-    example: {
+    examples: [{
+      t: "A competency interview question",
       scene: "Elena, a deputy representative in Tbilisi, is asked in a mock interview: \"Tell us about a time you managed a difficult relationship with a government partner.\"",
       first: "\"Government relations are very important. I always believe in respect and dialogue. In general, I try to understand their needs and find common ground, and I think that's the key to good partnerships.\"",
       better: "\"In 2024, the ministry suspended a joint programme after a dispute over data ownership (situation). As deputy, I was asked to restore the partnership within three months (task). I met the secretary general to understand his concerns, proposed a data-sharing agreement that gave the ministry co-ownership, and set up a monthly joint review (action). The programme restarted in seven weeks, and the ministry now presents the data itself (result).\"",
@@ -409,7 +421,7 @@ const GUIDES = {
         "Most of the answer describes her own actions.",
         "The result is concrete and measurable."
       ]
-    },
+    }],
     steps: [
       { do: "Study the role", how: "Read a head-of-office job description and list the competencies it asks for.", time: "30 minutes", done: "Six competencies listed." },
       { do: "Build an example bank", how: "Write one example for each competency using the template below.", time: "Two hours", done: "Six examples, each under two minutes spoken." },
@@ -441,7 +453,8 @@ const GUIDES = {
       { n: "Anchoring change in culture", d: "Making new ways of working part of everyday norms, routines and recognition.", why: "Changes that are not anchored fade when their champion leaves.", src: "John Kotter, Leading Change (1996)", miss: "Assuming a successful project will continue by itself." },
       { n: "Leadership philosophy", d: "A short statement of your beliefs about leading, what people can expect from you and what you expect from them.", why: "Sharing it makes you predictable and gives your team a standard to hold you to.", miss: "Writing ideals you do not practise." }
     ],
-    example: {
+    examples: [{
+      t: "Handing over a practice before leaving",
       scene: "Sione, a unit manager in Suva, will move to a new post in six months. His unit's monthly data review was his initiative, and he runs every session himself.",
       first: "In his last week, he writes a two-page note describing the review and sends it to his team. Three months after he leaves, the reviews have stopped.",
       better: "Six months before leaving, he asks two team members to co-facilitate the review, coaches them after each session with the GROW model, and hands them full responsibility for the last two months while he only observes. The review is added to the unit's work plan and the team's performance goals. It continues after he leaves, and one of the facilitators presents it at a regional meeting.",
@@ -451,7 +464,7 @@ const GUIDES = {
         "Adding the review to the work plan and goals anchored it in routines.",
         "The practice outlived him, which is the measure of legacy."
       ]
-    },
+    }],
     steps: [
       { do: "List what must continue", how: "Write the five things you do that would stop or suffer if you left tomorrow.", time: "20 minutes", done: "Five items." },
       { do: "Name successors", how: "For each item, name who could take it on with support.", time: "15 minutes", done: "A name next to each item." },
@@ -483,7 +496,8 @@ const GUIDES = {
       { n: "Pace and pause", d: "The speed of speech and the silences between ideas.", why: "Pauses give listeners time to absorb a point and make you sound in control.", miss: "Filling every silence with \"um\" or \"so\"." },
       { n: "Pitch variety", d: "Moving the voice up and down to show meaning and emotion.", why: "A monotone voice loses attention, even when the content is strong.", miss: "Ending statements with a rising tone, which sounds like a question." }
     ],
-    example: {
+    examples: [{
+      t: "A fast, flat budget update",
       scene: "Daniel, a finance officer in London, is told after a presentation that he was hard to follow. A recording shows he spoke at 190 words per minute with no pauses and a flat tone.",
       first: "\"Soourbudgetexecutionisat62percentwhichisbelowtargetsowe'llneedtoaccelerateinthelastquarteranduh...\" (fast, flat, no pauses)",
       better: "\"Our budget execution is at 62 percent. (pause) That's below target. (pause) So in the last quarter, we will focus on three things.\" He stresses \"62\" and \"three\", lowers his pitch at the end of each sentence and breathes at each pause.",
@@ -493,7 +507,7 @@ const GUIDES = {
         "Stress on key words guides attention.",
         "Falling pitch at sentence ends sounds confident and final."
       ]
-    },
+    }],
     steps: [
       { do: "Measure your baseline", how: "Open the Voice studio and record the pace drill. Note your words per minute and filler count.", time: "10 minutes", done: "Baseline numbers saved." },
       { do: "Learn the warm-up", how: "Follow the guided ten-minute warm-up in the Voice studio: jaw release, breathing, lip trills, sirens, articulation, projection.", time: "10 minutes daily", done: "You can do it without the guide." },
@@ -511,5 +525,8 @@ const GUIDES = {
     checkpoint: "Practise the routine daily; your weekly numbers in the Voice studio show your progress across all modules."
   }
 };
+
+// Four more worked examples per module, kept in a separate file.
+for (const [id, list] of Object.entries(MORE)) GUIDES[id].examples.push(...list);
 
 export default GUIDES;

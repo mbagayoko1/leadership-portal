@@ -63,17 +63,21 @@ SPEECHES.forEach(s => { if (!s.text || !s.text.en || !s.text.fr) p("speech witho
 LIBRARY.forEach(g => g.items.forEach(x => { if (!x.u || !x.d || !x.d.fr) p("library item incomplete", x.t); }));
 
 // Module guides: every listed module in both languages, with the same
-// number of outcomes, concepts, example changes, steps and reflections.
+// number of outcomes, concepts, worked examples (five each), steps and
+// reflections.
 for (const id of GUIDE_IDS) {
   const e = GUIDES_EN[id], f = GUIDES_FR[id];
   if (!e || !f) { p("module guide missing", id, !e ? "EN" : "FR"); continue; }
   for (const g of [e, f]) {
-    if (!g.def || !g.template || !g.example || !g.example.scene || !g.example.first || !g.example.better) p("module guide incomplete", id);
+    if (!g.def || !g.template) p("module guide incomplete", id);
+    if (!g.examples || g.examples.length !== 5) p("guide", id, "should have 5 worked examples");
+    for (const x of g.examples || []) if (!x.t || !x.scene || !x.first || !x.better || !(x.changes || []).length) p("guide example incomplete", id, x.t || "?");
     for (const c of g.concepts) if (!c.n || !c.d || !c.why || !c.miss) p("guide concept incomplete", id, c.n || "?");
     for (const s of g.steps) if (!s.do || !s.how || !s.time || !s.done) p("guide step incomplete", id, s.do || "?");
   }
   for (const k of ["outcomes", "concepts", "steps", "reflect"]) if (e[k].length !== f[k].length) p("guide", id, k, "EN/FR differ");
-  if (e.example.changes.length !== f.example.changes.length) p("guide", id, "example changes EN/FR differ");
+  if (e.examples.length !== f.examples.length) p("guide", id, "examples EN/FR differ");
+  else e.examples.forEach((x, i) => { if (x.changes.length !== f.examples[i].changes.length) p("guide", id, "example", i + 1, "changes EN/FR differ"); });
   e.concepts.forEach((c, i) => { if (!!c.src !== !!(f.concepts[i] && f.concepts[i].src)) p("guide", id, "concept", i + 1, "origin in one language only"); });
 }
 Object.keys(GUIDES_EN).filter(x => !GUIDE_IDS.includes(x)).forEach(x => p("module guide not listed in GUIDE_IDS", x));

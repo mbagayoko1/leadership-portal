@@ -226,12 +226,12 @@ export const COMPETENCIES = [
     practice: {
       en: [
         "Build the talk around one idea and one call to action",
-        "Use stories from West and Central Africa that the audience recognises",
+        "Use stories from the audience's own region and culture that they recognise",
         "Follow the talk with a short workshop so people turn inspiration into a first step"
       ],
       fr: [
         "Construisez l'intervention autour d'une idée et d'un appel à l'action",
-        "Utilisez des récits d'Afrique de l'Ouest et du Centre que le public reconnaît",
+        "Utilisez des récits de la région et de la culture du public, qu'il reconnaît",
         "Prolongez l'intervention par un court atelier pour transformer l'inspiration en un premier pas"
       ]
     },

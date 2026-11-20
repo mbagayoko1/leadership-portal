@@ -40,7 +40,7 @@ New participants can self-register via **Request Access** on the sign-in screen.
 - **Curriculum** — 4 phases / 11 modules with daily tasks, readings, vocal training,
   and checkpoint tracking (click to mark complete)
 - **Study Guide** — a **Learn** tab for each module (definition and outcomes, key
-  concepts, a worked example, a step-by-step guide with a copyable template, and
+  concepts, five worked examples set around the world, a step-by-step guide with a copyable template, and
   a self-check), plus resource guides, TED/YouTube videos, HBR/CCL articles,
   required readings and reflection questions. The guides live in
   [`src/guides/`](src/guides) (EN and FR, loaded on demand) and follow the

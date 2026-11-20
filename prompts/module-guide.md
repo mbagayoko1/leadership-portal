@@ -2,8 +2,8 @@
 
 A reusable prompt that writes a learning guide for one module of the
 Leadership & Communication Development Programme. Every guide has the same
-four parts: a definition of the module, an introduction to its key concepts, a
-worked example and a step-by-step guide, followed by a short self-check.
+four parts: a definition of the module, an introduction to its key concepts,
+five worked examples and a step-by-step guide, followed by a short self-check.
 
 **How to use it:** copy everything below the line into Claude (or any capable
 AI model), fill in the values in the `Module` block, and send. Leave a value
@@ -50,20 +50,22 @@ each concept:
   are certain. Otherwise leave this line out.
 - **Common mistake:** one sentence on how people usually get it wrong.
 
-### 3. Worked example
+### 3. Worked examples
 
-One realistic workplace scene, set anywhere in the world: a ministry
-meeting, a partner or donor briefing, a field office, a team meeting, an
-international conference or a media interview. Choose a setting that fits the
-module, and vary regions across guides (Africa, the Americas, Asia, Europe,
-the Middle East and the Pacific).
+Five realistic workplace scenes, each showing a different situation and a
+different concept from section 2: a ministry meeting, a partner or donor
+briefing, a field office, a team meeting, an email, an online call, an
+international conference or a media interview. Set them in five different
+countries from at least three regions (Africa, the Americas, Asia, Europe, the
+Middle East and the Pacific).
 
+- Give each example a short title.
 - Set the scene in two or three sentences, with fictional names and no real
   organisation.
 - Show the **first attempt**: what the person said or did, quoted or
   described.
 - Show the **stronger version**, applying the key concepts.
-- Explain in three to five bullets what changed and which concept each change
+- Explain in three or four bullets what changed and which concept each change
   uses.
 
 ### 4. Step-by-step guide

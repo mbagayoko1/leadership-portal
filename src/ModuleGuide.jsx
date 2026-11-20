@@ -1,5 +1,5 @@
 // The "Learn" view of a module in the Study Guide: definition and outcomes,
-// key concepts, a worked example, a step-by-step guide with a copyable
+// key concepts, five worked examples, a step-by-step guide with a copyable
 // template, and a self-check. Content lives in src/guides/{en,fr}.js and is
 // loaded on first use, so it stays out of the main bundle. Steps ticked off
 // are saved with the participant's progress (category "mg", key "m3:2").
@@ -26,6 +26,8 @@ export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
   const k = t.mg;
   const [data, setData] = useState(cache[lang] || null);
   const [failed, setFailed] = useState(false);
+  const [exIdx, setExIdx] = useState(0);
+  useEffect(() => { setExIdx(0); }, [id]);
   useEffect(() => {
     if (cache[lang]) { setData(cache[lang]); return; }
     let live = true;
@@ -39,6 +41,8 @@ export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
   const g = data[id];
   if (!g) return null;
   const doneCount = g.steps.filter((_, i) => done[id + ":" + i]).length;
+  const exI = exIdx < g.examples.length ? exIdx : 0;
+  const ex = g.examples[exI];
 
   return (
     <div className="space-y-4 max-w-3xl">
@@ -68,21 +72,29 @@ export default function ModuleGuide({ id, t, lang, done = {}, onToggle }) {
         </dl>
       </Section>
 
-      <Section title={k.example}>
-        <p className="text-sm leading-relaxed text-gray-800">{g.example.scene}</p>
+      <Section title={k.examples.replace("{n}", g.examples.length)}>
+        <div role="group" aria-label={k.examples.replace("{n}", g.examples.length)} className="flex flex-wrap gap-2 mb-4">
+          {g.examples.map((x, i) => (
+            <button key={i} onClick={() => setExIdx(i)} aria-pressed={i === exI}
+              className={"text-left text-sm px-3 py-1.5 rounded-lg border transition-colors " + (i === exI ? "bg-purple-700 border-purple-700 text-white" : "bg-white border-gray-200 text-gray-700 hover:border-gray-400")}>
+              {x.t}
+            </button>
+          ))}
+        </div>
+        <p className="text-sm leading-relaxed text-gray-800">{ex.scene}</p>
         <div className="grid md:grid-cols-2 gap-3 mt-4">
           <div className="rounded-lg bg-gray-50 border border-gray-200 p-4">
             <p className="text-xs font-semibold text-gray-500 mb-1.5">{k.first}</p>
-            <p className="text-sm leading-relaxed text-gray-700">{g.example.first}</p>
+            <p className="text-sm leading-relaxed text-gray-700">{ex.first}</p>
           </div>
           <div className="rounded-lg bg-white border border-gray-200 border-l-4 border-l-orange-500 p-4">
             <p className="text-xs font-semibold text-orange-700 mb-1.5">{k.better}</p>
-            <p className="text-sm leading-relaxed text-gray-800">{g.example.better}</p>
+            <p className="text-sm leading-relaxed text-gray-800">{ex.better}</p>
           </div>
         </div>
         <p className="text-sm font-semibold text-gray-900 mt-4 mb-2">{k.changed}</p>
         <ul className="space-y-1.5 list-disc pl-5 text-sm text-gray-700 marker:text-gray-400">
-          {g.example.changes.map((c, i) => <li key={i}>{c}</li>)}
+          {ex.changes.map((c, i) => <li key={i}>{c}</li>)}
         </ul>
       </Section>
 

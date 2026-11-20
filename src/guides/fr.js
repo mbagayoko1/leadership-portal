@@ -3,6 +3,8 @@
 // dans les deux langues. Les titres d'ouvrages restent dans leur langue
 // d'origine. Les noms des exemples sont fictifs.
 
+import MORE from "./examples-fr.js";
+
 const GUIDES = {
   m1: {
     def: "Ce module vous aide à vous voir comme les autres vous perçoivent, et à décider pour quoi vous voulez être reconnu·e. La connaissance de soi ouvre le programme, car toutes les compétences suivantes, de la présence à l'influence, reposent sur vos forces, vos angles morts et les valeurs qui guident votre leadership.",
@@ -18,7 +20,8 @@ const GUIDES = {
       { n: "Situation, comportement, impact (SCI)", d: "Une façon de donner et de demander un retour : décrire la situation, le comportement observable et son impact.", why: "Elle transforme un commentaire vague comme « sois plus sûr de toi » en quelque chose d'actionnable.", src: "Center for Creative Leadership", miss: "Décrire le caractère de la personne plutôt que ce qu'elle a fait." },
       { n: "Marque personnelle", d: "L'impression constante que les autres ont de ce que vous savez bien faire et de ce qu'on peut vous confier.", why: "Dans une grande organisation, les opportunités vont souvent à ceux dont les forces sont connues, pas seulement aux meilleurs.", miss: "La confondre avec l'autopromotion. Une marque crédible se construit par des comportements répétés, puis se formule." }
     ],
-    example: {
+    examples: [{
+      t: "Se présenter lors d'un atelier",
       scene: "Aminata, analyste en suivi et évaluation à Dakar, doit se présenter lors d'un atelier régional réunissant des partenaires de cinq pays. Elle dispose de deux minutes.",
       first: "« Bonjour, je suis Aminata, je travaille en suivi et évaluation. Je suis là depuis six ans. Je fais beaucoup de choses : des rapports, des données, quelques formations. Contente d'être ici. »",
       better: "« Bonjour, je suis Aminata. Depuis six ans, j'aide les équipes à transformer les données de terrain en décisions. L'an dernier, nos tableaux de bord de district ont réduit les délais de rapport de deux mois à deux semaines. Ce qui compte pour moi, ce sont des données qui arrivent jusqu'à ceux qui décident. Aujourd'hui, j'aimerais comprendre comment vos pays utilisent les données dans les discussions budgétaires. »",
@@ -28,7 +31,7 @@ const GUIDES = {
         "« Des données qui arrivent jusqu'à ceux qui décident » exprime une valeur en une phrase.",
         "Elle termine par une question à la salle, qui montre sa curiosité et invite à l'échange."
       ]
-    },
+    }],
     steps: [
       { do: "Lister vos valeurs", how: "Écrivez dix valeurs, puis gardez-en trois en vous demandant : laquelle garderais-je si elle me coûtait quelque chose ?", time: "20 minutes", done: "Trois valeurs, chacune avec un exemple d'une ligne tiré de l'année écoulée." },
       { do: "Demander un retour", how: "Envoyez une question à trois collègues : « Quelle est une chose que je fais qui aide l'équipe, et une chose qui me rendrait plus efficace ? » Demandez-leur d'utiliser situation, comportement, impact.", time: "15 minutes pour l'envoi", done: "Au moins deux réponses reçues." },
@@ -60,7 +63,8 @@ const GUIDES = {
       { n: "Sang-froid", d: "Rester stable dans la voix, le corps et les mots face à une contestation ou une surprise.", why: "Le sang-froid est perçu comme de l'assurance et de la compétence.", miss: "Répondre immédiatement. Une pause de deux secondes paraît réfléchie, pas faible." },
       { n: "La présence par l'écoute", d: "Accorder toute son attention, poser de bonnes questions et s'appuyer sur ce que disent les autres.", why: "Dans bien des contextes, la personne la plus respectée parle en dernier, et brièvement.", miss: "Croire qu'avoir de la présence, c'est parler le plus." }
     ],
-    example: {
+    examples: [{
+      t: "Répondre à sa directrice devant un partenaire",
       scene: "Lucía, chargée de programme à Bogotá, est interrogée par sa directrice, en réunion d'équipe, sur le report d'une formation. Un partenaire est présent.",
       first: "« Eh bien, il y a eu beaucoup de problèmes. D'abord la salle, ensuite le consultant a eu des soucis de visa, et puis la liste des participants n'était pas prête, alors on s'est dit que c'était peut-être mieux d'attendre, et… »",
       better: "(Pause.) « Nous l'avons déplacée au 14 mars pour que les bonnes personnes puissent y assister. La liste est confirmée et la salle réservée. Le seul risque est le visa du consultant ; je le saurai vendredi et j'ai une solution locale prête. »",
@@ -70,7 +74,7 @@ const GUIDES = {
         "Elle nomme elle-même le risque restant, ce qui renforce la confiance devant le partenaire.",
         "Elle termine par un plan : la directrice n'a pas besoin de relancer."
       ]
-    },
+    }],
     steps: [
       { do: "Vous évaluer", how: "Notez-vous de 1 à 5 sur le sang-froid, la clarté, la concision, l'écoute et l'apparence, avec la grille ci-dessous.", time: "15 minutes", done: "Cinq notes et votre point le plus faible entouré." },
       { do: "Demander à un observateur", how: "Demandez à un·e collègue de vous noter avec la même grille après votre prochaine réunion.", time: "5 minutes pour demander", done: "Vous pouvez comparer ses notes aux vôtres." },
@@ -102,7 +106,8 @@ const GUIDES = {
       { n: "Des données au « et alors ? »", d: "Chaque graphique ou chiffre doit s'accompagner de la conclusion qu'il soutient et de ce qu'il faut faire.", why: "Les données ne parlent pas d'elles-mêmes. Le public retient des messages, pas des tableaux.", miss: "Montrer tous les chiffres disponibles." },
       { n: "Des messages qui collent", d: "On retient un message simple, inattendu, concret, crédible, émouvant et raconté comme une histoire.", why: "Un message mémorable continue de circuler après la réunion.", src: "Chip Heath et Dan Heath, Made to Stick (2007)", miss: "Un langage abstrait comme « renforcer les capacités », sans image concrète." }
     ],
-    example: {
+    examples: [{
+      t: "Présenter des résultats d'enquête à un ministère",
       scene: "Priya, spécialiste des données à Dacca, doit présenter de nouveaux résultats d'enquête à l'équipe de planification du ministère de la Santé. Elle a dix minutes et vingt diapositives.",
       first: "Elle commence par la méthodologie, puis montre quatorze graphiques dans l'ordre du questionnaire. Sa recommandation figure sur la dernière diapositive, qu'elle atteint quand le temps est écoulé.",
       better: "Elle commence : « Dans trois districts du nord, une femme sur quatre qui souhaite éviter une grossesse n'a pas accès à la contraception moderne. Combler cet écart dans le prochain budget coûterait moins que soigner les complications qu'il entraîne. Je vais vous donner trois raisons et une option. » Elle montre trois graphiques dont chaque titre énonce le message, et consacre les quatre dernières minutes à l'option et aux questions.",
@@ -112,7 +117,7 @@ const GUIDES = {
         "« Une femme sur quatre » est concret et plus facile à retenir qu'un tableau de pourcentages.",
         "La méthodologie passe en annexe, disponible si quelqu'un la demande."
       ]
-    },
+    }],
     steps: [
       { do: "Définir le public et l'action", how: "Écrivez une phrase : « Après cela, [public] va [action]. »", time: "10 minutes", done: "La phrase nomme une personne ou un groupe et un verbe." },
       { do: "Écrire le message principal", how: "Formulez votre réponse en moins de 25 mots. Lisez-la à voix haute. Si elle demande une explication, réécrivez-la.", time: "15 minutes", done: "Un·e collègue peut la répéter après une seule écoute." },
@@ -144,7 +149,8 @@ const GUIDES = {
       { n: "L'équation de la confiance", d: "La confiance grandit avec la crédibilité, la fiabilité et la proximité, et diminue quand on vous soupçonne de servir vos propres intérêts.", why: "Sans pouvoir hiérarchique, la confiance est votre principale source d'influence.", src: "David Maister, Charles Green et Robert Galford, The Trusted Advisor (2000)", miss: "Miser sur l'expertise en négligeant la fiabilité sur les petites promesses." },
       { n: "Les coalitions", d: "Un petit groupe d'alliés qui soutiennent une idée avant qu'elle soit proposée largement.", why: "Une proposition portée par plusieurs voix respectées est difficile à écarter.", miss: "Présenter une idée nouvelle pour la première fois en grande réunion." }
     ],
-    example: {
+    examples: [{
+      t: "Décaler une échéance fixée par d'autres équipes",
       scene: "Fatou, analyste de programme à Bamako, a besoin que les équipes finances et approvisionnement décalent d'une semaine une échéance de rapport trimestriel, afin d'y intégrer les données de terrain. Aucune des deux équipes ne dépend d'elle.",
       first: "Elle écrit aux deux responsables : « L'échéance actuelle ne convient pas aux programmes. Merci de la décaler d'une semaine à partir du prochain trimestre. » Les finances répondent que la date est fixée par le siège.",
       better: "Elle rencontre d'abord la responsable des finances pour comprendre ce qui rend l'échéance difficile pour son équipe, et apprend qu'elle souffre aussi des corrections tardives. Elle propose : « Si les données de terrain arrivent en une seule fois, vous aurez moins de corrections ensuite. Pourrions-nous tester un décalage d'une semaine sur un trimestre et compter les corrections ? » Le responsable de l'approvisionnement, qui subit les mêmes corrections, accepte de cosigner. Ensemble, ils présentent une proposition commune.",
@@ -154,7 +160,7 @@ const GUIDES = {
         "Un essai sur un trimestre rend le « oui » moins risqué.",
         "Elle a formé une coalition avec l'approvisionnement avant la proposition officielle."
       ]
-    },
+    }],
     steps: [
       { do: "Définir l'objectif", how: "Écrivez le changement précis dont vous avez besoin et pour quand.", time: "10 minutes", done: "Une phrase avec un résultat et une date." },
       { do: "Cartographier les parties prenantes", how: "Listez toutes les personnes concernées et placez-les sur la grille influence/intérêt ci-dessous.", time: "30 minutes", done: "Chaque personne est dans un quadrant avec une approche : gérer de près, satisfaire, informer ou surveiller." },
@@ -186,7 +192,8 @@ const GUIDES = {
       { n: "Des histoires qui servent le propos", d: "Une courte histoire avec une personne, un défi et un changement, clairement reliée à votre message.", why: "Les histoires rendent les sujets abstraits humains et mémorables.", miss: "Une histoire émouvante qui ne mène pas à la demande." },
       { n: "Transformer le trac en enthousiasme", d: "Se dire « je suis enthousiaste » plutôt que « je suis calme » avant de parler.", why: "Une étude a montré que les personnes qui requalifiaient leur anxiété en enthousiasme réussissaient mieux que celles qui cherchaient à se calmer.", src: "Alison Wood Brooks (2014)", miss: "Vouloir supprimer tout trac ; un peu d'énergie aide." }
     ],
-    example: {
+    examples: [{
+      t: "Un discours de 15 minutes à un forum de la jeunesse",
       scene: "Jean-Baptiste, coordinateur d'un programme jeunesse à Kinshasa, dispose de 15 minutes lors d'un forum international de la jeunesse pour plaider en faveur de l'investissement dans les compétences des jeunes.",
       first: "« Merci aux organisateurs. Aujourd'hui, je vais parler de la jeunesse. On compte plus d'un milliard de jeunes de 15 à 24 ans. Les défis sont nombreux : chômage, éducation, santé. Notre programme intervient dans de nombreux domaines… » Il lit ses diapositives pendant 15 minutes.",
       better: "Il commence : « Grace a 19 ans. Elle a terminé l'école première de sa classe, et depuis deux ans elle n'a pas de travail. » Il nomme le besoin avec un seul chiffre, présente trois solutions éprouvées, décrit Grace trois ans plus tard avec une compétence et un revenu, et conclut : « Avant de partir aujourd'hui, engagez-vous à offrir un stage dans votre organisation. Écrivez-le sur la carte posée sur votre chaise. »",
@@ -196,7 +203,7 @@ const GUIDES = {
         "Les trois solutions suivent la règle de trois.",
         "La conclusion demande une action précise et immédiate."
       ]
-    },
+    }],
     steps: [
       { do: "Écrire votre message unique", how: "Complétez : « Je veux que ce public croie que ____ et qu'il ____. »", time: "15 minutes", done: "Une phrase de moins de 25 mots." },
       { do: "Bâtir le plan avec la séquence", how: "Remplissez les cinq étapes du modèle ci-dessous, une ou deux lignes chacune.", time: "30 minutes", done: "Chaque étape a un contenu." },
@@ -228,7 +235,8 @@ const GUIDES = {
       { n: "Gérer sa hiérarchie", d: "Travailler délibérément avec son responsable et la direction : comprendre leur style, les tenir informés et éviter les surprises.", why: "Un dirigeant jamais surpris par une mauvaise nouvelle fait confiance à qui l'a prévenu tôt.", miss: "Cacher un problème jusqu'à ce qu'il soit résolu." },
       { n: "Le suivi", d: "Confirmer par écrit ce qui a été convenu et livrer à temps.", why: "La fiabilité sur les petits engagements ouvre la voie à de plus grandes responsabilités.", miss: "Quitter la réunion sans responsables ni dates." }
     ],
-    example: {
+    examples: [{
+      t: "Demander un budget à une directrice",
       scene: "Omar, spécialiste technique à Amman, obtient dix minutes avec la directrice pays pour demander un budget pour un nouveau système de données.",
       first: "Il commence par l'historique des problèmes de données sur cinq ans, détaille les options techniques et, à la neuvième minute, demande 80 000 dollars. La directrice dit qu'elle doit réfléchir et part à une autre réunion.",
       better: "Il commence : « Je vous demande d'approuver 80 000 dollars pour un système de données qui nous permettra de rendre compte aux bailleurs en quelques jours au lieu de plusieurs semaines, ce qui sert votre objectif de rapports plus rapides cette année. » Il présente deux options sur une page, en recommande une, nomme le principal risque et la parade, puis demande : « Pouvez-vous approuver aujourd'hui, ou de quoi auriez-vous besoin pour décider d'ici vendredi ? » L'après-midi même, il envoie un résumé de trois lignes.",
@@ -238,7 +246,7 @@ const GUIDES = {
         "Deux options et une recommandation rendent la note prête pour la décision.",
         "Un suivi écrit le jour même confirme la prochaine étape."
       ]
-    },
+    }],
     steps: [
       { do: "Étudier ses priorités", how: "Lisez les discours, plans ou messages récents du dirigeant. Notez ses trois priorités.", time: "30 minutes", done: "Trois priorités écrites." },
       { do: "Rédiger la note d'une page", how: "Utilisez le modèle ci-dessous : décision attendue, pourquoi maintenant, options, recommandation, risques.", time: "45 minutes", done: "La note tient sur une page et la décision est en ligne 1." },
@@ -270,7 +278,8 @@ const GUIDES = {
       { n: "Volatilité, incertitude, complexité, ambiguïté (VICA)", d: "Une description des environnements où le changement est rapide et imprévisible.", why: "Dans ces contextes, des cycles de planification courts et des principes clairs valent mieux que des plans détaillés à long terme.", src: "US Army War College (fin des années 1980)", miss: "Utiliser le terme comme une excuse plutôt que comme une raison de s'adapter." },
       { n: "Retour d'expérience", d: "Une discussion courte et sans recherche de coupable : ce qui devait se passer, ce qui s'est passé, pourquoi, et ce que nous ferons autrement.", why: "Elle transforme une crise en apprentissage et rétablit la confiance dans l'équipe.", src: "Armée des États-Unis (after-action review)", miss: "En faire la recherche d'un coupable." }
     ],
-    example: {
+    examples: [{
+      t: "Une fausse vidéo devient virale",
       scene: "Ana, responsable de la communication à Manille, apprend à 9 heures qu'une vidéo diffusée sur les réseaux sociaux affirme à tort que les cliniques de son organisation distribuent des médicaments périmés. Les journalistes appellent.",
       first: "Le bureau ne dit rien pendant qu'il enquête. Le soir, la vidéo a été partagée des milliers de fois, et une radio annonce que l'organisation « a refusé de commenter ».",
       better: "À 10 h 30, elle publie une déclaration d'attente : « Nous avons connaissance d'une vidéo concernant les médicaments de nos cliniques partenaires. La sécurité de chaque patient est notre priorité. Nous vérifions aujourd'hui les stocks de tous les établissements avec le ministère de la Santé et publierons les résultats d'ici 18 heures. » À 18 heures, elle partage les résultats de l'inspection, remercie les soignants et explique comment les patients peuvent vérifier les dates de péremption.",
@@ -280,7 +289,7 @@ const GUIDES = {
         "Une heure précise pour le point suivant rend l'organisation crédible.",
         "Le dernier message donne au public une action utile."
       ]
-    },
+    }],
     steps: [
       { do: "Lister les crises probables", how: "Avec votre équipe, listez cinq événements qui pourraient toucher votre travail et notez leur probabilité et leur impact.", time: "30 minutes", done: "Les deux risques principaux choisis." },
       { do: "Rédiger des déclarations d'attente", how: "Écrivez une déclaration pour chaque risque principal avec le modèle ci-dessous.", time: "30 minutes", done: "Deux déclarations de moins de 80 mots." },
@@ -312,7 +321,8 @@ const GUIDES = {
       { n: "Conduire le changement", d: "Un modèle en huit étapes, qui commence par créer un sentiment d'urgence et une coalition et se termine par l'ancrage du changement dans la culture.", why: "Une vision sans plan pour embarquer les gens reste un discours.", src: "John Kotter, Leading Change (1996)", miss: "Annoncer la vision et supposer que le changement suivra." },
       { n: "Optimisme et réalisme", d: "Croire qu'un avenir meilleur est possible tout en nommant honnêtement les obstacles.", why: "On suit les leaders à la fois porteurs d'espoir et crédibles.", miss: "Ignorer les difficultés, ce qui rend la vision naïve." }
     ],
-    example: {
+    examples: [{
+      t: "Partager une vision avec une nouvelle équipe",
       scene: "Sophie, cheffe d'équipe à Yaoundé, doit partager sa vision de leadership avec une nouvelle équipe.",
       first: "« Ma vision est de renforcer nos capacités, d'améliorer la coordination et d'atteindre nos résultats conformément au plan stratégique. »",
       better: "« Quand j'avais douze ans, ma tante est morte en accouchant dans un village à deux heures du centre de santé le plus proche. C'est pour cela que je suis ici. Chacun de vous a aussi ses raisons. La mienne, c'est un avenir où aucune femme de cette région ne meurt en donnant la vie. Dans cinq ans, je veux que chaque district que nous appuyons ait une sage-femme à moins d'une heure de chaque village. Cette année, cela veut dire trois districts, et cela commence par le plan que nous allons construire ensemble ce mois-ci. »",
@@ -322,7 +332,7 @@ const GUIDES = {
         "La vision est une image précise, pas une liste d'activités.",
         "Elle relie la vision à l'objectif de l'année et à une étape immédiate (histoire du maintenant)."
       ]
-    },
+    }],
     steps: [
       { do: "Trouver votre pourquoi", how: "Écrivez sur un moment qui vous a fait tenir à ce travail. Demandez-vous : qu'ai-je vu, et qu'ai-je décidé ?", time: "30 minutes", done: "Une histoire d'une demi-page." },
       { do: "Imaginer l'avenir", how: "Décrivez ce qui sera différent dans cinq à dix ans si votre travail réussit : qui, où, quels changements.", time: "30 minutes", done: "Un paragraphe que quelqu'un pourrait dessiner." },
@@ -354,7 +364,8 @@ const GUIDES = {
       { n: "Mandat et gouvernance", d: "Ce que votre organisation est autorisée à faire, qui la supervise et comment elle se situe par rapport aux gouvernements et aux partenaires.", why: "Connaître le mandat aide à formuler des propositions qui s'y inscrivent et à éviter celles qui seront bloquées.", miss: "Proposer un travail utile mais hors mandat." },
       { n: "Sens politique", d: "Comprendre les intérêts, les relations et le pouvoir sans devenir cynique.", why: "Les leaders efficaces composent avec la politique interne pour obtenir de bons résultats.", miss: "Éviter toute politique, ce qui laisse le terrain aux autres." }
     ],
-    example: {
+    examples: [{
+      t: "Une proposition rejetée deux fois",
       scene: "Hiroshi, chargé technique à Bangkok, a une proposition bien conçue pour un nouveau programme jeunesse. Elle a été rejetée deux fois sans raison claire.",
       first: "Il soumet une version révisée au comité d'examen officiel en octobre, avec davantage de données. Elle est de nouveau rejetée parce que « les fonds sont engagés ».",
       better: "Il cartographie la décision. Il apprend que les priorités se fixent en pratique lors d'une retraite de planification en juin, que l'avis de la directrice adjointe pèse lourd et que le comité attache de l'importance à l'alignement sur la stratégie jeunesse du gouvernement. En mai, il partage une note conceptuelle de deux pages avec la directrice adjointe, la relie à la stratégie du gouvernement et lui demande conseil. L'idée entre comme priorité à la retraite de juin, et la soumission d'octobre est approuvée.",
@@ -364,7 +375,7 @@ const GUIDES = {
         "Il a formulé la proposition en fonction du mandat et des priorités des partenaires.",
         "Demander un conseil plutôt qu'une approbation lui a valu une alliée."
       ]
-    },
+    }],
     steps: [
       { do: "Décrire la culture", how: "Écrivez trois lignes par niveau : ce que l'on voit, ce que l'on dit, ce que l'on suppose.", time: "30 minutes", done: "Une hypothèse qui surprendrait un nouvel arrivant." },
       { do: "Cartographier une décision", how: "Choisissez une décision récente et retracez qui a été consulté, formellement et informellement, et quand.", time: "30 minutes", done: "Un schéma montrant au moins une influence informelle." },
@@ -396,7 +407,8 @@ const GUIDES = {
       { n: "Messages clés et transitions", d: "Trois points courts que tout public doit retenir, et des formules pour y revenir à partir de questions difficiles.", why: "Un représentant s'adresse à des ministres, des médias et des partenaires qui peuvent avoir d'autres agendas.", miss: "Répondre à chaque question sur son propre terrain et perdre son message." },
       { n: "Négociation raisonnée", d: "Séparer les personnes du problème, se concentrer sur les intérêts plutôt que sur les positions et chercher des options qui servent les deux parties.", why: "Un représentant négocie en permanence avec les gouvernements et les partenaires.", src: "Roger Fisher et William Ury, Getting to Yes (1981)", miss: "Défendre une position sans comprendre ce dont l'autre partie a besoin." }
     ],
-    example: {
+    examples: [{
+      t: "Une question d'entretien par compétences",
       scene: "Elena, représentante adjointe à Tbilissi, se voit demander lors d'un entretien blanc : « Parlez-nous d'une fois où vous avez géré une relation difficile avec un partenaire gouvernemental. »",
       first: "« Les relations avec le gouvernement sont très importantes. Je crois toujours au respect et au dialogue. En général, j'essaie de comprendre leurs besoins et de trouver un terrain d'entente, et je pense que c'est la clé de bons partenariats. »",
       better: "« En 2024, le ministère a suspendu un programme conjoint après un désaccord sur la propriété des données (situation). En tant qu'adjointe, j'étais chargée de rétablir le partenariat en trois mois (tâche). J'ai rencontré le secrétaire général pour comprendre ses préoccupations, proposé un accord de partage des données donnant au ministère la copropriété, et mis en place une revue conjointe mensuelle (action). Le programme a repris en sept semaines, et c'est désormais le ministère qui présente les données (résultat). »",
@@ -406,7 +418,7 @@ const GUIDES = {
         "L'essentiel de la réponse décrit ses propres actions.",
         "Le résultat est concret et mesurable."
       ]
-    },
+    }],
     steps: [
       { do: "Étudier le rôle", how: "Lisez une description de poste de chef·fe de bureau et listez les compétences demandées.", time: "30 minutes", done: "Six compétences listées." },
       { do: "Constituer une banque d'exemples", how: "Rédigez un exemple par compétence avec le modèle ci-dessous.", time: "Deux heures", done: "Six exemples, chacun de moins de deux minutes à l'oral." },
@@ -438,7 +450,8 @@ const GUIDES = {
       { n: "Ancrer le changement dans la culture", d: "Faire des nouvelles façons de travailler une partie des normes, des routines et de la reconnaissance au quotidien.", why: "Un changement non ancré s'efface quand son porteur s'en va.", src: "John Kotter, Leading Change (1996)", miss: "Supposer qu'un projet réussi continuera tout seul." },
       { n: "Philosophie de leadership", d: "Une courte déclaration de vos convictions sur le leadership, de ce que l'on peut attendre de vous et de ce que vous attendez des autres.", why: "La partager vous rend prévisible et donne à votre équipe une référence pour vous en tenir responsable.", miss: "Écrire des idéaux que vous ne pratiquez pas." }
     ],
-    example: {
+    examples: [{
+      t: "Transmettre une pratique avant de partir",
       scene: "Sione, responsable d'unité à Suva, change de poste dans six mois. La revue mensuelle des données de son unité est son initiative, et il anime lui-même chaque séance.",
       first: "Pendant sa dernière semaine, il rédige une note de deux pages décrivant la revue et l'envoie à son équipe. Trois mois après son départ, les revues ont cessé.",
       better: "Six mois avant son départ, il demande à deux membres de l'équipe de coanimer la revue, les accompagne après chaque séance avec le modèle GROW, puis leur confie l'entière responsabilité les deux derniers mois, en se contentant d'observer. La revue est inscrite au plan de travail de l'unité et dans les objectifs de l'équipe. Elle se poursuit après son départ, et l'une des animatrices la présente lors d'une réunion régionale.",
@@ -448,7 +461,7 @@ const GUIDES = {
         "L'inscription au plan de travail et aux objectifs a ancré la revue dans les routines.",
         "La pratique lui a survécu : c'est la mesure de l'héritage."
       ]
-    },
+    }],
     steps: [
       { do: "Lister ce qui doit continuer", how: "Écrivez les cinq choses que vous faites qui s'arrêteraient ou souffriraient si vous partiez demain.", time: "20 minutes", done: "Cinq éléments." },
       { do: "Nommer des successeurs", how: "Pour chaque élément, nommez qui pourrait le reprendre avec un accompagnement.", time: "15 minutes", done: "Un nom à côté de chaque élément." },
@@ -480,7 +493,8 @@ const GUIDES = {
       { n: "Débit et pauses", d: "La vitesse de la parole et les silences entre les idées.", why: "Les pauses laissent au public le temps d'assimiler et vous donnent l'air maître de vous.", miss: "Remplir chaque silence par « euh » ou « donc »." },
       { n: "La variété mélodique", d: "Faire monter et descendre la voix pour exprimer le sens et l'émotion.", why: "Une voix monocorde perd l'attention, même quand le contenu est fort.", miss: "Terminer les affirmations sur une note montante, comme une question." }
     ],
-    example: {
+    examples: [{
+      t: "Un point budgétaire rapide et monocorde",
       scene: "Daniel, chargé des finances à Londres, apprend après une présentation qu'il était difficile à suivre. L'enregistrement montre qu'il parlait à 190 mots par minute, sans pauses et d'un ton plat.",
       first: "« Doncnotreexécutionbudgétaireestà62pourcentcequiestendessousdelacibledoncilfaudraaccélérerauderniertrimestreeteuh… » (rapide, plat, sans pauses)",
       better: "« Notre exécution budgétaire est à 62 pour cent. (pause) C'est en dessous de la cible. (pause) Au dernier trimestre, nous nous concentrerons donc sur trois points. » Il appuie sur « 62 » et « trois », baisse la voix en fin de phrase et respire à chaque pause.",
@@ -490,7 +504,7 @@ const GUIDES = {
         "L'accent sur les mots clés guide l'attention.",
         "Une voix qui descend en fin de phrase sonne assurée et conclusive."
       ]
-    },
+    }],
     steps: [
       { do: "Mesurer votre point de départ", how: "Ouvrez le Studio vocal et enregistrez l'exercice de débit. Notez vos mots par minute et le nombre de mots de remplissage.", time: "10 minutes", done: "Chiffres de départ enregistrés." },
       { do: "Apprendre l'échauffement", how: "Suivez l'échauffement guidé de dix minutes du Studio vocal : détente de la mâchoire, respiration, vibrations des lèvres, sirènes, articulation, projection.", time: "10 minutes par jour", done: "Vous le faites sans le guide." },
@@ -508,5 +522,8 @@ const GUIDES = {
     checkpoint: "Pratiquez la routine chaque jour ; vos chiffres hebdomadaires dans le Studio vocal montrent vos progrès sur l'ensemble des modules."
   }
 };
+
+// Four more worked examples per module, kept in a separate file.
+for (const [id, list] of Object.entries(MORE)) GUIDES[id].examples.push(...list);
 
 export default GUIDES;

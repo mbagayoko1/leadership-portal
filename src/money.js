@@ -1,6 +1,6 @@
 // "Money & financial freedom" skill module (Personal Development tab), shown
 // by SkillModule like the facilitation and MC modules. General financial
-// education for UN staff in West and Central Africa: NOT personal investment
+// education for programme participants: NOT personal investment
 // advice (see `disclaimer`). Classic quotes were checked word for word against
 // Project Gutenberg texts (Franklin's The Way to Wealth, Hamlet, David
 // Copperfield, the King James Bible); resources were checked live on
