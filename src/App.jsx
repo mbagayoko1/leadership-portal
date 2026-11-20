@@ -5,7 +5,7 @@ import {
   Eye, EyeOff, Save, FolderOpen, ChevronRight, ChevronDown,
   Shield, Play, FileText, Link, ExternalLink, Sparkles,
   UserCheck, UsersRound, Mountain, Activity, Briefcase, Handshake, Megaphone, Lightbulb,
-  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder, Search, AudioLines, BookA
+  Compass, BookOpen, PenLine, Wallet, BarChart3, Flag, Folder, Search, AudioLines, BookA, Gamepad2
 } from "lucide-react";
 import { RC, ROLES, TC, EF, IU, CUR, SM, CI, DS, DDC, DEFAULT_GOALS } from "./data.js";
 import { loadUsers, saveUsers, loadSession, saveSession, clearSession, loadJSON, saveJSON, moveUserData, deleteUserData } from "./storage.js";
@@ -19,6 +19,7 @@ import ModuleGuide, { GUIDE_IDS } from "./ModuleGuide.jsx";
 import Glossary from "./Glossary.jsx";
 import EnglishLibrary from "./EnglishLibrary.jsx";
 import WordBank from "./WordBank.jsx";
+import EnglishPractice from "./EnglishPractice.jsx";
 import { sourceLabel } from "./sourceLabel.js";
 
 const CoachPanel = lazy(() => import("./coach/CoachPanel.jsx"));
@@ -992,7 +993,7 @@ export default function App() {
   ):null;
 
   // study guide
-  const sgTabs=[["learn",t.sgLearn,GUIDE_IDS.includes(cur.id)],["words",t.sgWords,cur.id==="eng"],["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
+  const sgTabs=[["learn",t.sgLearn,GUIDE_IDS.includes(cur.id)],["words",t.sgWords,cur.id==="eng"],["practice",t.sgPractice,cur.id==="eng"],["guide",t.sgGuide,true],["videos",t.sgVideos,(cur.vids&&cur.vids.length>0)],["articles",t.sgArticles,(cur.arts&&cur.arts.length>0)],["readings",t.sgReadings,(cur.reads&&cur.reads.length>0)],["reflect",t.sgReflect,(cur.refs&&cur.refs.length>0)]].filter(a=>a[2]);
   const stE=sgTabs.some(a=>a[0]===st)?st:sgTabs[0][0];
   const studyTab=tab==="study-guide"?(
     <div>
@@ -1026,7 +1027,7 @@ export default function App() {
         </div>
       </div>
       <div className="ldp-subtabs">
-        {sgTabs.map(a=>{const Icon={learn:BookOpen,words:BookA,guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={stE===a[0]} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{a[1]}</button>;})}
+        {sgTabs.map(a=>{const Icon={learn:BookOpen,words:BookA,practice:Gamepad2,guide:FileText,videos:Play,articles:Link,readings:Book,reflect:Edit2}[a[0]]||FileText;return <button key={a[0]} onClick={()=>setSt(a[0])} aria-pressed={stE===a[0]} className="ldp-subtab"><Icon className="w-4 h-4" aria-hidden="true"/>{a[1]}</button>;})}
       </div>
       {stE==="learn"&&<ModuleGuide id={cur.id} t={t} lang={lang} done={prog.mg||{}} onToggle={k=>tp("mg",k)}/>}
       {stE==="guide"&&(
@@ -1076,6 +1077,7 @@ export default function App() {
         </div>
       )}
       {stE==="words"&&<WordBank t={t} lang={lang} done={prog.wb||{}} onToggle={k=>tp("wb",k)} onTheme={k=>{setEngTheme(k);setSt("videos");}}/>}
+      {stE==="practice"&&<EnglishPractice t={t} lang={lang}/>}
       {stE==="videos"&&cur.id==="eng"&&<EnglishLibrary t={t} lang={lang} done={prog.ev||{}} onToggle={k=>tp("ev",k)} theme={engTheme} setTheme={setEngTheme}/>}
       {stE==="videos"&&cur.id!=="eng"&&cur.vids&&cur.vids.length>0&&(
         <div className="space-y-2">{cur.vids.map((v,i)=><ResLink key={i} href={v.u} icon={Play} title={v.t} meta={v.d} tag={v.g}/>)}</div>

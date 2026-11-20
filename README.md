@@ -53,7 +53,9 @@ New participants can self-register via **Request Access** on the sign-in screen.
   lessons from the Accurate English YouTube channel. Its **Videos** tab is a
   library of the channel's lessons grouped by theme, with an eight-week path; its
   **Word bank** tab has about 110 words and expressions grouped by theme, each with
-  pronunciation, meaning, an example and the lesson that teaches it. Run
+  pronunciation, meaning, an example and the lesson that teaches it; its
+  **Practice** tab has a ten-question quiz and a word-matching game built from the
+  word bank and [`src/guides/englishQuiz.js`](src/guides/englishQuiz.js). Run
   `npm run pull:english` to refresh the library from the channel: it keeps only
   the channel's own videos, leaves out partisan politics, and assigns each video
   one theme ([`scripts/pull-accurate-english.mjs`](scripts/pull-accurate-english.mjs)

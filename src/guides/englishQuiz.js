@@ -1,0 +1,22 @@
+// "Which sentence is correct?" items for the Polish Your English quiz.
+// Each pairs a correct sentence with a common error from professional
+// emails and reports. g is the word-bank group the item belongs to (empty:
+// only in mixed quizzes), so a quiz on one group includes its items. why is [English, French].
+const SPOT = [
+  { g: "uncount", ok: "Please find attached the information you requested.", bad: "Please find attached the informations you requested.", why: ["Information is uncountable: no s.", "Information est indénombrable : pas de s."] },
+  { g: "uncount", ok: "We have made good progress this quarter.", bad: "We have made a good progress this quarter.", why: ["Progress is uncountable: no \"a\".", "Progress est indénombrable : pas de « a »."] },
+  { g: "uncount", ok: "Thank you for the useful feedback.", bad: "Thank you for a useful feedback.", why: ["Feedback is uncountable: \"the feedback\" or \"some feedback\".", "Feedback est indénombrable : « the feedback » ou « some feedback »."] },
+  { g: "uncount", ok: "The clinics received new equipment.", bad: "The clinics received new equipments.", why: ["Equipment has no plural; say \"pieces of equipment\" to count.", "Equipment n'a pas de pluriel ; pour compter, dites « pieces of equipment »."] },
+  { g: "uncount", ok: "Our staff members work in six countries.", bad: "Our staffs work in six countries.", why: ["Staff is a group noun; for individuals say \"staff members\".", "Staff est un nom collectif ; pour des personnes, dites « staff members »."] },
+  { g: "uncount", ok: "All staff received training in data protection.", bad: "All staff received a training in data protection.", why: ["Say \"training\" or \"a training session\", not \"a training\".", "Dites « training » ou « a training session », pas « a training »."] },
+  { g: "prep", ok: "The timeline will depend on the budget.", bad: "The timeline will depend of the budget.", why: ["Depend takes on.", "Depend se construit avec on."] },
+  { g: "prep", ok: "We will discuss the plan tomorrow.", bad: "We will discuss about the plan tomorrow.", why: ["Discuss takes no preposition.", "Discuss s'emploie sans préposition."] },
+  { g: "prep", ok: "Twelve partners will attend the meeting.", bad: "Twelve partners will attend to the meeting.", why: ["Attend a meeting has no preposition; \"attend to\" means deal with.", "Attend a meeting s'emploie sans préposition ; « attend to » signifie « s'occuper de »."] },
+  { g: "prep", ok: "We arrive in Nairobi on Monday.", bad: "We arrive to Nairobi on Monday.", why: ["Arrive in a city or country; arrive at a building or event.", "Arrive in devant une ville ou un pays ; arrive at devant un bâtiment ou un événement."] },
+  { g: "prep", ok: "She is responsible for the regional reports.", bad: "She is responsible of the regional reports.", why: ["Responsible takes for.", "Responsible se construit avec for."] },
+  { g: "prep", ok: "Please send the report by Friday.", bad: "Please send the report until Friday.", why: ["By means no later than; until means continuing up to that time.", "By signifie « au plus tard » ; until signifie « jusqu'à » (en continu)."] },
+  { g: "business", ok: "The team worked late to meet the deadline.", bad: "The team worked late to respect the deadline.", why: ["The collocation is \"meet a deadline\".", "La collocation est « meet a deadline »."] },
+  { g: "", ok: "We have been working on this project since 2023.", bad: "We are working on this project since 2023.", why: ["With since, use the present perfect: \"have been working\".", "Avec since, employez le present perfect : « have been working »."] }
+];
+
+export default SPOT;

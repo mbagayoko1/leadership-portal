@@ -14,6 +14,7 @@ import { GUIDE_IDS } from "../src/guides/ids.js";
 import EN_VIDEOS from "../src/englishVideos.js";
 import { THEMES as EN_THEMES, PLAN as EN_PLAN, CONCEPT_VIDEOS as EN_CONCEPT_VIDEOS } from "../src/englishLibrary.js";
 import WORDBANK from "../src/guides/wordbank.js";
+import SPOT from "../src/guides/englishQuiz.js";
 import VOCAB_EN from "../src/guides/vocab-en.js";
 import VOCAB_FR from "../src/guides/vocab-fr.js";
 import fs from "fs";
@@ -125,6 +126,10 @@ Object.keys(GUIDES_EN).filter(x => !GUIDE_IDS.includes(x)).forEach(x => p("modul
       if (e.tip && (!e.tip[0] || !e.tip[1])) p("word bank tip without both languages", key);
       if (e.v) need(e.v, key);
     }
+  }
+  for (const it of SPOT) {
+    if (!it.ok || !it.bad || it.ok === it.bad || !it.why || !it.why[0] || !it.why[1]) p("quiz item incomplete", it.ok || "?");
+    if (it.g && !WORDBANK.some(g => g.k === it.g)) p("quiz item has unknown group", it.g);
   }
 }
 
